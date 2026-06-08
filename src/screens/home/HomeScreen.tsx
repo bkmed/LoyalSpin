@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { TopAppBar } from '../../components/TopAppBar';
 import { TransactionRow } from '../../components/TransactionRow';
+import Dashboard from '../../components/Dashboard';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import {
@@ -74,6 +75,11 @@ export const HomeScreen = () => {
           <Text className="mt-1 font-body text-[13px] font-medium text-on-surface-variant">
             Your portfolio is stable today.
           </Text>
+        </View>
+
+        {/* LoyalSpin dashboard (anonymous vs authenticated) */}
+        <View className="mx-5 mt-4">
+          <Dashboard user={user || undefined} isAnonymous={!user} />
         </View>
 
         <View className="mx-5 mt-4 overflow-hidden rounded-[28px] bg-primary p-7 shadow-editorial">

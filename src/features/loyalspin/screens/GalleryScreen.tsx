@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, Linking, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Linking, Platform, Image } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import {
@@ -92,10 +92,10 @@ const GalleryScreen = () => {
                 className="group overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
               >
                 <View className="h-56 overflow-hidden bg-slate-100 dark:bg-slate-900">
-                  <img
-                    src={item.imageUri}
-                    alt={localTitle}
-                    className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                  <Image
+                    source={{ uri: item.imageUri }}
+                    accessibilityLabel={localTitle}
+                    style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
                   />
                 </View>
                 <View className="p-5">

@@ -29,6 +29,7 @@ import { WebFooter } from '../features/loyalspin/components/WebFooter';
 import { ProductDetailModal } from '../features/loyalspin/components/ProductDetailModal';
 
 // Screens
+import LandingScreen from '../features/loyalspin/screens/LandingScreen';
 import HomeScreenWeb from '../features/loyalspin/screens/HomeScreen';
 import ServicesScreen from '../features/loyalspin/screens/ServicesScreen';
 import ZonesScreen from '../features/loyalspin/screens/ZonesScreen';
@@ -97,6 +98,7 @@ export const AppNavigator = () => {
   // Splash Screen
   const [showSplash, setShowSplash] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [showLandingPage, setShowLandingPage] = useState(!bypassAuth && !sessionUser);
 
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
 
@@ -362,7 +364,19 @@ export const AppNavigator = () => {
         t={translate}
       />
 
-      {!bypassAuth && !sessionUser && (
+      {!bypassAuth && !sessionUser && showLandingPage && (
+        <LandingScreen
+          businessName={businessName}
+          currentTheme={currentTheme}
+          nextLanguage={nextLanguage}
+          setCurrentLang={setCurrentLang}
+          setCurrentTheme={setCurrentTheme}
+          t={translate}
+          setShowLandingPage={setShowLandingPage}
+        />
+      )}
+
+      {!bypassAuth && !sessionUser && !showLandingPage && (
         <WebAuthScreen
           businessName={businessName}
           nextLanguage={nextLanguage}

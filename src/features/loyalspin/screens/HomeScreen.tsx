@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, Linking, Image } from 'react-native';
 import { ServiceIcon, ServiceIconName } from '../../../components/ServiceIcon';
 import { ProductVisual } from '../components/ProductSVGs';
 
@@ -198,7 +198,7 @@ export const HomeScreenWeb: React.FC<HomeScreenWebProps> = ({
       </section>
 
       {/* Real Photo Gallery Preview */}
-      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800">
+      <View className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800">
         <View className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
           <View>
             <Text className="text-xs font-black uppercase tracking-[0.25em] text-[#F97316]">
@@ -226,10 +226,10 @@ export const HomeScreenWeb: React.FC<HomeScreenWebProps> = ({
               className="rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 shadow-sm"
             >
               <View className="h-56 overflow-hidden">
-                <img
-                  src={item.imageUri}
-                  alt={item.title}
-                  className="h-full w-full object-cover"
+                <Image
+                  source={{ uri: item.imageUri }}
+                  accessibilityLabel={item.title}
+                  style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
                 />
               </View>
               <View className="p-5">
@@ -256,7 +256,7 @@ export const HomeScreenWeb: React.FC<HomeScreenWebProps> = ({
             </View>
           )}
         </View>
-      </section>
+      </View>
 
       {/* Used Parts Showcase Grid */}
       <section className="bg-slate-100 dark:bg-slate-900/60 py-20 border-t border-slate-200 dark:border-slate-800">

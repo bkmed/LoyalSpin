@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import { updateUser, deleteUser } from '../../../store/slices/usersSlice';
@@ -603,20 +604,17 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
               className="w-full px-4 py-3 rounded-3xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#F97316]"
             />
 
-            <select
-              value={editUserRole}
-              onChange={e =>
-                setEditUserRole(e.target.value as 'admin' | 'user')
-              }
-              className="w-full px-4 py-3 rounded-3xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#F97316]"
-            >
-              <option value="user">
-                {tCommon('adminUsers.roleUser', 'Utilisateur')}
-              </option>
-              <option value="admin">
-                {tCommon('adminUsers.roleAdmin', 'Administrateur')}
-              </option>
-            </select>
+            <View className="w-full">
+              <Picker
+                selectedValue={editUserRole}
+                onValueChange={(value: 'admin' | 'user') =>
+                  setEditUserRole(value)
+                }
+              >
+                <Picker.Item label={tCommon('adminUsers.roleUser', 'Utilisateur')} value="user" />
+                <Picker.Item label={tCommon('adminUsers.roleAdmin', 'Administrateur')} value="admin" />
+              </Picker>
+            </View>
             <View className="md:col-span-2 flex justify-end gap-3">
               <TouchableOpacity
                 onPress={() => handleSaveUserEdit({} as any)}

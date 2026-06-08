@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -262,19 +263,14 @@ const AdminServicesEditor = () => {
                       defaultValue: 'Éléments par page :',
                     })}
                   </Text>
-                  <select
-                    value={itemsPerPage}
-                    onChange={e => {
-                      setItemsPerPage(Number(e.target.value));
-                      setCurrentPage(1);
-                    }}
-                    className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2 py-1 text-xs font-bold focus:outline-none text-slate-700 dark:text-slate-200"
-                  >
-                    <option value={5}>5</option>
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                    <option value={50}>50</option>
-                  </select>
+                  <View className="w-28">
+                    <Picker selectedValue={itemsPerPage} onValueChange={value => { setItemsPerPage(Number(value)); setCurrentPage(1); }}>
+                      <Picker.Item label="5" value={5} />
+                      <Picker.Item label="10" value={10} />
+                      <Picker.Item label="20" value={20} />
+                      <Picker.Item label="50" value={50} />
+                    </Picker>
+                  </View>
                 </View>
 
                 <View className="flex flex-row items-center gap-4">

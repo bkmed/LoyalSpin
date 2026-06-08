@@ -100,17 +100,17 @@ const ServicesScreen = ({
                 {translateServiceField(service.desc)}
               </Text>
 
-              <ul className="space-y-2.5 font-bold text-xs text-slate-600 dark:text-slate-300">
+              <View className="space-y-2.5 font-bold text-xs text-slate-600 dark:text-slate-300">
                 {service.pts &&
                   service.pts.map((point: string, idx2: number) => (
-                    <li key={idx2} className="flex items-center gap-2">
-                      <Text className="w-1.5 h-1.5 bg-emerald-500 rounded-full text-slate-600 dark:text-slate-300" />
+                    <View key={idx2} className="flex flex-row items-center gap-2">
+                      <View className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
                       <Text className="text-slate-600 dark:text-slate-300 flex-1">
                         {translateServiceField(point)}
                       </Text>
-                    </li>
+                    </View>
                   ))}
-              </ul>
+              </View>
 
               <View className="flex flex-col sm:flex-row gap-3">
                 <TouchableOpacity

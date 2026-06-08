@@ -28,6 +28,7 @@ import { WebFooter } from '../features/loyalspin/components/WebFooter';
 import { ProductDetailModal } from '../features/loyalspin/components/ProductDetailModal';
 
 // Screens
+import LandingScreen from '../features/loyalspin/screens/LandingScreen';
 import HomeScreenWeb from '../features/loyalspin/screens/HomeScreen';
 import ServicesScreen from '../features/loyalspin/screens/ServicesScreen';
 import ZonesScreen from '../features/loyalspin/screens/ZonesScreen';
@@ -44,6 +45,7 @@ import AdminAnalyticsScreen from '../features/loyalspin/screens/AdminAnalyticsSc
 import AdminGalleryEditor from '../features/loyalspin/screens/AdminGalleryEditor';
 import AdminServicesEditor from '../features/loyalspin/screens/AdminServicesEditor';
 import AdminManage from '../features/loyalspin/screens/AdminManage';
+import LoyaltySpinScreen from '../features/loyalspin/screens/LoyaltySpinScreen';
 
 import {
   Role,
@@ -86,6 +88,7 @@ export const AppNavigator = () => {
   // Splash Screen
   const [showSplash, setShowSplash] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [showLandingPage, setShowLandingPage] = useState(!bypassAuth && !sessionUser);
 
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
 
@@ -416,7 +419,19 @@ export const AppNavigator = () => {
         t={translate}
       />
 
-      {!bypassAuth && !sessionUser && (
+      {!bypassAuth && !sessionUser && showLandingPage && (
+        <LandingScreen
+          businessName={businessName}
+          currentTheme={currentTheme}
+          nextLanguage={nextLanguage}
+          setCurrentLang={setCurrentLang}
+          setCurrentTheme={setCurrentTheme}
+          t={translate}
+          setShowLandingPage={setShowLandingPage}
+        />
+      )}
+
+      {!bypassAuth && !sessionUser && !showLandingPage && (
         <WebAuthScreen
           businessName={businessName}
           nextLanguage={nextLanguage}
@@ -496,6 +511,12 @@ export const AppNavigator = () => {
           {activeTab === 'Gallery' && (
             <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in text-left">
               <GalleryScreen />
+            </View>
+          )}
+
+          {activeTab === 'LoyalSpin' && (
+            <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in text-left">
+              <LoyaltySpinScreen />
             </View>
           )}
 

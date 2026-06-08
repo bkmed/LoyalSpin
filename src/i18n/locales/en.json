@@ -303,6 +303,18 @@
     "adminAdd": "Add image",
     "manageGallery": "Manage gallery"
   },
+  "loyalspin": {
+    "title": "Loyalty Wheel",
+    "spinButton": "Spin",
+    "congrats": "Congratulations!",
+    "close": "Close",
+    "prize": {
+      "discount10": "10% off",
+      "free_shipping": "Free shipping",
+      "bonus_points": "50 bonus points",
+      "gift": "Free gift"
+    }
+  },
   "support": {
     "whatsapp": "Call on WhatsApp",
     "header": "Support",
@@ -1675,6 +1687,27 @@
     "branding_tested": "100% tested",
     "branding_partsWarranty": "Parts Warranty",
     "branding_copyright": "© 2026 {{businessName}}. Developed for individuals and professionals."
+  ,
+  "loyalspin": {
+    "welcome": "Welcome to LoyalSpin",
+    "connectPrompt": "Sign in to access your personalized dashboard, points and the interactive wheel.",
+    "login": "Sign in",
+    "explore": "Explore",
+    "preview": "Preview: Interactive wheel",
+    "userDefault": "User",
+    "hello": "Hello, {{name}}",
+    "dashboardSubtitle": "Here is your dashboard",
+    "spin": "Spin",
+    "history": "History",
+    "points": "Points",
+    "coupons": "Coupons",
+    "nextRewardLabel": "Next reward",
+    "nextReward": "Wheel available",
+    "quickActions": "Quick actions",
+    "play": "Play the wheel",
+    "createCoupon": "Create coupon",
+    "viewAnalytics": "View analytics"
+  }
   },
   "auth_hardcoded": {
     "signin_title": "Sign In",

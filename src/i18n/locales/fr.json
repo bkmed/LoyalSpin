@@ -303,6 +303,18 @@
     "adminAdd": "Ajouter une image",
     "manageGallery": "Gérer la galerie"
   },
+  "loyalspin": {
+    "title": "Roulette de fidélité",
+    "spinButton": "Lancer",
+    "congrats": "Félicitations !",
+    "close": "Fermer",
+    "prize": {
+      "discount10": "10% de réduction",
+      "free_shipping": "Livraison gratuite",
+      "bonus_points": "50 points bonus",
+      "gift": "Cadeau gratuit"
+    }
+  },
   "support": {
     "whatsapp": "Appeler sur WhatsApp",
     "header": "Support",
@@ -1675,6 +1687,27 @@
     "branding_tested": "100% testé",
     "branding_partsWarranty": "Garantie Pièces",
     "branding_copyright": "© 2026 {{businessName}}. Développé pour les particuliers et professionnels."
+  ,
+  "loyalspin": {
+    "welcome": "Bienvenue sur LoyalSpin",
+    "connectPrompt": "Connectez-vous pour accéder à votre tableau de bord personnalisé, vos points et la roulette interactive.",
+    "login": "Se connecter",
+    "explore": "Découvrir",
+    "preview": "Aperçu : Roulette interactive",
+    "userDefault": "Utilisateur",
+    "hello": "Bonjour, {{name}}",
+    "dashboardSubtitle": "Voici votre tableau de bord",
+    "spin": "Spin",
+    "history": "Historique",
+    "points": "Points",
+    "coupons": "Coupons",
+    "nextRewardLabel": "Prochaine récompense",
+    "nextReward": "Roulette disponible",
+    "quickActions": "Actions rapides",
+    "play": "Jouer la roulette",
+    "createCoupon": "Créer un coupon",
+    "viewAnalytics": "Voir les analytics"
+  }
   },
   "auth_hardcoded": {
     "signin_title": "Connexion",

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { setActiveTab } from '../../../store/slices/uiSlice';
 import CategoryImageInput from '../components/CategoryImageInput';
+import { Picker } from '@react-native-picker/picker';
 import {
   addGalleryItem,
   updateGalleryItem,
@@ -273,10 +274,10 @@ const AdminGalleryEditor = () => {
                   className="grid gap-4 md:grid-cols-[150px_1fr_180px] rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 p-4 shadow-sm"
                 >
                   <View className="overflow-hidden rounded-3xl bg-slate-100 dark:bg-slate-800 h-full">
-                    <img
-                      src={item.imageUri}
-                      alt={item.title}
-                      className="h-full w-full object-cover"
+                    <Image
+                      source={{ uri: item.imageUri }}
+                      accessibilityLabel={item.title}
+                      style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
                     />
                   </View>
                   <View className="space-y-2">
@@ -332,19 +333,20 @@ const AdminGalleryEditor = () => {
                       defaultValue: 'Éléments par page :',
                     })}
                   </Text>
-                  <select
-                    value={itemsPerPage}
-                    onChange={e => {
-                      setItemsPerPage(Number(e.target.value));
-                      setCurrentPage(1);
-                    }}
-                    className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2 py-1 text-xs font-bold focus:outline-none text-slate-700 dark:text-slate-200"
-                  >
-                    <option value={5}>5</option>
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                    <option value={50}>50</option>
-                  </select>
+                  <View className="w-28">
+                    <Picker
+                      selectedValue={itemsPerPage}
+                      onValueChange={value => {
+                        setItemsPerPage(Number(value));
+                        setCurrentPage(1);
+                      }}
+                    >
+                      <Picker.Item label="5" value={5} />
+                      <Picker.Item label="10" value={10} />
+                      <Picker.Item label="20" value={20} />
+                      <Picker.Item label="50" value={50} />
+                    </Picker>
+                  </View>
                 </View>
 
                 <View className="flex flex-row items-center gap-4">
@@ -577,26 +579,11 @@ const AdminGalleryEditor = () => {
                         defaultValue: 'Conseil :',
                       })}
                     </Text>
-                    <ul className="list-disc pl-5 space-y-2">
-                      <li>
-                        {translate('admin.tip.chooseImage', {
-                          defaultValue:
-                            'Choisissez une image claire et représentative.',
-                        })}
-                      </li>
-                      <li>
-                        {translate('admin.tip.addTitle', {
-                          defaultValue:
-                            'Ajoutez un titre court et un sous-titre pertinent.',
-                        })}
-                      </li>
-                      <li>
-                        {translate('admin.tip.descriptionHelp', {
-                          defaultValue:
-                            'La description aide vos clients à comprendre la réalisation.',
-                        })}
-                      </li>
-                    </ul>
+                    <View className="space-y-2">
+                      <Text>- {translate('admin.tip.chooseImage', { defaultValue: 'Choisissez une image claire et représentative.' })}</Text>
+                      <Text>- {translate('admin.tip.addTitle', { defaultValue: 'Ajoutez un titre court et un sous-titre pertinent.' })}</Text>
+                      <Text>- {translate('admin.tip.descriptionHelp', { defaultValue: 'La description aide vos clients à comprendre la réalisation.' })}</Text>
+                    </View>
                   </View>
                 </View>
 

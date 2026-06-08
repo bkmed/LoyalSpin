@@ -10,7 +10,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, './build'),
     filename: 'index_bundle.js',
-    publicPath: process.env.NODE_ENV === 'production' ? '/LoyalSpin/' : '/',
+    publicPath: process.env.NODE_ENV === 'production' ? '/Plombier/' : '/',
     clean: true,
   },
   devServer: {
@@ -23,7 +23,7 @@ module.exports = {
       {
         test: /\.(js|ts)x?$/,
         exclude:
-          /node_modules[/\\](?!(react-native-chart-kit|@react-native-community[\\/]datetimepicker|react-native-image-picker|react-native-vector-icons|)[/\\])/,
+          /node_modules[/\\](?!(react-native-chart-kit|@react-native-community[\\/]datetimepicker|react-native-image-picker|react-native-vector-icons|react-native-css-interop|nativewind)[/\\])/,
 
         use: {
           loader: 'babel-loader',

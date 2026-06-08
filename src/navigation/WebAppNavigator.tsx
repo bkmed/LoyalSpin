@@ -29,12 +29,12 @@ import { WebFooter } from '../features/plombier/components/WebFooter';
 import { ProductDetailModal } from '../features/plombier/components/ProductDetailModal';
 
 // Screens
-import HomeScreenWeb from '../features/plombier/screens/HomeScreen';
+import HomeScreen from '../features/plombier/screens/HomeScreen';
 import ServicesScreen from '../features/plombier/screens/ServicesScreen';
 import ZonesScreen from '../features/plombier/screens/ZonesScreen';
 import MarketplaceScreen from '../features/plombier/screens/MarketplaceScreen';
 import GalleryScreen from '../features/plombier/screens/GalleryScreen';
-import ProfileScreenWeb from '../features/plombier/screens/ProfileScreen';
+import ProfileScreen from '../features/plombier/screens/ProfileScreen';
 import LegalPages from '../features/plombier/screens/LegalPages';
 import AdminDashboard from '../features/plombier/screens/AdminDashboard';
 import AdminAnnonces from '../features/plombier/screens/AdminAnnonces';
@@ -394,7 +394,7 @@ export const AppNavigator = () => {
       {(bypassAuth || sessionUser) && (
         <main className="min-h-[calc(100vh-280px)] bg-slate-50 text-slate-800 dark:bg-[#0B0F19] dark:text-slate-100 transition-colors duration-300">
           {activeTab === 'Accueil' && (
-            <HomeScreenWeb
+            <HomeScreen
               nextLanguage={nextLanguage}
               experienceYears={experienceYears}
               dispoVal={dispoVal}
@@ -437,7 +437,7 @@ export const AppNavigator = () => {
           )}
 
           {activeTab === 'Profile' && (
-            <ProfileScreenWeb
+            <ProfileScreen
               currentRole={currentRole}
               businessName={businessName}
               profileName={profileName}

@@ -1,10 +1,15 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, TextInput, Linking, Platform } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import {
   toggleFavoriteAction,
   type Product,
 } from '../../../store/slices/partsSlice';
+import {
+  trackPageView,
+  trackShare,
+} from '../../../store/slices/analyticsSlice';
 import { useToast } from '../../../context/ToastContext';
 
 interface MarketplaceScreenProps {
@@ -36,6 +41,7 @@ const ProductVisual = ({
           strokeWidth="6"
           stroke="#64748B"
         />
+
         <path d="M70 20 v8" strokeWidth="5" stroke="#94A3B8" />
         <path d="M66 28 h8" strokeWidth="2" stroke="#475569" />
         <path d="M32 50 h12" strokeWidth="4.5" stroke="#334155" />
@@ -71,6 +77,7 @@ const ProductVisual = ({
           stroke="#334155"
           strokeWidth="3"
         />
+
         <rect x="42" y="24" width="16" height="4" rx="1" fill="#1E3A5F" />
         <rect
           x="38"
@@ -82,6 +89,7 @@ const ProductVisual = ({
           stroke="#475569"
           strokeWidth="1.5"
         />
+
         <circle cx="44" cy="72" r="2.5" fill="#64748B" />
         <circle cx="56" cy="72" r="2.5" fill="#64748B" />
         <path d="M35 81 v10" stroke="#B45309" strokeWidth="4.5" />
@@ -108,6 +116,7 @@ const ProductVisual = ({
         strokeWidth="8"
         strokeLinecap="square"
       />
+
       <circle cx="22" cy="28" r="5" fill="#C2410C" />
       <circle cx="54" cy="60" r="5" fill="#C2410C" />
       <path d="M52 35 h32 M68 35 v30" stroke="#EA580C" strokeWidth="7" />
@@ -132,15 +141,67 @@ const MarketplaceScreen = ({
   t,
   setSelectedProduct,
 }: MarketplaceScreenProps) => {
-  const tCommon = (key: string, defaultValue: string) =>
-    t(key, { defaultValue });
+  const tCommon = (key: string, defaultValue?: string) =>
+    t(key, { defaultValue: defaultValue || key });
+
+  const getCategoryKey = (catName: string) => {
+    return `categories.${catName.toLowerCase().replace(/[- ]/g, '_')}`;
+  };
+
+  const getConditionKey = (cond: string) => {
+    if (cond === 'Tous') return 'tous';
+    const map: Record<string, string> = {
+      'comme neuf': 'comme_neuf',
+      'bon état': 'bon_etat',
+      'pour pièces': 'pour_pieces',
+    };
+    return `web.conditions.${
+      map[cond] || cond.toLowerCase().replace(/ /g, '_')
+    }`;
+  };
+
   const dispatch = useDispatch();
   const { showToast } = useToast();
 
-  const products = useSelector((state: RootState) => state.parts.listings);
-  const favorites = useSelector((state: RootState) => state.parts.favorites);
+  useEffect(() => {
+    dispatch(trackPageView('Marketplace'));
+  }, [dispatch]);
+
+  const handleShare = (
+    product: Product,
+    platform: 'facebook' | 'whatsapp',
+    event: any,
+  ) => {
+    event.stopPropagation();
+    dispatch(trackShare({ platform, item: product.title }));
+
+    const pageUrl =
+      Platform.OS === 'web' && typeof window !== 'undefined'
+        ? (window as any).location?.href || 'https://plombier.example.com/marketplace'
+        : 'https://plombier.example.com/marketplace';
+    const url = encodeURIComponent(pageUrl);
+    const text = encodeURIComponent(
+      `Découvrez cette pièce : ${product.title} - ${product.price} TND`,
+    );
+
+    let shareUrl = '';
+    if (platform === 'facebook') {
+      shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    } else {
+      shareUrl = `https://wa.me/?text=${text}%20${url}`;
+    }
+
+    Linking.openURL(shareUrl);
+  };
+
+  const products = useSelector(
+    (state: RootState) => state.parts?.listings || [],
+  );
+  const favorites = useSelector(
+    (state: RootState) => state.parts?.favorites || [],
+  );
   const reduxCategories = useSelector(
-    (state: RootState) => state.categories.items,
+    (state: RootState) => state.categories?.items || [],
   );
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -185,169 +246,182 @@ const MarketplaceScreen = ({
     });
   }, [filteredProducts, sortBy]);
 
-  const toggleFavorite = (
-    id: string,
-    event: React.MouseEvent<HTMLButtonElement>,
-  ) => {
+  const toggleFavorite = (id: string, event: any) => {
     event.stopPropagation();
     dispatch(toggleFavoriteAction(id));
     if (favorites.includes(id)) {
-      showToast(tCommon('web.favoriteRemoved', 'Retiré des favoris'), 'info');
+      showToast(tCommon('web.favoriteRemoved'), 'info');
     } else {
-      showToast(
-        tCommon('web.favoriteAdded', 'Ajouté aux favoris !'),
-        'success',
-      );
+      showToast(tCommon('web.favoriteAdded'), 'success');
     }
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in text-left">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-        <div>
-          <h1 className="text-3xl font-black tracking-tight">{t.pieces}</h1>
-          <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-2 font-semibold">
-            {tCommon(
-              'web.marketplaceIntro',
-              "Recherchez et filtrez nos pièces de rechange de plomberie d'occasion certifiées.",
-            )}
-          </p>
-        </div>
+    <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in text-left">
+      <View className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+        <View>
+          <Text className="text-3xl font-black tracking-tight text-slate-900 dark:text-slate-100">
+            {tCommon('pieces')}
+          </Text>
+          <Text className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-2 font-semibold">
+            {tCommon('web.marketplaceIntro')}
+          </Text>
+        </View>
 
-        <div className="flex items-center gap-3">
-          <span className="text-[10px] font-bold text-slate-450 uppercase tracking-widest">
-            {t.tri} :
-          </span>
+        <View className="flex items-center gap-3">
+          <Text className="text-[10px] font-bold text-slate-500 uppercase tracking-widest dark:text-slate-400">
+            {tCommon('tri')} :
+          </Text>
           <select
             value={sortBy}
             onChange={e => setSortBy(e.target.value)}
-            className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-850 dark:text-slate-250 focus:outline-none"
+            className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none"
           >
-            <option value="featured">{t.recommande}</option>
-            <option value="price_asc">{t.prix_croissant}</option>
-            <option value="price_desc">{t.prix_decroissant}</option>
+            <option value="featured">{tCommon('recommande')}</option>
+            <option value="price_asc">{tCommon('prix_croissant')}</option>
+            <option value="price_desc">{tCommon('prix_decroissant')}</option>
           </select>
-        </div>
-      </div>
+        </View>
+      </View>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        <div className="lg:col-span-3 space-y-6">
-          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 shadow-sm space-y-6">
-            <h3 className="text-sm font-black uppercase tracking-wider">
-              {t.filtres}
-            </h3>
+      <View className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <View className="lg:col-span-3 space-y-6">
+          <View className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 shadow-sm space-y-6">
+            <Text className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-slate-100">
+              {tCommon('filtres')}
+            </Text>
 
-            <div className="space-y-2">
-              <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-widest">
-                {t.rechercher}
-              </label>
-              <input
-                type="text"
-                placeholder={tCommon(
-                  'web.marketplaceSearchPlaceholder',
-                  'Grohe, boiler, radiateur...',
-                )}
+            <View className="space-y-2">
+              <Text className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest dark:text-slate-400">
+                {tCommon('rechercher')}
+              </Text>
+              <TextInput
+                placeholder={tCommon('web.marketplaceSearchPlaceholder')}
                 value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
+                onChangeText={setSearchQuery}
                 className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:border-[#F97316]"
               />
-            </div>
+            </View>
 
-            <div className="space-y-2">
-              <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-widest">
-                Catégories
-              </label>
-              <div className="space-y-1.5">
-                <button
-                  type="button"
-                  onClick={() => setSelectedCategoryFilter('Toutes')}
+            <View className="space-y-2">
+              <Text className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest dark:text-slate-400">
+                {tCommon('web.categories')}
+              </Text>
+              <View className="space-y-1.5">
+                <TouchableOpacity
+                  onPress={() => setSelectedCategoryFilter('Toutes')}
                   className={`w-full text-left px-3.5 py-2 rounded-xl text-xs font-bold transition ${
                     selectedCategoryFilter === 'Toutes'
                       ? 'bg-[#1E3A5F] text-white shadow-sm'
-                      : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-750'
+                      : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700'
                   }`}
                 >
-                  {t.toutes_categories}
-                </button>
+                  <Text
+                    className={`font-bold ${
+                      selectedCategoryFilter === 'Toutes'
+                        ? 'text-white'
+                        : 'text-slate-500'
+                    }`}
+                  >
+                    {tCommon('toutes_categories')}
+                  </Text>
+                </TouchableOpacity>
                 {reduxCategories.map(cat => (
-                  <button
+                  <TouchableOpacity
                     key={cat.id}
-                    type="button"
-                    onClick={() => setSelectedCategoryFilter(cat.name)}
+                    onPress={() => setSelectedCategoryFilter(cat.name)}
                     className={`w-full text-left px-3.5 py-2 rounded-xl text-xs font-bold transition ${
                       selectedCategoryFilter === cat.name
                         ? 'bg-[#1E3A5F] text-white shadow-sm'
-                        : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-750'
+                        : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700'
                     }`}
                   >
-                    {cat.name}
-                  </button>
+                    <Text
+                      className={`font-bold ${
+                        selectedCategoryFilter === cat.name
+                          ? 'text-white'
+                          : 'text-slate-500'
+                      }`}
+                    >
+                      {tCommon(getCategoryKey(cat.name), cat.name)}
+                    </Text>
+                  </TouchableOpacity>
                 ))}
-              </div>
-            </div>
+              </View>
+            </View>
 
-            <div className="space-y-2">
-              <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-widest">
-                {t.etat}
-              </label>
-              <div className="grid grid-cols-2 gap-2 text-center">
+            <View className="space-y-2">
+              <Text className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest dark:text-slate-400">
+                {tCommon('etat')}
+              </Text>
+              <View className="grid grid-cols-2 gap-2 text-center">
                 {['Tous', 'comme neuf', 'bon état', 'pour pièces'].map(cond => (
-                  <button
-                    type="button"
+                  <TouchableOpacity
                     key={cond}
-                    onClick={() => setSelectedConditionFilter(cond)}
+                    onPress={() => setSelectedConditionFilter(cond)}
                     className={`px-2 py-2 rounded-xl border text-[10px] font-black capitalize transition leading-none ${
                       selectedConditionFilter === cond
                         ? 'bg-[#1E3A5F] border-[#1E3A5F] text-white'
-                        : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-500 hover:border-slate-350'
+                        : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-500 hover:border-slate-300'
                     }`}
                   >
-                    {cond === 'Tous' ? t.tous : cond}
-                  </button>
+                    <Text
+                      className={`text-[10px] font-black text-center ${
+                        selectedConditionFilter === cond
+                          ? 'text-white'
+                          : 'text-slate-500'
+                      }`}
+                    >
+                      {cond === 'Tous'
+                        ? tCommon('tous')
+                        : tCommon(getConditionKey(cond), cond)}
+                    </Text>
+                  </TouchableOpacity>
                 ))}
-              </div>
-            </div>
+              </View>
+            </View>
 
-            <div className="space-y-3">
-              <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                <span>{t.prix} Max</span>
-                <span className="text-[#F97316]">{priceMax} DT</span>
-              </div>
-              <input
-                type="range"
-                min="10"
-                max="1000"
-                step="10"
-                value={priceMax}
-                onChange={e => setPriceMax(Number(e.target.value))}
-                className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-[#F97316]"
+            <View className="space-y-3">
+              <View className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                <Text className="text-[10px] text-slate-400">
+                  {tCommon('prix')} {tCommon('web.maxLabel')}
+                </Text>
+                <Text className="text-[#F97316]">
+                  {priceMax} {tCommon('web.tndSymbol')}
+                </Text>
+              </View>
+              <TextInput
+                keyboardType="numeric"
+                value={priceMax.toString()}
+                onChangeText={text => setPriceMax(Number(text) || 0)}
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:border-[#F97316]"
               />
-            </div>
-          </div>
-        </div>
+            </View>
+          </View>
+        </View>
 
-        <div className="lg:col-span-9">
+        <View className="lg:col-span-9">
           {sortedProducts.length === 0 ? (
-            <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-12 text-center shadow-sm">
-              <p className="text-sm text-slate-400 font-bold">
-                {t.aucun_produit}
-              </p>
-            </div>
+            <View className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-12 text-center shadow-sm">
+              <Text className="text-sm text-slate-400 font-bold dark:text-slate-300">
+                {tCommon('aucun_produit')}
+              </Text>
+            </View>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+            <View className="grid grid-cols-2 sm:grid-cols-3 gap-6">
               {sortedProducts.map(prod => (
-                <div
+                <TouchableOpacity
                   key={prod.id}
-                  onClick={() => setSelectedProduct(prod)}
+                  onPress={() => setSelectedProduct(prod)}
                   className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl overflow-hidden shadow-sm hover:shadow-lg hover:border-[#1E3A5F] dark:hover:border-slate-500 transition-all duration-300 group flex flex-col justify-between cursor-pointer"
                 >
-                  <div className="bg-slate-50 dark:bg-slate-900 py-10 flex items-center justify-center border-b border-slate-100 dark:border-slate-800 relative">
-                    <span className="absolute top-3 right-3 z-10 bg-slate-200 dark:bg-slate-750 text-slate-700 dark:text-slate-350 text-[8.5px] font-extrabold uppercase px-2 py-0.5 rounded-full">
-                      {prod.condition}
-                    </span>
+                  <View className="bg-slate-50 dark:bg-slate-900 py-10 flex items-center justify-center border-b border-slate-100 dark:border-slate-800 relative">
+                    <Text className="absolute top-3 right-3 z-10 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-[8.5px] font-extrabold uppercase px-2 py-0.5 rounded-full">
+                      {tCommon(getConditionKey(prod.condition), prod.condition)}
+                    </Text>
 
-                    <button
-                      onClick={e => toggleFavorite(prod.id, e)}
+                    <TouchableOpacity
+                      onPress={e => toggleFavorite(prod.id, e)}
                       className="absolute top-3 left-3 z-10 w-8 h-8 bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 rounded-full flex items-center justify-center text-slate-400 hover:text-rose-500 transition"
                     >
                       <svg
@@ -365,48 +439,66 @@ const MarketplaceScreen = ({
                       >
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                       </svg>
-                    </button>
+                    </TouchableOpacity>
 
                     <ProductVisual image={prod.image} />
-                  </div>
+                  </View>
 
-                  <div className="p-4 text-left flex-1 flex flex-col justify-between">
-                    <div>
-                      <span className="text-[9px] font-black text-slate-450 uppercase tracking-wider">
-                        {prod.category}
-                      </span>
-                      <h4 className="text-xs sm:text-sm font-black text-slate-850 dark:text-slate-100 mt-1 leading-tight group-hover:text-[#F97316] transition-colors">
+                  <View className="p-4 text-left flex-1 flex flex-col justify-between">
+                    <View>
+                      <Text className="text-[9px] font-black text-slate-500 uppercase tracking-wider dark:text-slate-400">
+                        {tCommon(getCategoryKey(prod.category), prod.category)}
+                      </Text>
+                      <Text className="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-100 mt-1 leading-tight group-hover:text-[#F97316] transition-colors">
                         {prod.title}
-                      </h4>
-                      <p className="text-[10.5px] text-slate-400 mt-0.5 line-clamp-1 font-semibold">
+                      </Text>
+                      <Text className="text-[10.5px] text-slate-400 mt-0.5 line-clamp-1 font-semibold dark:text-slate-300">
                         {prod.subtitle}
-                      </p>
-                    </div>
+                      </Text>
+                    </View>
 
-                    <div className="flex items-center justify-between border-t border-slate-50 dark:border-slate-750 pt-3 mt-4">
-                      <div className="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-250">
+                    <View className="flex items-center justify-between border-t border-slate-50 dark:border-slate-700 pt-3 mt-4">
+                      <Text className="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-200">
                         {prod.price}{' '}
-                        <span className="text-[9.5px] font-bold">DT</span>
-                      </div>
+                        <Text className="text-[9.5px] font-bold">
+                          {tCommon('web.tndSymbol')}
+                        </Text>
+                      </Text>
 
-                      <button
-                        onClick={e => {
-                          e.stopPropagation();
-                          setSelectedProduct(prod);
-                        }}
-                        className="bg-[#1E3A5F] hover:bg-[#152a47] text-white text-[10px] font-black px-3 py-1.5 rounded-lg transition"
+                      <View className="bg-[#1E3A5F] hover:bg-[#152a47] text-white text-[10px] font-black px-3 py-1.5 rounded-lg transition">
+                        <Text className="text-white font-black text-[10px]">
+                          {tCommon('web.home.call_to_buy')}
+                        </Text>
+                      </View>
+                    </View>
+
+                    {/* Share Buttons */}
+                    <View className="mt-3 flex flex-row gap-2 border-t border-slate-100 dark:border-slate-700 pt-3">
+                      <TouchableOpacity
+                        onPress={e => handleShare(prod, 'facebook', e)}
+                        className="flex-1 bg-[#1877F2] rounded-lg py-1.5 flex items-center justify-center"
                       >
-                        {tCommon('web.buyButton', 'Commander')}
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                        <Text className="text-white text-[9px] font-black">
+                          Facebook
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={e => handleShare(prod, 'whatsapp', e)}
+                        className="flex-1 bg-[#25D366] rounded-lg py-1.5 flex items-center justify-center"
+                      >
+                        <Text className="text-white text-[9px] font-black">
+                          WhatsApp
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </TouchableOpacity>
               ))}
-            </div>
+            </View>
           )}
-        </div>
-      </div>
-    </div>
+        </View>
+      </View>
+    </View>
   );
 };
 

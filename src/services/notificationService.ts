@@ -12,17 +12,17 @@ import { RecurringRule } from '../store/slices/walletSlice';
 export const createWalletChannels = async () => {
   if (Platform.OS !== 'android') return;
   await notifee.createChannel({
-    id: 'loyalspin_bills',
+    id: 'plombier_bills',
     name: 'Bill Reminders',
     importance: AndroidImportance.HIGH,
   });
   await notifee.createChannel({
-    id: 'loyalspin_budget',
+    id: 'plombier_budget',
     name: 'Budget Alerts',
     importance: AndroidImportance.DEFAULT,
   });
   await notifee.createChannel({
-    id: 'loyalspin_summary',
+    id: 'plombier_summary',
     name: 'Daily Summary',
     importance: AndroidImportance.LOW,
   });
@@ -45,7 +45,7 @@ export const scheduleBillReminder = async (rule: RecurringRule) => {
       title: 'Bill Reminder',
       body: `${rule.label} is due on ${rule.nextDueDate}.`,
       android: {
-        channelId: 'loyalspin_bills',
+        channelId: 'plombier_bills',
         importance: AndroidImportance.HIGH,
       },
       data: { type: 'wallet_bill', ruleId: rule.id },
@@ -60,7 +60,7 @@ export const sendBudgetAlert = async (category: string, percent: number) => {
     title: 'Budget Alert',
     body: `${category} reached ${percent}% of its budget.`,
     android: {
-      channelId: 'loyalspin_budget',
+      channelId: 'plombier_budget',
       importance: AndroidImportance.DEFAULT,
     },
     data: { type: 'wallet_budget', category },

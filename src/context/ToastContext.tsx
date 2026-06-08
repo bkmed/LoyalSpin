@@ -4,7 +4,7 @@ import {
   Text,
   StyleSheet,
   Animated,
-  Dimensions,
+  useWindowDimensions,
   Platform,
 } from 'react-native';
 import { useTheme } from './ThemeContext';
@@ -122,7 +122,7 @@ const ToastItem: React.FC<{
   }, []);
 
   const styles = createToastStyles(theme, toast.type);
-  const { width } = Dimensions.get('window');
+  const { width } = useWindowDimensions();
   const isMobile = width < 768;
 
   return (

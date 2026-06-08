@@ -1,5 +1,6 @@
 import React from 'react';
 import { Platform, View, Image, Text, TouchableOpacity } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   imageUri?: string | null;
@@ -12,6 +13,9 @@ const CategoryImageInput = ({
   onImageSelected,
   accept = 'image/*',
 }: Props) => {
+  const { t } = useTranslation();
+  const tCommon = (key: string) => t(key, { defaultValue: key });
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return onImageSelected(null);
@@ -26,7 +30,7 @@ const CategoryImageInput = ({
   const handleNativePress = () => {
     // Native image picker is not configured in this repo yet.
     // This placeholder keeps the file cross-platform and allows future integration.
-    alert("Sélection d'image non disponible sur mobile pour le moment.");
+    alert(tCommon('categoryImageInput.unavailableMobile'));
   };
 
   if (Platform.OS === 'web') {
@@ -36,7 +40,7 @@ const CategoryImageInput = ({
         {imageUri ? (
           <img
             src={imageUri}
-            alt="preview"
+            alt={tCommon('categoryImageInput.previewAlt')}
             style={{
               width: 64,
               height: 64,
@@ -71,7 +75,9 @@ const CategoryImageInput = ({
           marginRight: 12,
         }}
       >
-        <Text>Choisir une image</Text>
+        <Text className="text-slate-900 dark:text-slate-100">
+          {tCommon('categoryImageInput.chooseImage')}
+        </Text>
       </TouchableOpacity>
       {imageUri ? (
         <Image

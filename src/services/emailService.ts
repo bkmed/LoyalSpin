@@ -37,7 +37,7 @@ export const emailService = {
     const subject = `Support Request${
       orderId ? `: Order #${orderId}` : ''
     } - ${userName}`;
-    const body = `Hello LoyalSpin Support,
+    const body = `Hello Plombier Support,
 
 I need assistance with ${orderId ? `my order #${orderId}` : 'my account'}.
 
@@ -50,7 +50,7 @@ ${orderId ? `- Order ID: ${orderId}` : ''}
 Best regards,
 ${userName}`;
 
-    await emailService.sendEmail('support@loyalspin.com', subject, body);
+    await emailService.sendEmail('support@plombier.com', subject, body);
   },
 
   /**
@@ -62,7 +62,7 @@ ${userName}`;
     status: string,
   ) => {
     const subject = `Order Inquiry: #${orderId}`;
-    const body = `Dear LoyalSpin Support,
+    const body = `Dear Plombier Support,
 
 I am writing regarding my order #${orderId}, which is currently marked as ${status.toUpperCase()}.
 
@@ -71,6 +71,6 @@ I am writing regarding my order #${orderId}, which is currently marked as ${stat
 Best regards,
 ${userEmail}`;
 
-    await emailService.sendEmail('support@loyalspin.com', subject, body);
+    await emailService.sendEmail('support@plombier.com', subject, body);
   },
 };

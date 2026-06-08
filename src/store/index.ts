@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import {
   persistStore,
   persistReducer,
+  createTransform,
   FLUSH,
   REHYDRATE,
   PAUSE,
@@ -10,6 +11,28 @@ import {
   REGISTER,
 } from 'redux-persist';
 import { reduxStorage } from './storage';
+import { Service } from './slices/servicesSlice';
+
+const normalizePersistedServices = createTransform(
+  (inboundState: { items: Service[] }) => {
+    if (!inboundState?.items) return inboundState;
+    const seenIds = new Set<string>();
+    return {
+      items: inboundState.items.map((service, idx) => {
+        let id = service.id;
+        if (!id || seenIds.has(id)) {
+          id = `srv-${Date.now()}-${idx}-${Math.floor(
+            Math.random() * 1000000,
+          )}`;
+        }
+        seenIds.add(id);
+        return { ...service, id };
+      }),
+    };
+  },
+  state => state,
+  { whitelist: ['services'] },
+);
 
 // Import slices
 import authReducer from './slices/authSlice';
@@ -24,7 +47,7 @@ import goalsReducer from './slices/goalsSlice';
 import categoriesReducer from './slices/categoriesSlice';
 import servicesReducer from './slices/servicesSlice';
 import partsReducer from './slices/partsSlice';
-import loyalspinSettingsReducer from './slices/loyalspinSettingsSlice';
+import plombierSettingsReducer from './slices/plombierSettingsSlice';
 import galleryReducer from './slices/gallerySlice';
 import uiReducer from './slices/uiSlice';
 import webSessionReducer from './slices/webSessionSlice';
@@ -43,7 +66,7 @@ const rootReducer = combineReducers({
   services: servicesReducer,
   parts: partsReducer,
   gallery: galleryReducer,
-  loyalspinSettings: loyalspinSettingsReducer,
+  plombierSettings: plombierSettingsReducer,
   ui: uiReducer,
   webSession: webSessionReducer,
 });
@@ -65,13 +88,18 @@ const persistConfig = {
     'services',
     'parts',
     'gallery',
-    'loyalspinSettings',
+    'plombierSettings',
     'ui',
     'webSession',
   ], // add slices here to persist
+  transforms: [normalizePersistedServices],
 };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const persistedReducer = persistReducer(
+  persistConfig,
+  rootReducer as any,
+) as typeof rootReducer;
 
 export const store = configureStore({
   reducer: persistedReducer,
@@ -85,5 +113,5 @@ export const store = configureStore({
 
 export const persistor = persistStore(store);
 
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;

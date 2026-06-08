@@ -1,5 +1,4 @@
-import React from 'react';
-import { Dimensions, Platform } from 'react-native';
+import { Dimensions, Platform, useWindowDimensions } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
@@ -21,47 +20,39 @@ export const responsive = {
   isDesktopWidth: width >= 1024,
 
   // Get columns for responsive grid
-  getColumns: () => {
-    if (width >= 1440) return 4;
-    if (width >= 1024) return 3;
-    if (width >= 768) return 2;
+  getColumns: (currentWidth = width) => {
+    if (currentWidth >= 1440) return 4;
+    if (currentWidth >= 1024) return 3;
+    if (currentWidth >= 768) return 2;
     return 1;
   },
 
   // Get container max width
-  getContainerWidth: () => {
-    if (width >= 1440) return 1400;
-    if (width >= 1024) return 960;
-    if (width >= 768) return 720;
-    return width - 32;
+  getContainerWidth: (currentWidth = width) => {
+    if (currentWidth >= 1440) return 1400;
+    if (currentWidth >= 1024) return 960;
+    if (currentWidth >= 768) return 720;
+    return currentWidth - 32;
   },
 
   // Responsive padding
-  getPadding: () => {
-    if (width >= 1024) return 24;
-    if (width >= 768) return 20;
+  getPadding: (currentWidth = width) => {
+    if (currentWidth >= 1024) return 24;
+    if (currentWidth >= 768) return 20;
     return 16;
   },
 };
 
 // Hook for responsive updates
 export const useResponsive = () => {
-  const [dimensions, setDimensions] = React.useState(Dimensions.get('window'));
-
-  React.useEffect(() => {
-    const subscription = Dimensions.addEventListener('change', ({ window }) => {
-      setDimensions(window);
-    });
-
-    return () => subscription?.remove();
-  }, []);
+  const { width, height } = useWindowDimensions();
 
   return {
-    width: dimensions.width,
-    height: dimensions.height,
-    isMobile: dimensions.width < 768,
-    isTablet: dimensions.width >= 768 && dimensions.width < 1024,
-    isDesktop: dimensions.width >= 1024,
-    columns: responsive.getColumns(),
+    width,
+    height,
+    isMobile: width < 768,
+    isTablet: width >= 768 && width < 1024,
+    isDesktop: width >= 1024,
+    columns: responsive.getColumns(width),
   };
 };

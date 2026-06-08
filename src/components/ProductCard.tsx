@@ -5,14 +5,12 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
+  useWindowDimensions,
 } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { useCurrency } from '../utils/currencyUtils';
 import { Product } from '../database/schema';
-
-const { width } = Dimensions.get('window');
 
 interface ProductCardProps {
   product: Product;
@@ -23,10 +21,11 @@ export const ProductCard = ({ product, onPress }: ProductCardProps) => {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { formatPrice } = useCurrency();
+  const { width } = useWindowDimensions();
 
   return (
     <TouchableOpacity
-      style={styles.container}
+      style={[styles.container, { width: width / 2 - 24 }]}
       onPress={onPress}
       activeOpacity={0.9}
     >
@@ -70,7 +69,6 @@ export const ProductCard = ({ product, onPress }: ProductCardProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: width / 2 - 24,
     marginBottom: 32,
   },
   imageContainer: {

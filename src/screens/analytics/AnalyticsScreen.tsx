@@ -4,7 +4,7 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  Dimensions,
+  useWindowDimensions,
   ActivityIndicator,
 } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
@@ -15,15 +15,14 @@ import {
 } from '../../services/analyticsService';
 import { Theme } from '../../theme';
 
-const { width } = Dimensions.get('window');
-
 export const AnalyticsScreen = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
+  const { width } = useWindowDimensions();
 
-  const styles = useMemo(() => createStyles(theme), [theme]);
+  const styles = useMemo(() => createStyles(theme, width), [theme, width]);
 
   useEffect(() => {
     loadAnalytics();
@@ -112,7 +111,7 @@ export const AnalyticsScreen = () => {
   );
 };
 
-const createStyles = (theme: Theme) =>
+const createStyles = (theme: Theme, width: number) =>
   StyleSheet.create({
     container: {
       flex: 1,

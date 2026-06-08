@@ -1,6 +1,8 @@
 import React from 'react';
+import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
+import { setActiveTab } from '../../../store/slices/uiSlice';
 import {
   addCategory,
   updateCategory,
@@ -21,12 +23,24 @@ export const AdminCategories: React.FC<AdminCategoriesProps> = ({
     translate(key, { defaultValue });
   const dispatch = useDispatch();
   const reduxCategories = useSelector(
-    (state: RootState) => state.categories.items,
+    (state: RootState) => state.categories?.items || [],
   );
-  const products = useSelector((state: RootState) => state.parts.listings);
+  const products = useSelector(
+    (state: RootState) => state.parts?.listings || [],
+  );
   const [showCategoryModal, setShowCategoryModal] = React.useState(false);
   const [editingCategory, setEditingCategory] = React.useState<any | null>(
     null,
+  );
+
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [itemsPerPage, setItemsPerPage] = React.useState(10);
+
+  const totalPages = Math.ceil(reduxCategories.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedCategories = reduxCategories.slice(
+    startIndex,
+    startIndex + itemsPerPage,
   );
 
   const [newCategoryName, setNewCategoryName] = React.useState('');
@@ -68,8 +82,7 @@ export const AdminCategories: React.FC<AdminCategoriesProps> = ({
     setNewCategoryImage(null);
   };
 
-  const handleSaveCategory = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSaveCategory = () => {
     setCategoryErrorMessage(null);
 
     const categoryName = editingCategory ? editCategoryName : newCategoryName;
@@ -126,6 +139,11 @@ export const AdminCategories: React.FC<AdminCategoriesProps> = ({
         }),
         'success',
       );
+      // Go to last page to see the new item
+      const newTotalPages = Math.ceil(
+        (reduxCategories.length + 1) / itemsPerPage,
+      );
+      setCurrentPage(newTotalPages);
     }
 
     setEditingCategory(null);
@@ -147,6 +165,18 @@ export const AdminCategories: React.FC<AdminCategoriesProps> = ({
       setEditCategoryName('');
       setNewCategoryImage(null);
     }
+
+    // Adjust current page if we delete the last item of the current page
+    const remainingItemsOnPage = reduxCategories.filter(
+      c => c.id !== categoryToDelete.id,
+    ).length;
+    const newTotalPages = Math.ceil(remainingItemsOnPage / itemsPerPage);
+    if (currentPage > newTotalPages && newTotalPages > 0) {
+      setCurrentPage(newTotalPages);
+    } else if (newTotalPages === 0) {
+      setCurrentPage(1);
+    }
+
     dispatch(deleteCategory(categoryToDelete.id));
     showToast(
       translate('web.autoText27', {
@@ -164,166 +194,267 @@ export const AdminCategories: React.FC<AdminCategoriesProps> = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in text-left">
-      <h1 className="text-3xl font-black tracking-tight">
+    <View className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in text-left">
+      <TouchableOpacity
+        onPress={() => dispatch(setActiveTab('AdminManage'))}
+        className="mb-6 bg-slate-200 dark:bg-slate-700 px-4 py-2 rounded-xl self-start"
+        style={{ alignSelf: 'flex-start' }}
+      >
+        <Text className="text-xs font-black text-slate-600 dark:text-slate-200">
+          {tCommon('adminUsers.backToManage', '← Retour à Manage')}
+        </Text>
+      </TouchableOpacity>
+
+      <Text className="text-3xl font-black tracking-tight text-slate-900 dark:text-slate-100">
         {tCommon('adminCategories.title', 'Gestion des Catégories')}
-      </h1>
-      <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-1 font-semibold">
+      </Text>
+      <Text className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-1 font-semibold">
         {tCommon(
           'adminCategories.description',
           'Ajoutez de nouvelles familles de produits et réorganisez le catalogue.',
         )}
-      </p>
+      </Text>
 
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 shadow-sm mt-8">
-        <div>
-          <h3 className="text-xs font-black uppercase tracking-widest text-slate-450 mb-2">
+      <View className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 shadow-sm mt-8">
+        <View>
+          <Text className="text-xs font-black uppercase tracking-widest text-slate-500 mb-2 dark:text-slate-400">
             {editingCategory
               ? tCommon('adminCategories.editHeading', 'Modifier la catégorie')
               : tCommon(
                   'adminCategories.createHeading',
                   'Créer une nouvelle catégorie',
                 )}
-          </h3>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 max-w-xl">
+          </Text>
+          <Text className="text-[11px] text-slate-500 dark:text-slate-400 max-w-xl">
             {tCommon(
               'adminCategories.infoText',
               'Ajoutez de nouvelles catégories via la fenêtre modale. Vous pouvez renommer les catégories existantes depuis le tableau ci-dessous.',
             )}
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
+          </Text>
+        </View>
+        <View className="flex items-center gap-3">
           {editingCategory ? (
-            <button
-              type="button"
-              onClick={() => {
+            <TouchableOpacity
+              onPress={() => {
                 setEditingCategory(null);
                 setEditCategoryName('');
                 setNewCategoryImage(null);
                 setCategoryErrorMessage(null);
               }}
-              className="bg-slate-200 dark:bg-slate-700 text-slate-650 dark:text-slate-250 text-xs font-black px-5 py-3 rounded-xl transition"
+              className="bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-200 text-xs font-black px-5 py-3 rounded-xl transition"
             >
               {tCommon('adminCategories.cancelEdit', 'Annuler la modification')}
-            </button>
+            </TouchableOpacity>
           ) : null}
-          <button
-            type="button"
-            onClick={openAddCategoryModal}
+          <TouchableOpacity
+            onPress={openAddCategoryModal}
             className="bg-[#F97316] hover:bg-[#e0630b] text-white text-xs font-black px-5 py-3 rounded-xl shadow-sm transition"
           >
             {tCommon('adminCategories.addCategory', '+ Ajouter une catégorie')}
-          </button>
-        </div>
-      </div>
+          </TouchableOpacity>
+        </View>
+      </View>
 
       {/* Categories list table */}
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-sm overflow-hidden mt-8">
-        <table className="w-full text-xs text-left font-semibold">
-          <thead className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 uppercase tracking-widest text-[9.5px] text-slate-400">
-            <tr>
-              <th className="px-6 py-4">Nom de la Catégorie</th>
-              <th className="px-6 py-4">Nombre d'Articles</th>
-              <th className="px-6 py-4 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-750 text-slate-700 dark:text-slate-200">
-            {reduxCategories.map(cat => {
-              const count = products.filter(
-                p => p.category === cat.name,
-              ).length;
-              return (
-                <tr
-                  key={cat.id}
-                  className="hover:bg-slate-50/50 dark:hover:bg-slate-750/30 transition"
+      <View className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-sm overflow-hidden mt-8">
+        <View className="overflow-x-auto w-full">
+          <table className="w-full min-w-[600px] text-xs text-left font-semibold">
+            <thead className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 uppercase tracking-widest text-[9.5px] text-slate-400 whitespace-nowrap">
+              <tr>
+                <th className="px-6 py-4">
+                  {tCommon(
+                    'adminCategories.tableCategoryName',
+                    'Nom de la Catégorie',
+                  )}
+                </th>
+                <th className="px-6 py-4">
+                  {tCommon(
+                    'adminCategories.tableArticleCount',
+                    "Nombre d'Articles",
+                  )}
+                </th>
+                <th className="px-6 py-4 text-center">
+                  {tCommon('adminCategories.tableActions', 'Actions')}
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-700 text-slate-700 dark:text-slate-200">
+              {paginatedCategories.map(cat => {
+                const count = products.filter(
+                  p => p.category === cat.name,
+                ).length;
+                return (
+                  <tr
+                    key={cat.id}
+                    className="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition whitespace-nowrap"
+                  >
+                    <td className="px-6 py-4">
+                      <View className="flex flex-row items-center gap-3">
+                        {cat.imageUri ? (
+                          <img
+                            src={cat.imageUri}
+                            alt={cat.name}
+                            className="h-10 w-10 rounded-xl object-cover border border-slate-200 dark:border-slate-700"
+                          />
+                        ) : (
+                          <View className="h-10 w-10 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700" />
+                        )}
+                        <Text className="font-black text-slate-700 dark:text-slate-200">
+                          {cat.name}
+                        </Text>
+                      </View>
+                    </td>
+                    <td className="px-6 py-4 text-slate-500 dark:text-slate-400">
+                      {count} {tCommon('adminCategories.articles', 'articles')}
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <View className="flex flex-row justify-center gap-2">
+                        <TouchableOpacity
+                          onPress={() => openEditCategoryModal(cat)}
+                          className="bg-blue-600 hover:bg-blue-700 text-white font-black px-3 py-1 rounded-lg transition"
+                        >
+                          {tCommon('adminCategories.rename', 'Renommer')}
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() =>
+                            handleDeleteCategoryClick(cat.id, cat.name)
+                          }
+                          className="bg-rose-600 hover:bg-rose-700 text-white font-black px-3 py-1 rounded-lg transition"
+                        >
+                          {tCommon('adminCategories.delete', 'Supprimer')}
+                        </TouchableOpacity>
+                      </View>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </View>
+
+        {totalPages > 1 || reduxCategories.length > 5 ? (
+          <View className="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 border-t border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 text-slate-700 dark:text-slate-200">
+            <View className="flex flex-row items-center gap-2">
+              <Text className="text-xs text-slate-500 dark:text-slate-400">
+                {translate('admin.itemsPerPage', {
+                  defaultValue: 'Éléments par page :',
+                })}
+              </Text>
+              <select
+                value={itemsPerPage}
+                onChange={e => {
+                  setItemsPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2 py-1 text-xs font-bold focus:outline-none text-slate-700 dark:text-slate-200"
+              >
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+              </select>
+            </View>
+
+            <View className="flex flex-row items-center gap-4">
+              <Text className="text-xs text-slate-500 dark:text-slate-400">
+                {translate('admin.paginationInfo', {
+                  defaultValue: 'Page {{page}} sur {{totalPages}}',
+                  page: currentPage,
+                  totalPages: totalPages || 1,
+                })}
+              </Text>
+
+              <View className="flex flex-row items-center gap-1">
+                <TouchableOpacity
+                  disabled={currentPage === 1}
+                  onPress={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  className={`px-3 py-1.5 rounded-lg border text-xs font-black transition ${
+                    currentPage === 1
+                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-200/60 dark:border-slate-700/60 cursor-not-allowed'
+                      : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'
+                  }`}
                 >
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      {cat.imageUri ? (
-                        <img
-                          src={cat.imageUri}
-                          alt={cat.name}
-                          className="h-10 w-10 rounded-xl object-cover border border-slate-200 dark:border-slate-700"
-                        />
-                      ) : (
-                        <div className="h-10 w-10 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700" />
-                      )}
-                      <span className="font-black">{cat.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-slate-500 dark:text-slate-400">
-                    {count} articles
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <div className="flex justify-center gap-2">
-                      <button
-                        onClick={() => openEditCategoryModal(cat)}
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-black px-3 py-1 rounded-lg transition"
-                      >
-                        {tCommon('adminCategories.rename', 'Renommer')}
-                      </button>
-                      <button
-                        onClick={() =>
-                          handleDeleteCategoryClick(cat.id, cat.name)
-                        }
-                        className="bg-rose-600 hover:bg-rose-700 text-white font-black px-3 py-1 rounded-lg transition"
-                      >
-                        Supprimer
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+                  {translate('admin.prevPage', { defaultValue: 'Précédent' })}
+                </TouchableOpacity>
+
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  pageNum => (
+                    <TouchableOpacity
+                      key={pageNum}
+                      onPress={() => setCurrentPage(pageNum)}
+                      className={`w-8 h-8 flex items-center justify-center rounded-lg text-xs font-black transition ${
+                        currentPage === pageNum
+                          ? 'bg-[#F97316] text-white'
+                          : 'bg-white dark:bg-slate-900 text-slate-750 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800'
+                      }`}
+                    >
+                      {pageNum}
+                    </TouchableOpacity>
+                  ),
+                )}
+
+                <TouchableOpacity
+                  disabled={currentPage === totalPages || totalPages === 0}
+                  onPress={() =>
+                    setCurrentPage(prev => Math.min(prev + 1, totalPages))
+                  }
+                  className={`px-3 py-1.5 rounded-lg border text-xs font-black transition ${
+                    currentPage === totalPages || totalPages === 0
+                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-200/60 dark:border-slate-700/60 cursor-not-allowed'
+                      : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-55 dark:hover:bg-slate-800'
+                  }`}
+                >
+                  {translate('admin.nextPage', { defaultValue: 'Suivant' })}
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        ) : null}
+      </View>
 
       {showDeleteConfirm && categoryToDelete && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[28px] max-w-sm w-full shadow-2xl p-6 text-center space-y-6">
-            <div>
-              <h3 className="text-xl font-black text-slate-900 dark:text-white">
+        <View className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
+          <View className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[28px] max-w-sm w-full shadow-2xl p-6 text-center space-y-6">
+            <View>
+              <Text className="text-xl font-black text-slate-900 dark:text-white">
                 {tCommon('admin.confirmDelete', 'Confirmer la suppression')}
-              </h3>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
+              </Text>
+              <Text className="text-sm text-slate-500 dark:text-slate-400 mt-2">
                 {translate('web.autoText26', {
                   defaultValue: `Voulez-vous supprimer la catégorie "${categoryToDelete.name}" ?`,
                 })}
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={cancelDeleteCategory}
+              </Text>
+            </View>
+            <View className="flex gap-3">
+              <TouchableOpacity
+                onPress={cancelDeleteCategory}
                 className="flex-1 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl px-4 py-3 font-black hover:bg-slate-300 dark:hover:bg-slate-600 transition"
               >
                 {tCommon('admin.cancelButton', 'Annuler')}
-              </button>
-              <button
-                type="button"
-                onClick={confirmDeleteCategory}
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={confirmDeleteCategory}
                 className="flex-1 bg-rose-600 text-white rounded-xl px-4 py-3 font-black hover:bg-rose-700 transition"
               >
                 {tCommon('admin.deleteButton', 'Supprimer')}
-              </button>
-            </div>
-          </div>
-        </div>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
       )}
 
       {showCategoryModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in text-left">
-          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[28px] max-w-lg w-full shadow-2xl overflow-hidden relative">
-            <button
-              onClick={closeCategoryModal}
-              className="absolute top-4 right-4 z-10 w-8.5 h-8.5 rounded-full bg-slate-100 dark:bg-slate-750 text-slate-500 hover:text-slate-850 dark:hover:text-slate-100 flex items-center justify-center font-bold"
+        <View className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in text-left">
+          <View className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[28px] max-w-lg w-full shadow-2xl overflow-hidden relative">
+            <TouchableOpacity
+              onPress={closeCategoryModal}
+              className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 hover:text-slate-800 dark:hover:text-slate-100 flex items-center justify-center font-bold"
             >
               ✕
-            </button>
+            </TouchableOpacity>
 
-            <div className="p-6 sm:p-8 space-y-6">
-              <h2 className="text-xl font-black text-slate-850 dark:text-white">
+            <View className="p-6 sm:p-8 space-y-6">
+              <Text className="text-xl font-black text-slate-800 dark:text-white">
                 {editingCategory
                   ? tCommon(
                       'adminCategories.modalEditTitle',
@@ -333,79 +464,73 @@ export const AdminCategories: React.FC<AdminCategoriesProps> = ({
                       'adminCategories.modalCreateTitle',
                       'Ajouter une catégorie',
                     )}
-              </h2>
+              </Text>
 
               {categoryErrorMessage && (
-                <div className="mb-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-750">
+                <View className="mb-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-750">
                   {categoryErrorMessage}
-                </div>
+                </View>
               )}
 
-              <form
-                onSubmit={handleSaveCategory}
-                className="space-y-4 text-xs font-semibold"
-              >
-                <div className="space-y-2">
-                  <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-widest">
+              <View className="space-y-4 text-xs font-semibold">
+                <View className="space-y-2">
+                  <Text className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest dark:text-slate-400">
                     {tCommon(
                       'adminCategories.categoryNameLabel',
                       'Nom de la catégorie',
                     )}{' '}
                     *
-                  </label>
-                  <input
-                    type="text"
-                    required
+                  </Text>
+                  <TextInput
                     placeholder={tCommon(
                       'adminCategories.categoryPlaceholder',
                       'Ex: Pompes et Accessoires',
                     )}
                     value={editingCategory ? editCategoryName : newCategoryName}
-                    onChange={e =>
+                    onChangeText={text =>
                       editingCategory
-                        ? setEditCategoryName(e.target.value)
-                        : setNewCategoryName(e.target.value)
+                        ? setEditCategoryName(text)
+                        : setNewCategoryName(text)
                     }
-                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4.5 py-3 text-xs font-semibold focus:outline-none"
+                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-xs font-semibold focus:outline-none text-slate-900 dark:text-slate-100"
                   />
-                </div>
+                </View>
 
-                <div className="space-y-2">
-                  <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-widest">
+                <View className="space-y-2">
+                  <Text className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest dark:text-slate-400">
                     {tCommon(
                       'adminCategories.imageLabel',
                       'Image de catégorie (optionnel)',
                     )}
-                  </label>
+                  </Text>
                   <CategoryImageInput
                     imageUri={newCategoryImage || undefined}
                     onImageSelected={setNewCategoryImage}
                   />
-                </div>
+                </View>
 
-                <div className="flex justify-end gap-3 pt-4">
-                  <button
-                    type="button"
-                    onClick={closeCategoryModal}
-                    className="bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-250 text-xs font-black px-5 py-3 rounded-xl transition"
+                <View className="flex justify-end gap-3 pt-4">
+                  <TouchableOpacity
+                    onPress={closeCategoryModal}
+                    className="bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-200 text-xs font-black px-5 py-3 rounded-xl transition"
                   >
                     {tCommon('adminCategories.modalCancel', 'Annuler')}
-                  </button>
-                  <button
-                    type="submit"
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={handleSaveCategory}
                     className="bg-[#F97316] hover:bg-[#e0630b] text-white text-xs font-black px-5 py-3 rounded-xl shadow-sm transition"
                   >
                     {editingCategory
                       ? tCommon('adminCategories.saveEdit', 'Enregistrer')
                       : tCommon('adminCategories.add', 'Ajouter')}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
       )}
-    </div>
+    </View>
   );
 };
 export default AdminCategories;

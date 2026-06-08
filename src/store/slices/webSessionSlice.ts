@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   WebSessionUser,
   Role,
-} from '../../features/loyalspin/utils/webTranslations';
+} from '../../features/plombier/utils/webTranslations';
 
 interface WebSessionState {
   sessionUser: WebSessionUser | null;

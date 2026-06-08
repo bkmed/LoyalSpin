@@ -1,37 +1,46 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface LoyalSpinSettingsState {
+interface PlombierSettingsState {
   businessName: string;
+  businessNameAr: string;
   experienceYears: number;
   interventionZones: string[];
   supportEmail: string;
   supportPhone: string;
+  dispoVal?: string;
+  govVal?: string;
 }
 
-const initialState: LoyalSpinSettingsState = {
-  businessName: 'LoyalSpin Tunisie',
+const initialState: PlombierSettingsState = {
+  businessName: 'Plombier Tunisie',
+  businessNameAr: 'سباك تونس',
   experienceYears: 15,
   interventionZones: ['Grand Tunis', 'Sahel', 'Sfax'],
   supportEmail: '',
   supportPhone: '',
+  dispoVal: '24/7',
+  govVal: '24',
 };
 
-const ensureInterventionZones = (state: LoyalSpinSettingsState) => {
+const ensureInterventionZones = (state: PlombierSettingsState) => {
   if (!Array.isArray(state.interventionZones)) {
     state.interventionZones = [];
   }
 };
 
-const loyalspinSettingsSlice = createSlice({
-  name: 'loyalspinSettings',
+const plombierSettingsSlice = createSlice({
+  name: 'plombierSettings',
   initialState,
   reducers: {
-    updateLoyalSpinSettings: (
+    updatePlombierSettings: (
       state,
-      action: PayloadAction<Partial<LoyalSpinSettingsState>>,
+      action: PayloadAction<Partial<PlombierSettingsState>>,
     ) => {
       if (action.payload.businessName !== undefined) {
         state.businessName = action.payload.businessName;
+      }
+      if (action.payload.businessNameAr !== undefined) {
+        state.businessNameAr = action.payload.businessNameAr;
       }
       if (action.payload.experienceYears !== undefined) {
         state.experienceYears = action.payload.experienceYears;
@@ -48,6 +57,12 @@ const loyalspinSettingsSlice = createSlice({
       }
       if (action.payload.supportPhone !== undefined) {
         state.supportPhone = action.payload.supportPhone;
+      }
+      if (action.payload.dispoVal !== undefined) {
+        state.dispoVal = action.payload.dispoVal;
+      }
+      if (action.payload.govVal !== undefined) {
+        state.govVal = action.payload.govVal;
       }
     },
     addInterventionZone: (state, action: PayloadAction<string>) => {
@@ -85,10 +100,10 @@ const loyalspinSettingsSlice = createSlice({
 });
 
 export const {
-  updateLoyalSpinSettings,
+  updatePlombierSettings,
   addInterventionZone,
   updateInterventionZone,
   removeInterventionZone,
-} = loyalspinSettingsSlice.actions;
+} = plombierSettingsSlice.actions;
 
-export default loyalspinSettingsSlice.reducer;
+export default plombierSettingsSlice.reducer;

@@ -1,5 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export interface GalleryItemTranslation {
+  title?: string;
+  subtitle?: string;
+  description?: string;
+}
+
 export interface GalleryItem {
   id: string;
   title: string;
@@ -8,6 +14,8 @@ export interface GalleryItem {
   imageUri: string;
   createdAt: string;
   updatedAt?: string;
+  /** Per-language overrides: e.g. { ar: { title: '...', subtitle: '...' } } */
+  translations?: Record<string, GalleryItemTranslation>;
 }
 
 interface GalleryState {

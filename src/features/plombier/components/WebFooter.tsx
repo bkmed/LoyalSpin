@@ -1,4 +1,5 @@
 import React from 'react';
+import { View, Text, TouchableOpacity, Linking, Platform } from 'react-native';
 import FooterLinks from './FooterLinks';
 import { Role } from '../utils/webTranslations';
 
@@ -23,24 +24,42 @@ export const WebFooter: React.FC<WebFooterProps> = ({
   t,
   setActiveTab,
 }) => {
+  const tc = (key: string, fallback: string) =>
+    t(key, { defaultValue: fallback });
+
+  const openWhatsApp = () => {
+    const msg = tc('web.whatsapp_msg', "Bonjour, j'ai besoin d'un plombier.");
+    const url = `https://wa.me/${supportWhatsAppDigits}?text=${encodeURIComponent(
+      msg,
+    )}`;
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      window.open(url, '_blank');
+    } else {
+      Linking.openURL(url).catch(() => {});
+    }
+  };
+
   return (
-    <>
-      <footer
+    <View>
+      <View
         className={`border-t transition-colors ${
           currentTheme === 'dark'
             ? 'bg-[#0B0F19] border-slate-800 text-slate-400'
             : 'bg-slate-100 border-slate-200 text-slate-600'
         } py-12`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8 text-left">
-          <div className="space-y-4">
-            <span className="text-lg font-black text-slate-850 dark:text-slate-105 flex items-center gap-2">
+        <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8 text-left">
+          <View className="space-y-4">
+            <Text className="text-lg font-black text-slate-800 dark:text-slate-100 flex items-center gap-2">
               🛠️ {businessName}
-            </span>
-            <p className="text-xs leading-relaxed font-semibold">
-              {t.foot_desc}
-            </p>
-          </div>
+            </Text>
+            <Text className="text-xs leading-relaxed font-semibold text-slate-900 dark:text-slate-100">
+              {tc(
+                'web.foot_desc',
+                'Votre expert en plomberie, climatisation et gaz en Tunisie.',
+              )}
+            </Text>
+          </View>
 
           <FooterLinks
             setActiveTab={setActiveTab}
@@ -49,27 +68,33 @@ export const WebFooter: React.FC<WebFooterProps> = ({
             supportWhatsAppNumber={supportWhatsAppNumber}
             supportEmail={supportEmail}
           />
-        </div>
+        </View>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 dark:border-slate-880 mt-10 pt-6 text-center text-xs font-bold">
-          {t.credits}
-        </div>
-      </footer>
+        <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 dark:border-slate-800 mt-10 pt-6 text-center text-xs font-bold">
+          <Text className="text-slate-900 dark:text-slate-100">
+            {tc(
+              'web.credits',
+              `© ${new Date().getFullYear()} ${businessName}. Tous droits réservés.`,
+            )}
+          </Text>
+        </View>
+      </View>
 
       {currentRole !== 'admin' && (
-        <a
-          href={`https://wa.me/${supportWhatsAppDigits}?text=${encodeURIComponent(
-            t.whatsapp_msg,
-          )}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="fixed bottom-6 right-6 z-40 w-14 h-14 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95"
-          title="WhatsApp Support Urgent"
+        <TouchableOpacity
+          onPress={openWhatsApp}
+          accessibilityLabel="WhatsApp Support Urgent"
+          className="fixed bottom-6 right-6 z-40 w-14 h-14 bg-emerald-500 hover:bg-emerald-600 rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95"
         >
-          💬
-        </a>
+          <Text
+            style={{ fontSize: 22 }}
+            className="text-slate-900 dark:text-slate-100"
+          >
+            💬
+          </Text>
+        </TouchableOpacity>
       )}
-    </>
+    </View>
   );
 };
 export default WebFooter;

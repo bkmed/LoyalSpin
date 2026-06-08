@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Modal as RNModal,
   Animated,
-  Dimensions,
+  useWindowDimensions,
 } from 'react-native';
 import { useTheme } from './ThemeContext';
 import { Theme } from '../theme';
@@ -118,7 +118,7 @@ const ModalContent: React.FC<{
   if (!options) return null;
 
   const styles = createModalStyles(theme);
-  const { width } = Dimensions.get('window');
+  const { width } = useWindowDimensions();
   const isMobile = width < 768;
 
   const defaultButtons: ModalButton[] = options.buttons || [

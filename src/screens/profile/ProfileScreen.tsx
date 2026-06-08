@@ -86,24 +86,24 @@ export const ProfileScreen = () => {
           </View>
           <View className="flex-1">
             <Text className="font-headline text-lg font-extrabold text-on-surface">
-              {user?.name || 'LoyalSpin User'}
+              {user?.name || 'Plombier User'}
             </Text>
             <Text className="mt-1 font-body text-xs text-on-surface-variant">
               {user?.email}
             </Text>
             <Text className="mt-2 self-start rounded-full bg-primary/10 px-3 py-1.5 font-label text-[10px] font-extrabold uppercase text-primary">
-              Verified Wallet
+              {t('profile.verifiedWallet', 'Verified Wallet')}
             </Text>
           </View>
         </View>
 
         <Text className="px-5 pb-2 pt-5 font-label text-[11px] font-extrabold uppercase tracking-[2px] text-on-surface-variant">
-          Display
+          {t('profile.display', 'Display')}
         </Text>
         <View className="mx-5 rounded-2xl bg-surface-container-lowest shadow-editorial">
           {[
-            ['Language', i18n.language.toUpperCase(), 'language'],
-            ['Currency', settings.currency, 'payments'],
+            [t('profile.language', 'Language'), i18n.language.toUpperCase(), 'language'],
+            [t('profile.currency', 'Currency'), settings.currency, 'payments'],
           ].map(([label, value, icon]) => (
             <TouchableOpacity
               key={label}
@@ -126,7 +126,7 @@ export const ProfileScreen = () => {
           ))}
           <View className="flex-row items-center justify-between px-5 py-4">
             <Text className="font-body text-sm font-bold text-on-surface">
-              Hide Balances
+              {t('profile.hideBalances', 'Hide Balances')}
             </Text>
             <Toggle
               value={settings.hideBalances}
@@ -140,12 +140,12 @@ export const ProfileScreen = () => {
         </View>
 
         <Text className="px-5 pb-2 pt-5 font-label text-[11px] font-extrabold uppercase tracking-[2px] text-on-surface-variant">
-          Budget & Alerts
+          {t('profile.budgetAlerts', 'Budget & Alerts')}
         </Text>
         <View className="mx-5 rounded-2xl bg-surface-container-lowest shadow-editorial">
           <View className="flex-row items-center justify-between px-5 py-4">
             <Text className="font-body text-sm font-bold text-on-surface">
-              Monthly Budget
+              {t('profile.monthlyBudget', 'Monthly Budget')}
             </Text>
             <Text className="font-body text-sm text-on-surface-variant">
               {settings.monthlyBudget} {settings.currency}
@@ -153,7 +153,7 @@ export const ProfileScreen = () => {
           </View>
           <View className="flex-row items-center justify-between px-5 py-4">
             <Text className="font-body text-sm font-bold text-on-surface">
-              Notifications
+              {t('profile.notifications', 'Notifications')}
             </Text>
             <Toggle
               value={settings.notificationsEnabled}
@@ -169,7 +169,7 @@ export const ProfileScreen = () => {
         </View>
 
         <Text className="px-5 pb-2 pt-5 font-label text-[11px] font-extrabold uppercase tracking-[2px] text-on-surface-variant">
-          Shortcuts
+          {t('profile.shortcuts', 'Shortcuts')}
         </Text>
         <View className="mx-5 rounded-2xl bg-surface-container-lowest p-2 shadow-editorial">
           {settings.shortcuts.map(shortcut => (
@@ -216,7 +216,7 @@ export const ProfileScreen = () => {
         </View>
 
         <Text className="px-5 pb-2 pt-5 font-label text-[11px] font-extrabold uppercase tracking-[2px] text-on-surface-variant">
-          Data
+          {t('profile.data', 'Data')}
         </Text>
         <View className="mx-5 rounded-2xl bg-surface-container-lowest shadow-editorial">
           <TouchableOpacity
@@ -224,25 +224,29 @@ export const ProfileScreen = () => {
             onPress={exportCsv}
           >
             <Text className="font-body text-sm font-bold text-on-surface">
-              Export CSV
+              {t('profile.exportCsv', 'Export CSV')}
             </Text>
             <MaterialIcons name="download" size={20} color="#005994" />
           </TouchableOpacity>
           <TouchableOpacity
             className="flex-row items-center justify-between px-5 py-4"
             onPress={() =>
-              Alert.alert('Reset?', 'This cannot be undone', [
-                { text: 'Cancel', style: 'cancel' },
-                {
-                  text: 'Reset',
-                  style: 'destructive',
-                  onPress: () => dispatch(resetAll()),
-                },
-              ])
+              Alert.alert(
+                t('profile.resetTitle', 'Reset?'),
+                t('profile.resetMessage', 'This cannot be undone'),
+                [
+                  { text: t('common.cancel', 'Cancel'), style: 'cancel' },
+                  {
+                    text: t('profile.resetConfirm', 'Reset'),
+                    style: 'destructive',
+                    onPress: () => dispatch(resetAll()),
+                  },
+                ],
+              )
             }
           >
             <Text className="font-body text-sm font-bold text-secondary">
-              Reset All Data
+              {t('profile.resetAllData', 'Reset All Data')}
             </Text>
             <MaterialIcons name="delete-forever" size={20} color="#bc000d" />
           </TouchableOpacity>
@@ -253,7 +257,7 @@ export const ProfileScreen = () => {
           onPress={() => signOut()}
         >
           <Text className="text-center font-label text-xs font-extrabold uppercase tracking-[1px] text-white">
-            Sign Out
+            {t('profile.signOut', 'Sign Out')}
           </Text>
         </TouchableOpacity>
       </ScrollView>

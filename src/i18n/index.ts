@@ -24,8 +24,8 @@ const languageDetector = {
         callback(savedLanguage);
         return;
       }
-      // Default to English if no saved language
-      callback('en');
+      // Default to Arabic if no saved language
+      callback('ar');
     } catch (error) {
       console.error('Error detecting language:', error);
       callback('en');
@@ -56,7 +56,8 @@ i18n
       tr: { translation: tr },
       it: { translation: it },
     },
-    fallbackLng: 'en',
+    fallbackLng: 'ar',
+    lng: 'ar',
     interpolation: {
       escapeValue: false, // React already escapes values
     },

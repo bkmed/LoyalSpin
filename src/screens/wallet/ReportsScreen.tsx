@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import {
-  Dimensions,
+  useWindowDimensions,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -27,7 +27,8 @@ export const ReportsScreen = () => {
   const byCategory = useSelector((state: any) =>
     selectTotalByCategory(state, month),
   );
-  const width = Math.min(Dimensions.get('window').width - 40, 760);
+  const { width: windowWidth } = useWindowDimensions();
+  const width = Math.min(windowWidth - 40, 760);
   const categories = Object.entries(byCategory).slice(0, 4);
   const total = categories.reduce((sum, [, value]) => sum + value, 0) || 1;
 

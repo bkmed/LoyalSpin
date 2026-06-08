@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import { LogoSVG } from './LogoSVG';
 import { Role, WebSessionUser } from '../utils/webTranslations';
 
@@ -18,7 +19,7 @@ interface WebNavbarProps {
   setCurrentTheme: (theme: any) => void;
   handleLogout: () => void;
   setBypassAuth: (bypass: boolean) => void;
-  setSessionUser: (user: WebSessionUser | null) => void;
+  setSessionUser: (user: any) => void;
 }
 
 export const WebNavbar: React.FC<WebNavbarProps> = ({
@@ -29,7 +30,6 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
   sessionUser,
   activeTab,
   isRTL,
-  galleryManageLabel,
   galleryTitle,
   t,
   setActiveTab,
@@ -39,304 +39,560 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
   setBypassAuth,
   setSessionUser,
 }) => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
   const tCommon = (key: string, defaultValue: string) =>
     t(key, { defaultValue });
 
+  const isDark = currentTheme === 'dark';
+
+  useEffect(() => {
+    if (Platform.OS !== 'web') return;
+    const handleScroll = () => setScrolled((window as any).scrollY > 8);
+    (window as any).addEventListener('scroll', handleScroll, { passive: true });
+    return () => (window as any).removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (Platform.OS !== 'web') return;
+    const handleResize = () => {
+      if ((window as any).innerWidth >= 1024) setMobileOpen(false);
+    };
+    (window as any).addEventListener('resize', handleResize);
+    return () => (window as any).removeEventListener('resize', handleResize);
+  }, []);
+
+  const adminLinks = [
+    {
+      id: 'AdminAccueil',
+      label: tCommon('web.adminHome', 'Accueil'),
+      icon: '🏠',
+    },
+    {
+      id: 'AdminManage',
+      label: tCommon('web.manage', 'Manage'),
+      icon: '⚙️',
+    },
+    {
+      id: 'AdminProfile',
+      label: tCommon('web.adminProfile', 'Profil'),
+      icon: '👤',
+    },
+    {
+      id: 'Analytics',
+      label: tCommon('web.analyticsLabel', 'Analytics'),
+      icon: '📊',
+    },
+  ];
+
+  const userLinks = [
+    {
+      id: 'Accueil',
+      label: t('web.accueil', { defaultValue: 'Accueil' }),
+      icon: '🏠',
+    },
+    {
+      id: 'Services',
+      label: t('web.services', { defaultValue: 'Services' }),
+      icon: '🔧',
+    },
+    {
+      id: 'Zones',
+      label: t('web.zones', { defaultValue: 'Zones' }),
+      icon: '📍',
+    },
+    {
+      id: 'Marketplace',
+      label: t('web.pieces', { defaultValue: 'Marketplace' }),
+      icon: '🛒',
+    },
+    { id: 'Gallery', label: galleryTitle, icon: '🖼️' },
+    {
+      id: 'Profile',
+      label: t('web.mon_profil', { defaultValue: 'Mon profil' }),
+      icon: '👤',
+    },
+  ];
+
+  const links = currentRole === 'admin' ? adminLinks : userLinks;
+
+  const handleNav = (id: string) => {
+    setActiveTab(id);
+    setMobileOpen(false);
+  };
+
+  /* ─── Web-only style objects (cast as any to satisfy RN types) ─── */
+  const navStyle: any = {
+    position: 'sticky',
+    top: 0,
+    zIndex: 50,
+    transition: 'box-shadow 0.3s ease, background-color 0.3s ease',
+    boxShadow: scrolled
+      ? isDark
+        ? '0 4px 24px rgba(0,0,0,0.45)'
+        : '0 4px 24px rgba(30,58,95,0.10)'
+      : '0 1px 0 rgba(0,0,0,0.07)',
+    backdropFilter: 'blur(16px)',
+    WebkitBackdropFilter: 'blur(16px)',
+    backgroundColor: isDark ? 'rgba(15,23,42,0.93)' : 'rgba(255,255,255,0.96)',
+    borderBottom: isDark
+      ? '1px solid rgba(51,65,85,0.6)'
+      : '1px solid rgba(226,232,240,0.8)',
+  };
+
+  const barBase: any = {
+    display: 'block',
+    width: 22,
+    height: 2.5,
+    borderRadius: 4,
+    backgroundColor: isDark ? '#CBD5E1' : '#334155',
+    transition: 'transform 0.28s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease',
+    transformOrigin: 'center',
+  };
+
+  const bar1Style: any = {
+    ...barBase,
+    transform: mobileOpen ? 'translateY(5.5px) rotate(45deg)' : 'none',
+  };
+  const bar2Style: any = { ...barBase, opacity: mobileOpen ? 0 : 1 };
+  const bar3Style: any = {
+    ...barBase,
+    transform: mobileOpen ? 'translateY(-5.5px) rotate(-45deg)' : 'none',
+  };
+
+  const drawerStyle: any = {
+    overflowY: 'auto',
+    maxHeight: mobileOpen ? 'calc(100vh - 72px)' : 0,
+    opacity: mobileOpen ? 1 : 0,
+    transition:
+      'max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease',
+    backgroundColor: isDark ? '#0F172A' : '#ffffff',
+    borderTop: isDark
+      ? '1px solid rgba(51,65,85,0.6)'
+      : '1px solid rgba(226,232,240,0.8)',
+  };
+
+  const btnBase: any = {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: isDark ? '#334155' : '#E2E8F0',
+    backgroundColor: isDark ? '#1E293B' : '#F8FAFC',
+    transition: 'background 0.18s',
+  };
+
   return (
-    <header
-      className={`sticky top-0 z-50 border-b transition-colors backdrop-blur-md ${
-        currentTheme === 'dark'
-          ? 'bg-[#0F172A]/90 border-slate-800'
-          : 'bg-white/95 border-slate-200'
-      } shadow-sm`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        {/* Logo area */}
-        <button
-          onClick={() => {
-            if (currentRole === 'admin') {
-              setActiveTab('AdminAccueil');
-            } else {
-              setActiveTab('Accueil');
+    <>
+      {/* ═══ NAVBAR ═══════════════════════════════════════════════════════ */}
+      <View style={navStyle}>
+        {/* ── Top bar ── */}
+        <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[72px] flex flex-row items-center justify-between">
+          {/* Logo */}
+          <TouchableOpacity
+            onPress={() =>
+              setActiveTab(currentRole === 'admin' ? 'AdminAccueil' : 'Accueil')
             }
-          }}
-          className="flex items-center gap-3 focus:outline-none"
-        >
-          <LogoSVG size={44} />
-          <div className="text-left">
-            <span
-              className={`text-xl font-black tracking-tight ${
-                isRTL ? 'font-arabic font-extrabold' : ''
-              }`}
+            className="flex flex-row items-center gap-3"
+          >
+            <LogoSVG size={42} />
+            <View>
+              <Text
+                className={`text-lg font-black tracking-tight leading-tight ${
+                  isDark ? 'text-white' : 'text-slate-900'
+                } ${isRTL ? 'font-arabic' : ''}`}
+              >
+                {businessName}
+              </Text>
+              <Text
+                className="text-[9px] font-black tracking-widest uppercase leading-none"
+                style={{ color: '#F97316' } as any}
+              >
+                {t('web.tagline', { defaultValue: 'Expert Plombier' })}
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          {/* ── Desktop Nav links (xl+) ── */}
+          <View
+            className="hidden xl:flex flex-row items-center gap-1 flex-1 mx-4"
+            style={{ overflow: 'hidden' } as any}
+          >
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ alignItems: 'center', gap: 4 } as any}
             >
-              {businessName}
-            </span>
-            <p className="text-[9px] text-[#F97316] font-bold tracking-widest uppercase mt-0.5 leading-none">
-              {t('tagline')}
-            </p>
-          </div>
-        </button>
+              {links.map(link => {
+                const isActive = activeTab === link.id;
+                return (
+                  <TouchableOpacity
+                    key={link.id}
+                    onPress={() => setActiveTab(link.id)}
+                    style={
+                      {
+                        paddingHorizontal: 14,
+                        paddingVertical: 8,
+                        borderRadius: 10,
+                        position: 'relative',
+                        backgroundColor: isActive
+                          ? 'rgba(249,115,22,0.10)'
+                          : 'transparent',
+                        transition: 'background 0.18s',
+                      } as any
+                    }
+                  >
+                    <Text
+                      style={
+                        {
+                          fontSize: 12,
+                          fontWeight: '800',
+                          letterSpacing: 0.8,
+                          textTransform: 'uppercase',
+                          color: isActive
+                            ? '#F97316'
+                            : isDark
+                            ? '#94A3B8'
+                            : '#475569',
+                          transition: 'color 0.18s',
+                        } as any
+                      }
+                      className="text-slate-900 dark:text-slate-100"
+                    >
+                      {link.label}
+                    </Text>
+                    {isActive && (
+                      <View
+                        style={
+                          {
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 10,
+                            right: 10,
+                            height: 2,
+                            borderRadius: 2,
+                            backgroundColor: '#F97316',
+                          } as any
+                        }
+                      />
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
 
-        {/* Navigation Tabs based on Role */}
-        <nav className="hidden lg:flex items-center gap-7 font-black text-xs uppercase tracking-wider">
-          {currentRole === 'admin'
-            ? [
+          {/* ── Right controls ── */}
+          <View className="flex flex-row items-center gap-2">
+            {/* Language switcher */}
+            <TouchableOpacity
+              onPress={() => setCurrentLang(nextLanguage)}
+              style={
                 {
-                  id: 'AdminAccueil',
-                  label: tCommon('web.adminHome', 'Accueil'),
-                },
-                {
-                  id: 'GestionAnnonce',
-                  label: tCommon('web.manageAds', 'Gestion Annonce'),
-                },
-                {
-                  id: 'GestionCategorie',
-                  label: tCommon('web.manageCategories', 'Gestion Catégorie'),
-                },
-                {
-                  id: 'AdminGallery',
-                  label: tCommon(
-                    'web.gallery.manageGallery',
-                    galleryManageLabel,
-                  ),
-                },
-                {
-                  id: 'AdminServices',
-                  label: tCommon('web.servicesLabel', 'Services'),
-                },
-                {
-                  id: 'GestionUser',
-                  label: tCommon('web.manageUsers', 'Gestion User'),
-                },
-                {
-                  id: 'AdminProfile',
-                  label: tCommon('web.adminProfile', 'Profil'),
-                },
-                {
-                  id: 'Analytics',
-                  label: tCommon('web.analyticsLabel', 'Analytics'),
-                },
-              ].map(link => (
-                <button
+                  ...btnBase,
+                  minHeight: 36,
+                  minWidth: 44,
+                  paddingHorizontal: 12,
+                } as any
+              }
+            >
+              <Text
+                style={
+                  {
+                    fontSize: 11,
+                    fontWeight: '900',
+                    color: isDark ? '#CBD5E1' : '#475569',
+                  } as any
+                }
+                className="text-slate-900 dark:text-slate-100"
+              >
+                {nextLanguage}
+              </Text>
+            </TouchableOpacity>
+
+            {/* Dark / light toggle */}
+            <TouchableOpacity
+              onPress={() => setCurrentTheme(isDark ? 'light' : 'dark')}
+              style={{ ...btnBase, width: 36, height: 36 } as any}
+            >
+              <Text
+                style={{ fontSize: 16 } as any}
+                className="text-slate-900 dark:text-slate-100"
+              >
+                {isDark ? '☀️' : '🌙'}
+              </Text>
+            </TouchableOpacity>
+
+            {/* Auth — desktop only */}
+            <View className="hidden md:flex flex-row items-center gap-2">
+              {currentRole === 'anonyme' ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    setBypassAuth(false);
+                    setSessionUser(null);
+                  }}
+                  style={
+                    {
+                      backgroundColor: '#1E3A5F',
+                      paddingHorizontal: 16,
+                      paddingVertical: 9,
+                      borderRadius: 10,
+                      transition: 'background 0.18s',
+                    } as any
+                  }
+                >
+                  <Text
+                    style={
+                      { color: '#fff', fontSize: 12, fontWeight: '800' } as any
+                    }
+                    className="text-slate-900 dark:text-slate-100"
+                  >
+                    {tCommon('web.loginAction', "Connexion / S'inscrire")}
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <View className="flex flex-row items-center gap-2">
+                  <View
+                    style={
+                      {
+                        paddingHorizontal: 12,
+                        paddingVertical: 6,
+                        borderRadius: 8,
+                        borderWidth: 1,
+                        borderColor: isDark ? '#1E3A5F' : 'rgba(30,58,95,0.15)',
+                        backgroundColor: isDark
+                          ? 'rgba(30,58,95,0.2)'
+                          : 'rgba(30,58,95,0.05)',
+                      } as any
+                    }
+                  >
+                    <Text
+                      style={
+                        {
+                          fontSize: 11,
+                          fontWeight: '800',
+                          color: isDark ? '#38BDF8' : '#1E3A5F',
+                        } as any
+                      }
+                      className="text-slate-900 dark:text-slate-100"
+                    >
+                      {sessionUser?.name} · {currentRole.toUpperCase()}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={handleLogout}
+                    style={
+                      {
+                        backgroundColor: '#E11D48',
+                        paddingHorizontal: 14,
+                        paddingVertical: 9,
+                        borderRadius: 10,
+                        transition: 'background 0.18s',
+                      } as any
+                    }
+                  >
+                    <Text
+                      style={
+                        {
+                          color: '#fff',
+                          fontSize: 12,
+                          fontWeight: '800',
+                        } as any
+                      }
+                      className="text-slate-900 dark:text-slate-100"
+                    >
+                      {tCommon('web.logoutAction', 'Déconnexion')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+
+            {/* ── Hamburger — mobile/tablet only (xl:hidden) ── */}
+            <TouchableOpacity
+              onPress={() => setMobileOpen(prev => !prev)}
+              className="xl:hidden"
+              style={{ ...btnBase, width: 40, height: 40 } as any}
+              accessibilityLabel={
+                mobileOpen ? 'Fermer le menu' : 'Ouvrir le menu'
+              }
+            >
+              <View style={{ gap: 5, alignItems: 'center' } as any}>
+                <View style={bar1Style} />
+                <View style={bar2Style} />
+                <View style={bar3Style} />
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* ── Mobile drawer (slide-down) ── */}
+        <View className="xl:hidden" style={drawerStyle}>
+          <View style={{ padding: 16, gap: 4 } as any}>
+            {links.map(link => {
+              const isActive = activeTab === link.id;
+              return (
+                <TouchableOpacity
                   key={link.id}
-                  onClick={() => setActiveTab(link.id)}
-                  className={`transition-colors py-2.5 relative leading-none ${
-                    activeTab === link.id
-                      ? 'text-[#F97316]'
-                      : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'
-                  }`}
+                  onPress={() => handleNav(link.id)}
+                  style={
+                    {
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      paddingHorizontal: 16,
+                      paddingVertical: 13,
+                      borderRadius: 12,
+                      gap: 12,
+                      backgroundColor: isActive
+                        ? 'rgba(249,115,22,0.10)'
+                        : 'transparent',
+                      borderLeftWidth: isActive ? 3 : 0,
+                      borderLeftColor: '#F97316',
+                      transition: 'background 0.15s',
+                    } as any
+                  }
                 >
-                  <span>{link.label}</span>
-                  {activeTab === link.id && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#F97316] rounded-full" />
+                  <Text
+                    style={{ fontSize: 18 } as any}
+                    className="text-slate-900 dark:text-slate-100"
+                  >
+                    {link.icon}
+                  </Text>
+                  <Text
+                    style={
+                      {
+                        fontSize: 14,
+                        fontWeight: '700',
+                        color: isActive
+                          ? '#F97316'
+                          : isDark
+                          ? '#CBD5E1'
+                          : '#334155',
+                      } as any
+                    }
+                    className="text-slate-900 dark:text-slate-100"
+                  >
+                    {link.label}
+                  </Text>
+                  {isActive && (
+                    <View style={{ marginLeft: 'auto' } as any}>
+                      <Text
+                        style={{ color: '#F97316', fontSize: 16 } as any}
+                        className="text-slate-900 dark:text-slate-100"
+                      >
+                        ›
+                      </Text>
+                    </View>
                   )}
-                </button>
-              ))
-            : [
+                </TouchableOpacity>
+              );
+            })}
+
+            {/* Auth row in drawer */}
+            <View
+              style={
                 {
-                  id: 'Accueil',
-                  label: t('web.accueil', { defaultValue: 'Accueil' }),
-                },
-                {
-                  id: 'Services',
-                  label: t('web.services', { defaultValue: 'Services' }),
-                },
-                {
-                  id: 'Zones',
-                  label: t('web.zones', { defaultValue: 'Zones' }),
-                },
-                {
-                  id: 'Marketplace',
-                  label: t('web.pieces', { defaultValue: 'Marketplace' }),
-                },
-                { id: 'Gallery', label: galleryTitle },
-                {
-                  id: 'Profile',
-                  label: t('web.mon_profil', { defaultValue: 'Mon profil' }),
-                },
-              ].map(link => (
-                <button
-                  key={link.id}
-                  onClick={() => setActiveTab(link.id)}
-                  className={`transition-colors py-2.5 relative leading-none ${
-                    activeTab === link.id
-                      ? 'text-[#F97316]'
-                      : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'
-                  }`}
+                  marginTop: 12,
+                  paddingTop: 16,
+                  borderTopWidth: 1,
+                  borderTopColor: isDark
+                    ? 'rgba(51,65,85,0.6)'
+                    : 'rgba(226,232,240,0.8)',
+                  gap: 10,
+                } as any
+              }
+            >
+              {currentRole === 'anonyme' ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    setBypassAuth(false);
+                    setSessionUser(null);
+                    setMobileOpen(false);
+                  }}
+                  style={
+                    {
+                      backgroundColor: '#1E3A5F',
+                      paddingVertical: 14,
+                      borderRadius: 12,
+                      alignItems: 'center',
+                    } as any
+                  }
                 >
-                  <span>{link.label}</span>
-                  {activeTab === link.id && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#F97316] rounded-full" />
-                  )}
-                </button>
-              ))}
-        </nav>
-
-        {/* Utility Preferences Header Right */}
-        <div className="flex items-center gap-3 sm:gap-4 ml-3">
-          {/* Language toggle button */}
-          <button
-            onClick={() => setCurrentLang(nextLanguage)}
-            className="min-h-[44px] min-w-[44px] px-3 rounded-lg border text-[11px] font-black shadow-sm bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition"
-          >
-            {nextLanguage}
-          </button>
-
-          {/* Dark mode toggler */}
-          <button
-            onClick={() =>
-              setCurrentTheme(currentTheme === 'light' ? 'dark' : 'light')
-            }
-            className="w-9 h-9 rounded-lg border flex items-center justify-center bg-slate-50 dark:bg-slate-800 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-750 transition"
-          >
-            {currentTheme === 'light' ? (
-              <svg
-                width="15"
-                height="15"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-              >
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-              </svg>
-            ) : (
-              <svg
-                width="15"
-                height="15"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                className="text-amber-400"
-              >
-                <circle cx="12" cy="12" r="5" />
-                <line x1="12" y1="1" x2="12" y2="3" />
-                <line x1="12" y1="21" x2="12" y2="23" />
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                <line x1="1" y1="12" x2="3" y2="12" />
-                <line x1="21" y1="12" x2="23" y2="12" />
-              </svg>
-            )}
-          </button>
-
-          {/* Logged user badge & Logout option */}
-          <div className="flex items-center gap-2">
-            {currentRole === 'anonyme' ? (
-              <button
-                onClick={() => {
-                  setBypassAuth(false);
-                  setSessionUser(null);
-                }}
-                className="bg-[#1E3A5F] hover:bg-[#152a47] text-white text-xs font-black px-4.5 py-2.5 rounded-xl transition shadow-md"
-              >
-                {tCommon('web.loginAction', "Connexion / S'inscrire")}
-              </button>
-            ) : (
-              <div className="flex items-center gap-2">
-                <span className="hidden md:inline text-xs font-black bg-[#1E3A5F]/5 dark:bg-[#1E3A5F]/20 text-[#1E3A5F] dark:text-sky-400 px-3 py-1.5 rounded-lg border border-[#1E3A5F]/10">
-                  {sessionUser?.name} ({currentRole.toUpperCase()})
-                </span>
-                <button
-                  onClick={handleLogout}
-                  className="bg-rose-600 hover:bg-rose-700 text-white text-xs font-black px-3.5 py-2.5 rounded-xl transition shadow-md"
-                  title={tCommon('web.logoutAction', 'Déconnexion')}
-                >
-                  {tCommon('web.logoutAction', 'Déconnexion')}
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Dynamic Mobile Nav Header Toggles */}
-      <div className="lg:hidden flex overflow-x-auto border-t border-slate-200 dark:border-slate-800 px-4 py-2 gap-3 text-center no-scrollbar">
-        {currentRole === 'admin'
-          ? [
-              {
-                id: 'AdminAccueil',
-                label: tCommon('web.adminHome', 'Accueil'),
-              },
-              {
-                id: 'GestionAnnonce',
-                label: tCommon('web.manageAds', 'Annonces'),
-              },
-              {
-                id: 'GestionCategorie',
-                label: tCommon('web.manageCategories', 'Catégories'),
-              },
-              {
-                id: 'AdminGallery',
-                label: tCommon('web.gallery.manageGallery', galleryManageLabel),
-              },
-              {
-                id: 'AdminServices',
-                label: tCommon('web.servicesLabel', 'Services'),
-              },
-              {
-                id: 'GestionUser',
-                label: tCommon('web.adminUsers', 'Membres'),
-              },
-              {
-                id: 'AdminProfile',
-                label: tCommon('web.adminProfile', 'Profil'),
-              },
-              {
-                id: 'Analytics',
-                label: tCommon('web.analyticsLabel', 'Analytics'),
-              },
-            ].map(link => (
-              <button
-                key={link.id}
-                onClick={() => setActiveTab(link.id)}
-                className={`px-3 py-1.5 rounded-full text-[11px] font-black whitespace-nowrap transition ${
-                  activeTab === link.id
-                    ? 'bg-[#F97316] text-white'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
-                }`}
-              >
-                {link.label}
-              </button>
-            ))
-          : [
-              {
-                id: 'Accueil',
-                label: t('web.accueil', { defaultValue: 'Accueil' }),
-              },
-              {
-                id: 'Services',
-                label: t('web.services', { defaultValue: 'Services' }),
-              },
-              {
-                id: 'Zones',
-                label: t('web.zones', { defaultValue: 'Zones' }),
-              },
-              {
-                id: 'Marketplace',
-                label: t('web.pieces', { defaultValue: 'Marketplace' }),
-              },
-              { id: 'Gallery', label: galleryTitle },
-              {
-                id: 'Profile',
-                label: t('web.mon_profil', { defaultValue: 'Mon profil' }),
-              },
-            ].map(link => (
-              <button
-                key={link.id}
-                onClick={() => setActiveTab(link.id)}
-                className={`px-3 py-1.5 rounded-full text-[11px] font-black whitespace-nowrap transition ${
-                  activeTab === link.id
-                    ? 'bg-[#F97316] text-white'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
-                }`}
-              >
-                {link.label}
-              </button>
-            ))}
-      </div>
-    </header>
+                  <Text
+                    style={
+                      { color: '#fff', fontSize: 14, fontWeight: '800' } as any
+                    }
+                    className="text-slate-900 dark:text-slate-100"
+                  >
+                    {tCommon('web.loginAction', "Connexion / S'inscrire")}
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <View style={{ gap: 10 } as any}>
+                  <View
+                    style={
+                      {
+                        paddingHorizontal: 16,
+                        paddingVertical: 10,
+                        borderRadius: 10,
+                        backgroundColor: isDark
+                          ? 'rgba(30,58,95,0.2)'
+                          : 'rgba(30,58,95,0.06)',
+                        borderWidth: 1,
+                        borderColor: isDark ? '#1E3A5F' : 'rgba(30,58,95,0.15)',
+                        alignItems: 'center',
+                      } as any
+                    }
+                  >
+                    <Text
+                      style={
+                        {
+                          fontSize: 13,
+                          fontWeight: '700',
+                          color: isDark ? '#38BDF8' : '#1E3A5F',
+                        } as any
+                      }
+                      className="text-slate-900 dark:text-slate-100"
+                    >
+                      👤 {sessionUser?.name} — {currentRole.toUpperCase()}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleLogout();
+                      setMobileOpen(false);
+                    }}
+                    style={
+                      {
+                        backgroundColor: '#E11D48',
+                        paddingVertical: 14,
+                        borderRadius: 12,
+                        alignItems: 'center',
+                      } as any
+                    }
+                  >
+                    <Text
+                      style={
+                        {
+                          color: '#fff',
+                          fontSize: 14,
+                          fontWeight: '800',
+                        } as any
+                      }
+                      className="text-slate-900 dark:text-slate-100"
+                    >
+                      {tCommon('web.logoutAction', 'Déconnexion')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+          </View>
+        </View>
+      </View>
+    </>
   );
 };
+
 export default WebNavbar;

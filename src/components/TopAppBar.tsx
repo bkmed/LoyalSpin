@@ -10,7 +10,7 @@ import {
 } from '../store/slices/walletSlice';
 
 const getInitials = (name?: string) =>
-  (name || 'LoyalSpin User')
+  (name || 'Plombier User')
     .split(' ')
     .map(part => part[0])
     .join('')
@@ -43,7 +43,7 @@ export const TopAppBar = () => {
           </Text>
         </View>
         <Text className="font-headline text-[22px] font-black text-primary-container">
-          LoyalSpin
+          Plombier
         </Text>
       </View>
 

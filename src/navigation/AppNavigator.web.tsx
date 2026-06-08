@@ -98,7 +98,7 @@ export const AppNavigator = () => {
   // Splash Screen
   const [showSplash, setShowSplash] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
-  const [showLandingPage, setShowLandingPage] = useState(!bypassAuth && !sessionUser);
+  const [showLandingPage, setShowLandingPage] = useState(true);
 
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
 
@@ -315,8 +315,9 @@ export const AppNavigator = () => {
   useEffect(() => {
     if (!authUser) {
       dispatch(clearSession());
-      setBypassAuth(true);
+      setBypassAuth(false);
       setActiveTab('Accueil');
+      setShowLandingPage(true);
       return;
     }
     const restoredUser: WebSessionUser = {

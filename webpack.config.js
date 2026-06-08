@@ -10,7 +10,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, './build'),
     filename: 'index_bundle.js',
-    publicPath: process.env.NODE_ENV === 'production' ? '/Plombier/' : '/',
+    publicPath: process.env.NODE_ENV === 'production' ? '/LoyalSpin/' : '/',
     clean: true,
   },
   devServer: {

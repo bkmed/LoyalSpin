@@ -105,7 +105,8 @@ export interface UserAccount {
   id: string;
   name: string;
   email: string;
-  role: string; // 'admin' | 'user' | 'gestionnaire_de_stock' | 'anonyme'
+  role: string; // 'admin' | 'user' | 'gestionnaire_de_stock' | 'anonyme' | 'super-admin'
+  managerId?: string; // optional: id of admin managing this user
   avatarUri?: string;
   phone?: string;
   addresses?: string[];

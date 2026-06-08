@@ -5,8 +5,8 @@ const AUTH_KEY = 'auth_session';
 const USERS_KEY = 'auth_users';
 const SEED_KEY = 'demo_data_seeded_wallet_v1';
 
-export type UserRole = 'admin' | 'user' | 'anonyme';
-export const ROLES: UserRole[] = ['admin', 'user', 'anonyme'];
+export type UserRole = 'admin' | 'user' | 'anonyme' | 'super-admin';
+export const ROLES: UserRole[] = ['admin', 'user', 'anonyme', 'super-admin'];
 
 export interface User {
   id: string;
@@ -26,6 +26,16 @@ export interface User {
 
 const seedDemoData = async () => {
   const users: Array<UserAccount & { password: string }> = [
+    {
+      id: 'super-1',
+      name: 'Super Admin',
+      email: 'super@demo.com',
+      password: 'super123',
+      role: 'super-admin',
+      status: 'active',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    } as UserAccount & { password: string },
     {
       id: 'admin-1',
       name: 'Admin User',

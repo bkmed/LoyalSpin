@@ -1,4 +1,4 @@
-import { LocalCategory } from '../features/plombier/utils/webTranslations';
+import { LocalCategory } from '../features/loyalspin/utils/webTranslations';
 
 const now = new Date().toISOString();
 

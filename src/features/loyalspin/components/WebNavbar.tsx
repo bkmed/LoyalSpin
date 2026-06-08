@@ -66,18 +66,28 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
   const adminLinks = [
     {
       id: 'AdminAccueil',
-      label: tCommon('web.adminHome', 'Accueil'),
+      label: tCommon('web.adminHome', 'Dashboard'),
       icon: '🏠',
     },
     {
-      id: 'AdminManage',
-      label: tCommon('web.manage', 'Manage'),
-      icon: '⚙️',
+      id: 'AdminRoulette',
+      label: tCommon('web.adminRoulette', 'Roulette'),
+      icon: '🎯',
     },
     {
-      id: 'AdminProfile',
-      label: tCommon('web.adminProfile', 'Profil'),
-      icon: '👤',
+      id: 'AdminSticker',
+      label: tCommon('web.adminSticker', 'Sticker'),
+      icon: '🪪',
+    },
+    {
+      id: 'GestionUser',
+      label: tCommon('web.adminClients', 'Clients'),
+      icon: '👥',
+    },
+    {
+      id: 'AdminSettings',
+      label: tCommon('web.adminSettings', 'Settings'),
+      icon: '⚙️',
     },
     {
       id: 'Analytics',
@@ -85,6 +95,10 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
       icon: '📊',
     },
   ];
+
+  if (currentRole === 'super-admin') {
+    adminLinks.unshift({ id: 'SuperAdminAccueil', label: tCommon('web.superAdmin', 'Super Admin'), icon: '⭐' });
+  }
 
   const userLinks = [
     {
@@ -115,7 +129,35 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
     },
   ];
 
-  const links = currentRole === 'admin' ? adminLinks : userLinks;
+  const anonymousLinks = [
+    {
+      id: 'Accueil',
+      label: t('web.accueil', { defaultValue: 'Accueil' }),
+      icon: '🏠',
+    },
+    {
+      id: 'Services',
+      label: t('web.services', { defaultValue: 'Services' }),
+      icon: '🔧',
+    },
+    {
+      id: 'Marketplace',
+      label: t('web.pieces', { defaultValue: 'Marketplace' }),
+      icon: '🛒',
+    },
+    {
+      id: 'Profile',
+      label: tCommon('web.guestProfile', 'Invité'),
+      icon: '👤',
+    },
+  ];
+
+  const links =
+    currentRole === 'admin' || currentRole === 'super-admin'
+      ? adminLinks
+      : currentRole === 'anonyme'
+      ? anonymousLinks
+      : userLinks;
 
   const handleNav = (id: string) => {
     setActiveTab(id);

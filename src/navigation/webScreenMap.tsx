@@ -1,20 +1,20 @@
 import React from 'react';
 import { View } from 'react-native';
-import HomeScreen from '../features/plombier/screens/HomeScreen';
-import ServicesScreen from '../features/plombier/screens/ServicesScreen';
-import ZonesScreen from '../features/plombier/screens/ZonesScreen';
-import MarketplaceScreen from '../features/plombier/screens/MarketplaceScreen';
-import GalleryScreen from '../features/plombier/screens/GalleryScreen';
-import ProfileScreen from '../features/plombier/screens/ProfileScreen';
-import LegalPages from '../features/plombier/screens/LegalPages';
-import AdminDashboard from '../features/plombier/screens/AdminDashboard';
-import AdminAnnonces from '../features/plombier/screens/AdminAnnonces';
-import AdminCategories from '../features/plombier/screens/AdminCategories';
-import AdminGalleryEditor from '../features/plombier/screens/AdminGalleryEditor';
-import AdminServicesEditor from '../features/plombier/screens/AdminServicesEditor';
-import AdminUsers from '../features/plombier/screens/AdminUsers';
-import AdminProfileScreen from '../features/plombier/screens/AdminProfileScreen';
-import AdminAnalyticsScreen from '../features/plombier/screens/AdminAnalyticsScreen';
+import HomeScreen from '../features/loyalspin/screens/HomeScreen';
+import ServicesScreen from '../features/loyalspin/screens/ServicesScreen';
+import ZonesScreen from '../features/loyalspin/screens/ZonesScreen';
+import MarketplaceScreen from '../features/loyalspin/screens/MarketplaceScreen';
+import GalleryScreen from '../features/loyalspin/screens/GalleryScreen';
+import ProfileScreen from '../features/loyalspin/screens/ProfileScreen';
+import LegalPages from '../features/loyalspin/screens/LegalPages';
+import AdminDashboard from '../features/loyalspin/screens/AdminDashboard';
+import AdminAnnonces from '../features/loyalspin/screens/AdminAnnonces';
+import AdminCategories from '../features/loyalspin/screens/AdminCategories';
+import AdminGalleryEditor from '../features/loyalspin/screens/AdminGalleryEditor';
+import AdminServicesEditor from '../features/loyalspin/screens/AdminServicesEditor';
+import AdminUsers from '../features/loyalspin/screens/AdminUsers';
+import AdminProfileScreen from '../features/loyalspin/screens/AdminProfileScreen';
+import AdminAnalyticsScreen from '../features/loyalspin/screens/AdminAnalyticsScreen';
 
 interface WebScreenMapProps {
   activeTab: string;

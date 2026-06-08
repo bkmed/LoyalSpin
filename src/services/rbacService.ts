@@ -30,12 +30,19 @@ class RbacService {
 
   getUserRole(user: User | null): WalletRole {
     if (!user) return 'guest';
+    if (user.role === 'super-admin') return 'admin';
     if (user.role === 'admin') return 'admin';
     return 'user';
   }
 
   isAdmin(user: User | null): boolean {
-    return this.getUserRole(user) === 'admin';
+    if (!user) return false;
+    return user.role === 'admin' || user.role === 'super-admin' || this.getUserRole(user) === 'admin';
+  }
+
+  isSuperAdmin(user: User | null): boolean {
+    if (!user) return false;
+    return user.role === 'super-admin';
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

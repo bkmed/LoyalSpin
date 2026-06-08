@@ -1,6 +1,6 @@
 import { Category, UserAccount as User } from '../../../database/schema';
 
-export type Role = 'anonyme' | 'user' | 'admin';
+export type Role = 'anonyme' | 'user' | 'admin' | 'super-admin';
 
 export type WebSessionUser = User & {
   city?: string;

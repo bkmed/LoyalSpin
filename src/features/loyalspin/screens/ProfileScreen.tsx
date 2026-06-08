@@ -199,6 +199,61 @@ export const ProfileScreenWeb: React.FC<ProfileScreenWebProps> = ({
                 </View>
               </View>
 
+              <View className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 shadow-sm space-y-6">
+                <Text className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-slate-100">
+                  {tCommon('web.quickUserActions', 'Accès rapides')}
+                </Text>
+                <View className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  {[
+                    {
+                      label: tCommon('web.userDashboard.coupons', 'Mes coupons'),
+                      description: tCommon(
+                        'web.userDashboard.couponsDesc',
+                        'Voir et utiliser vos bons de réduction.',
+                      ),
+                      tab: 'UserCoupons',
+                    },
+                    {
+                      label: tCommon('web.userDashboard.history', 'Historique'),
+                      description: tCommon(
+                        'web.userDashboard.historyDesc',
+                        'Consulter vos dernières interventions.',
+                      ),
+                      tab: 'UserPurchaseHistory',
+                    },
+                    {
+                      label: tCommon('web.userDashboard.notifications', 'Notifications'),
+                      description: tCommon(
+                        'web.userDashboard.notificationsDesc',
+                        'Consulter vos alertes récentes.',
+                      ),
+                      tab: 'UserNotifications',
+                    },
+                    {
+                      label: tCommon('web.userDashboard.dashboard', 'Mon tableau de bord'),
+                      description: tCommon(
+                        'web.userDashboard.dashboardDesc',
+                        'Retourner à votre espace personnel.',
+                      ),
+                      tab: 'UserDashboard',
+                    },
+                  ].map(action => (
+                    <TouchableOpacity
+                      key={action.tab}
+                      onPress={() => setActiveTab(action.tab)}
+                      className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 p-5 hover:border-[#F97316] hover:bg-[#F97316]/10 transition"
+                    >
+                      <Text className="text-sm font-black text-slate-900 dark:text-white">
+                        {action.label}
+                      </Text>
+                      <Text className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+                        {action.description}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+
               {/* Payment maintenance card (moved into Profile) */}
               <View className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 shadow-sm space-y-6">
                 <Text className="bg-amber-100 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 font-extrabold text-[9px] px-3.5 py-1.5 rounded-full uppercase tracking-wider">

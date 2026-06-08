@@ -10,7 +10,7 @@ interface UsersState {
 const initialState: UsersState = {
   items: [
     {
-      id: 'admin1',
+      id: 'admin-1',
       name: 'Admin User',
       email: 'admin@demo.com',
       role: 'admin',
@@ -19,11 +19,12 @@ const initialState: UsersState = {
       updatedAt: new Date().toISOString(),
     },
     {
-      id: 'user1',
+      id: 'user-1',
       name: 'Regular User',
       email: 'user@demo.com',
       role: 'user',
       status: 'active',
+      managerId: 'admin-1',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },

@@ -53,7 +53,25 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
   const [signupConfirmPassword, setSignupConfirmPassword] = React.useState('');
 
   const handleSignIn = () => {
-    if (signinEmail === 'admin@demo.com' && signinPassword === 'admin123') {
+    if (signinEmail === 'super@demo.com' && signinPassword === 'super123') {
+      const superSession: WebSessionUser = {
+        id: 'super-web-demo',
+        name: 'Super Administrator',
+        email: 'super@demo.com',
+        role: 'super-admin',
+        phone: '+216 22 999 999',
+        status: 'active',
+        addresses: ['Tunis'],
+        city: 'Tunis',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      startWebSession(superSession, 'SuperAdminAccueil');
+      showToast(
+        tCommon('web.welcomeSuper', "Bienvenue Super Admin !"),
+        'success',
+      );
+    } else if (signinEmail === 'admin@demo.com' && signinPassword === 'admin123') {
       const adminSession: WebSessionUser = {
         id: 'admin-web-demo',
         name: 'Admin Plombier',

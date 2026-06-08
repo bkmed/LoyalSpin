@@ -22,35 +22,40 @@ import { setServices } from '../store/slices/servicesSlice';
 import { toggleFavoriteAction } from '../store/slices/partsSlice';
 
 // Shared Components & Screens
-import { WebSplashScreen } from '../features/plombier/components/WebSplashScreen';
-import { WebAuthScreen } from '../features/plombier/screens/WebAuthScreen';
-import { WebNavbar } from '../features/plombier/components/WebNavbar';
-import { WebFooter } from '../features/plombier/components/WebFooter';
-import { ProductDetailModal } from '../features/plombier/components/ProductDetailModal';
+import { WebSplashScreen } from '../features/loyalspin/components/WebSplashScreen';
+import { WebAuthScreen } from '../features/loyalspin/screens/WebAuthScreen';
+import { WebNavbar } from '../features/loyalspin/components/WebNavbar';
+import { WebFooter } from '../features/loyalspin/components/WebFooter';
+import { ProductDetailModal } from '../features/loyalspin/components/ProductDetailModal';
 
 // Screens
-import HomeScreen from '../features/plombier/screens/HomeScreen';
-import ServicesScreen from '../features/plombier/screens/ServicesScreen';
-import ZonesScreen from '../features/plombier/screens/ZonesScreen';
-import MarketplaceScreen from '../features/plombier/screens/MarketplaceScreen';
-import GalleryScreen from '../features/plombier/screens/GalleryScreen';
-import ProfileScreen from '../features/plombier/screens/ProfileScreen';
-import LegalPages from '../features/plombier/screens/LegalPages';
-import AdminDashboard from '../features/plombier/screens/AdminDashboard';
-import AdminAnnonces from '../features/plombier/screens/AdminAnnonces';
-import AdminCategories from '../features/plombier/screens/AdminCategories';
-import AdminUsers from '../features/plombier/screens/AdminUsers';
-import AdminProfileScreen from '../features/plombier/screens/AdminProfileScreen';
-import AdminAnalyticsScreen from '../features/plombier/screens/AdminAnalyticsScreen';
-import AdminGalleryEditor from '../features/plombier/screens/AdminGalleryEditor';
-import AdminServicesEditor from '../features/plombier/screens/AdminServicesEditor';
-import AdminManage from '../features/plombier/screens/AdminManage';
+import HomeScreen from '../features/loyalspin/screens/HomeScreen';
+import ServicesScreen from '../features/loyalspin/screens/ServicesScreen';
+import ZonesScreen from '../features/loyalspin/screens/ZonesScreen';
+import MarketplaceScreen from '../features/loyalspin/screens/MarketplaceScreen';
+import GalleryScreen from '../features/loyalspin/screens/GalleryScreen';
+import ProfileScreen from '../features/loyalspin/screens/ProfileScreen';
+import UserDashboardMobile from '../features/loyalspin/screens/UserDashboardMobile';
+import CouponMobile from '../features/loyalspin/screens/CouponMobile';
+import PurchaseHistory from '../features/loyalspin/screens/PurchaseHistory';
+import NotificationsScreen from '../features/loyalspin/screens/NotificationsScreen';
+import LegalPages from '../features/loyalspin/screens/LegalPages';
+import AdminDashboard from '../features/loyalspin/screens/AdminDashboard';
+import SuperAdminDashboard from '../features/loyalspin/screens/SuperAdminDashboard';
+import AdminAnnonces from '../features/loyalspin/screens/AdminAnnonces';
+import AdminCategories from '../features/loyalspin/screens/AdminCategories';
+import AdminUsers from '../features/loyalspin/screens/AdminUsers';
+import AdminProfileScreen from '../features/loyalspin/screens/AdminProfileScreen';
+import AdminAnalyticsScreen from '../features/loyalspin/screens/AdminAnalyticsScreen';
+import AdminGalleryEditor from '../features/loyalspin/screens/AdminGalleryEditor';
+import AdminServicesEditor from '../features/loyalspin/screens/AdminServicesEditor';
+import AdminManage from '../features/loyalspin/screens/AdminManage';
 
 import {
   Role,
   WebSessionUser,
   LocalCategory,
-} from '../features/plombier/utils/webTranslations';
+} from '../features/loyalspin/utils/webTranslations';
 import { User } from '../services/authService';
 
 export const AppNavigator = () => {
@@ -321,7 +326,8 @@ export const AppNavigator = () => {
     dispatch(setCurrentRole(restoredUser.role as Role));
     setBypassAuth(true);
     if (!sessionUser) {
-      setActiveTab(restoredUser.role === 'admin' ? 'AdminAccueil' : 'Accueil');
+      if (restoredUser.role === 'super-admin') setActiveTab('SuperAdminAccueil');
+      else setActiveTab(restoredUser.role === 'admin' ? 'AdminAccueil' : 'Accueil');
     }
   }, [authUser]);
 
@@ -457,6 +463,22 @@ export const AppNavigator = () => {
             />
           )}
 
+          {activeTab === 'UserDashboard' && (
+            <UserDashboardMobile t={translate} setActiveTab={setActiveTab} />
+          )}
+
+          {activeTab === 'UserCoupons' && (
+            <CouponMobile t={translate} />
+          )}
+
+          {activeTab === 'UserPurchaseHistory' && (
+            <PurchaseHistory t={translate} />
+          )}
+
+          {activeTab === 'UserNotifications' && (
+            <NotificationsScreen t={translate} />
+          )}
+
           {['Informations', 'Politique', 'Conditions', 'PlanSite'].includes(
             activeTab,
           ) && (
@@ -465,6 +487,10 @@ export const AppNavigator = () => {
               t={translate}
               setActiveTab={setActiveTab}
             />
+          )}
+
+          {activeTab === 'SuperAdminAccueil' && (
+            <SuperAdminDashboard t={translate} setActiveTab={setActiveTab} />
           )}
 
           {activeTab === 'AdminAccueil' && (

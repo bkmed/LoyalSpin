@@ -15,6 +15,7 @@ interface LandingScreenProps {
   setCurrentTheme: (theme: 'light' | 'dark') => void;
   t: (key: string, options?: any) => string;
   setShowLandingPage: (show: boolean) => void;
+  onViewDemo?: () => void;
 }
 
 export const LandingScreen: React.FC<LandingScreenProps> = ({
@@ -25,6 +26,7 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({
   setCurrentTheme,
   t,
   setShowLandingPage,
+  onViewDemo,
 }) => {
   const tCommon = (key: string, defaultValue: string) =>
     t(key, { defaultValue });
@@ -143,7 +145,7 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  onPress={() => Linking.openURL('https://demo.loyalspin.com')}
+                  onPress={() => onViewDemo ? onViewDemo() : Linking.openURL('https://demo.loyalspin.com')}
                   className={`px-8 py-4 rounded-xl transition font-black text-xs border-2 hover:scale-105 transform ${
                     currentTheme === 'dark'
                       ? 'border-slate-500 hover:bg-slate-800'

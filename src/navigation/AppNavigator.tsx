@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Platform, View } from 'react-native';
+import { Platform, View, TouchableOpacity, Text } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
@@ -50,6 +50,8 @@ import AdminGalleryEditor from '../features/loyalspin/screens/AdminGalleryEditor
 import AdminServicesEditor from '../features/loyalspin/screens/AdminServicesEditor';
 import AdminManage from '../features/loyalspin/screens/AdminManage';
 import LoyaltySpinScreen from '../features/loyalspin/screens/LoyaltySpinScreen';
+import DemoOnboardingScreen from '../features/loyalspin/screens/DemoOnboardingScreen';
+import DemoDashboardScreen from '../features/loyalspin/screens/DemoDashboardScreen';
 
 import {
   Role,
@@ -95,6 +97,8 @@ export const AppNavigator = () => {
   const [showLandingPage, setShowLandingPage] = useState(
     !bypassAuth && !sessionUser,
   );
+  const [showDemoOnboarding, setShowDemoOnboarding] = useState(false);
+  const [showDemoDashboard, setShowDemoDashboard] = useState(false);
 
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
 
@@ -182,6 +186,22 @@ export const AppNavigator = () => {
         'success',
       );
     }
+  };
+
+  const handleViewDemo = () => {
+    setShowLandingPage(false);
+    setShowDemoOnboarding(true);
+  };
+
+  const handleFinishDemo = () => {
+    setShowDemoOnboarding(false);
+    setShowDemoDashboard(true);
+  };
+
+  const closeDemoOnboarding = () => {
+    setShowDemoOnboarding(false);
+    setShowDemoDashboard(false);
+    setShowLandingPage(true);
   };
 
   // Seed Initial state
@@ -438,7 +458,35 @@ export const AppNavigator = () => {
           setCurrentTheme={setCurrentTheme}
           t={translate}
           setShowLandingPage={setShowLandingPage}
+          onViewDemo={handleViewDemo}
         />
+      )}
+
+      {!bypassAuth && !sessionUser && showDemoOnboarding && (
+        <DemoOnboardingScreen
+          isDarkMode={currentTheme === 'dark'}
+          onFinish={handleFinishDemo}
+        />
+      )}
+
+      {!bypassAuth && !sessionUser && showDemoDashboard && (
+        <View className="flex-1">
+          <View className="absolute top-4 right-4 z-50">
+            <TouchableOpacity
+              onPress={closeDemoOnboarding}
+              className={`p-2 rounded-lg ${
+                currentTheme === 'dark'
+                  ? 'bg-slate-700 hover:bg-slate-600'
+                  : 'bg-slate-100 hover:bg-slate-200'
+              }`}
+            >
+              <Text className="text-lg">✕</Text>
+            </TouchableOpacity>
+          </View>
+          <DemoDashboardScreen
+            isDarkMode={currentTheme === 'dark'}
+          />
+        </View>
       )}
 
       {!bypassAuth && !sessionUser && !showLandingPage && (

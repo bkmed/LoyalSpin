@@ -1913,5 +1913,27 @@
       "nov": "November",
       "dec": "December"
     }
+  },
+  "onboarding": {
+    "slide1": {
+      "title": "Scan",
+      "description": "Enter the LoyalSpin experience by scanning the unique code of your favorite establishment.",
+      "badge": "SCAN"
+    },
+    "slide2": {
+      "title": "Win",
+      "description": "Spin the 3D wheel on every visit and win points or instant rewards.",
+      "badge": "Step 2: The Win"
+    },
+    "slide3": {
+      "title": "Enjoy",
+      "description": "Transform your accumulated points into exclusive rewards directly at the counter.",
+      "badge": "STEP 3 OF 3"
+    },
+    "skip": "Skip",
+    "next": "Next →",
+    "finish": "Start Demo ✓",
+    "progressText": "Step {{current}} of 3",
+    "footer": "Ready to start your LoyalSpin experience?"
   }
 }

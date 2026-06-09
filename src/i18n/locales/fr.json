@@ -1913,5 +1913,27 @@
       "nov": "novembre",
       "dec": "décembre"
     }
+  },
+  "onboarding": {
+    "slide1": {
+      "title": "Scannez",
+      "description": "Entrez dans l'expérience LoyalSpin en scannant le code unique de votre établissement favori.",
+      "badge": "LESCAN"
+    },
+    "slide2": {
+      "title": "Gagnez",
+      "description": "Lancez la roulette 3D à chaque visite et gagnez des points ou des cadeaux instantanés.",
+      "badge": "Étape 2: Le Gain"
+    },
+    "slide3": {
+      "title": "Profitez",
+      "description": "Transformez vos points accumulés en récompenses exclusives directement au comptoir.",
+      "badge": "ÉTAPE 3 SUR 3"
+    },
+    "skip": "Passer",
+    "next": "Suivant →",
+    "finish": "Terminer la démo ✓",
+    "progressText": "Étape {{current}} sur 3",
+    "footer": "Prêt à commencer votre expérience LoyalSpin ?"
   }
 }

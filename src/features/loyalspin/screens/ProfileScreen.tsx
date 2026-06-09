@@ -206,7 +206,10 @@ export const ProfileScreenWeb: React.FC<ProfileScreenWebProps> = ({
                 <View className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   {[
                     {
-                      label: tCommon('web.userDashboard.coupons', 'Mes coupons'),
+                      label: tCommon(
+                        'web.userDashboard.coupons',
+                        'Mes coupons',
+                      ),
                       description: tCommon(
                         'web.userDashboard.couponsDesc',
                         'Voir et utiliser vos bons de réduction.',
@@ -222,7 +225,10 @@ export const ProfileScreenWeb: React.FC<ProfileScreenWebProps> = ({
                       tab: 'UserPurchaseHistory',
                     },
                     {
-                      label: tCommon('web.userDashboard.notifications', 'Notifications'),
+                      label: tCommon(
+                        'web.userDashboard.notifications',
+                        'Notifications',
+                      ),
                       description: tCommon(
                         'web.userDashboard.notificationsDesc',
                         'Consulter vos alertes récentes.',
@@ -230,7 +236,10 @@ export const ProfileScreenWeb: React.FC<ProfileScreenWebProps> = ({
                       tab: 'UserNotifications',
                     },
                     {
-                      label: tCommon('web.userDashboard.dashboard', 'Mon tableau de bord'),
+                      label: tCommon(
+                        'web.userDashboard.dashboard',
+                        'Mon tableau de bord',
+                      ),
                       description: tCommon(
                         'web.userDashboard.dashboardDesc',
                         'Retourner à votre espace personnel.',

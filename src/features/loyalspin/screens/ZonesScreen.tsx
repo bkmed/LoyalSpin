@@ -100,11 +100,17 @@ const ZonesScreen = ({
 
   const handleSubmit = () => {
     if (!interventionName || !interventionPhone) {
-      showToast(tCommon('web.request_name_phone_required', 'Nom et téléphone requis'), 'error');
+      showToast(
+        tCommon('web.request_name_phone_required', 'Nom et téléphone requis'),
+        'error',
+      );
       return;
     }
 
-    showToast(tCommon('web.request_submitted', 'Demande envoyée avec succès'), 'success');
+    showToast(
+      tCommon('web.request_submitted', 'Demande envoyée avec succès'),
+      'success',
+    );
     setInterventionName('');
     setInterventionPhone('');
     setInterventionDetails('');
@@ -114,13 +120,16 @@ const ZonesScreen = ({
     <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 animate-fade-in text-left">
       <View className="text-center max-w-3xl mx-auto mb-16">
         <Text className="bg-[#1E3A5F] text-white font-extrabold text-[10px] px-3.5 py-1.5 rounded-full uppercase tracking-widest leading-none">
-          {tCommon('web.zones_directes', 'Zones d\'intervention directes')}
+          {tCommon('web.zones_directes', "Zones d'intervention directes")}
         </Text>
         <Text className="text-3xl sm:text-4xl font-black tracking-tight mt-6 text-slate-900 dark:text-slate-100">
           {tCommon('zones.zones', 'Zones Couvertes')}
         </Text>
         <Text className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-3 font-semibold">
-          {tCommon('zones.zone_tagline', 'Nous intervenons rapidement dans ces régions.')}
+          {tCommon(
+            'zones.zone_tagline',
+            'Nous intervenons rapidement dans ces régions.',
+          )}
         </Text>
       </View>
 
@@ -131,7 +140,10 @@ const ZonesScreen = ({
               {tCommon('zones.carte_interactive', 'Carte Interactive')}
             </Text>
             <Text className="text-slate-400 text-xs mt-1 font-semibold dark:text-slate-300">
-              {tCommon('web.zone_map_instructions', 'Cliquez sur une zone pour plus de détails')}
+              {tCommon(
+                'web.zone_map_instructions',
+                'Cliquez sur une zone pour plus de détails',
+              )}
             </Text>
           </View>
 
@@ -192,16 +204,28 @@ const ZonesScreen = ({
             {selectedGovernorat && (
               <View className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-slate-900/95 text-white p-4 rounded-2xl border border-[#F97316]/30 shadow-xl max-w-[220px] backdrop-blur-sm animate-fade-in text-center">
                 <Text className="text-[10px] font-black text-[#F97316] uppercase tracking-wider">
-                  {tCommon(getZoneTranslationKey(selectedGovernorat), selectedGovernorat)}
+                  {tCommon(
+                    getZoneTranslationKey(selectedGovernorat),
+                    selectedGovernorat,
+                  )}
                 </Text>
                 <Text className="text-xs font-black mt-1 text-white">
-                  {tCommon('zones.intervention_express', 'Intervention Express')}
+                  {tCommon(
+                    'zones.intervention_express',
+                    'Intervention Express',
+                  )}
                 </Text>
                 <Text className="text-[10.5px] text-slate-300 mt-1 leading-relaxed">
                   {selectedGovernorat === 'Grand Tunis'
-                    ? tCommon('web.zone_grand_tunis_info', 'Intervention rapide dans le Grand Tunis')
+                    ? tCommon(
+                        'web.zone_grand_tunis_info',
+                        'Intervention rapide dans le Grand Tunis',
+                      )
                     : selectedGovernorat === 'Sahel'
-                    ? tCommon('web.zone_sahel_info', 'Intervention rapide au Sahel')
+                    ? tCommon(
+                        'web.zone_sahel_info',
+                        'Intervention rapide au Sahel',
+                      )
                     : tCommon('web.zone_other_info', 'Intervention disponible')}
                 </Text>
                 <TouchableOpacity
@@ -223,14 +247,18 @@ const ZonesScreen = ({
                 onPress={() =>
                   Linking.openURL(
                     `https://wa.me/${supportWhatsAppDigits}?text=${encodeURIComponent(
-                      tCommon('zones.whatsapp_msg', 'Bonjour, j\'ai besoin d\'une intervention urgente.')
+                      tCommon(
+                        'zones.whatsapp_msg',
+                        "Bonjour, j'ai besoin d'une intervention urgente.",
+                      ),
                     )}`,
                   )
                 }
                 className="inline-flex min-h-[40px] items-center justify-center rounded-xl bg-emerald-600 px-4 py-2 text-[10px] font-black uppercase tracking-wider text-white transition hover:bg-emerald-700"
               >
                 <Text className="text-white text-center font-bold">
-                  {tCommon('zones.appeler_whatsapp', 'Contacter WhatsApp')}: {supportWhatsAppNumber}
+                  {tCommon('zones.appeler_whatsapp', 'Contacter WhatsApp')}:{' '}
+                  {supportWhatsAppNumber}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -253,7 +281,11 @@ const ZonesScreen = ({
 
           <View className="border-t border-slate-100 dark:border-slate-700 pt-5 flex items-center justify-between">
             <Text className="text-xs font-bold text-slate-500 dark:text-slate-400">
-              * {tCommon('zones.urgentCoverageText', 'Les zones colorées sont couvertes en moins de 30 minutes.')}
+              *{' '}
+              {tCommon(
+                'zones.urgentCoverageText',
+                'Les zones colorées sont couvertes en moins de 30 minutes.',
+              )}
             </Text>
             <TouchableOpacity
               onPress={() => Linking.openURL('https://maps.google.com')}
@@ -272,7 +304,7 @@ const ZonesScreen = ({
               {tCommon('zones.urgentStatusBadge', 'Intervention Urgente')}
             </Text>
             <Text className="text-xl font-black text-slate-800 dark:text-slate-100 mt-3">
-              {tCommon('zones.demande_intervention', 'Demande d\'intervention')}
+              {tCommon('zones.demande_intervention', "Demande d'intervention")}
             </Text>
           </View>
 
@@ -282,7 +314,10 @@ const ZonesScreen = ({
                 {tCommon('zones.nom_complet', 'Nom Complet')} *
               </Text>
               <TextInput
-                placeholder={tCommon('zones.nom_placeholder', 'Ex: Mohamed Ben Khedher')}
+                placeholder={tCommon(
+                  'zones.nom_placeholder',
+                  'Ex: Mohamed Ben Khedher',
+                )}
                 value={interventionName}
                 onChangeText={setInterventionName}
                 className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-xs font-semibold focus:outline-none focus:border-[#F97316] text-slate-900 dark:text-slate-100"
@@ -328,10 +363,18 @@ const ZonesScreen = ({
                   onChange={e => setInterventionProblem(e.target.value)}
                   className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-3 text-xs font-bold focus:outline-none"
                 >
-                  <option value="Fuite d'eau">{tCommon('zones.prob_fuite', "Fuite d'eau / Tuyau cassé")}</option>
-                  <option value="Panne Chauffe-eau">{tCommon('zones.prob_chauffe_eau', "Panne Chauffe-eau")}</option>
-                  <option value="Climatisation">{tCommon('zones.prob_climatiseur', "Problème Climatiseur")}</option>
-                  <option value="Gaz STEG">{tCommon('zones.prob_gaz', "Tuyauterie Gaz / Sécurité")}</option>
+                  <option value="Fuite d'eau">
+                    {tCommon('zones.prob_fuite', "Fuite d'eau / Tuyau cassé")}
+                  </option>
+                  <option value="Panne Chauffe-eau">
+                    {tCommon('zones.prob_chauffe_eau', 'Panne Chauffe-eau')}
+                  </option>
+                  <option value="Climatisation">
+                    {tCommon('zones.prob_climatiseur', 'Problème Climatiseur')}
+                  </option>
+                  <option value="Gaz STEG">
+                    {tCommon('zones.prob_gaz', 'Tuyauterie Gaz / Sécurité')}
+                  </option>
                 </select>
               </View>
             </View>
@@ -342,7 +385,10 @@ const ZonesScreen = ({
               </Text>
               <TextInput
                 multiline={true}
-                placeholder={tCommon('zones.desc_placeholder', 'Précisez votre adresse, étage, ou problème...')}
+                placeholder={tCommon(
+                  'zones.desc_placeholder',
+                  'Précisez votre adresse, étage, ou problème...',
+                )}
                 value={interventionDetails}
                 onChangeText={setInterventionDetails}
                 className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-xs font-semibold focus:outline-none focus:border-[#F97316] text-slate-900 dark:text-slate-100"
@@ -365,4 +411,3 @@ const ZonesScreen = ({
 };
 
 export default ZonesScreen;
-

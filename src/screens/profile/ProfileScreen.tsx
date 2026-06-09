@@ -102,7 +102,11 @@ export const ProfileScreen = () => {
         </Text>
         <View className="mx-5 rounded-2xl bg-surface-container-lowest shadow-editorial">
           {[
-            [t('profile.language', 'Language'), i18n.language.toUpperCase(), 'language'],
+            [
+              t('profile.language', 'Language'),
+              i18n.language.toUpperCase(),
+              'language',
+            ],
             [t('profile.currency', 'Currency'), settings.currency, 'payments'],
           ].map(([label, value, icon]) => (
             <TouchableOpacity

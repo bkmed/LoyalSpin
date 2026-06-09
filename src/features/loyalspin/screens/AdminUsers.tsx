@@ -32,19 +32,27 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
   const [userToDelete, setUserToDelete] = React.useState<any | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState('');
-  const [selectedUserId, setSelectedUserId] = React.useState<string | null>(null);
+  const [selectedUserId, setSelectedUserId] = React.useState<string | null>(
+    null,
+  );
 
   const enrichedUsers = React.useMemo((): any[] => {
     return usersList.map((user: any) => ({
       ...user,
       level:
         user.level ||
-        (user.role === 'admin' ? 'Gold' : user.role === 'user' ? 'Silver' : 'Bronze'),
+        (user.role === 'admin'
+          ? 'Gold'
+          : user.role === 'user'
+          ? 'Silver'
+          : 'Bronze'),
       visits: user.visits ?? Math.max(1, Math.floor(Math.random() * 48) + 2),
       couponsUsed: user.couponsUsed ?? Math.floor(Math.random() * 12),
       lastVisit: user.lastVisit || 'Il y a 2h',
-      loyaltyPoints: user.loyaltyPoints ?? Math.floor(Math.random() * 12000) + 450,
-      revenue: user.revenue ?? parseFloat((Math.random() * 2400 + 120).toFixed(2)),
+      loyaltyPoints:
+        user.loyaltyPoints ?? Math.floor(Math.random() * 12000) + 450,
+      revenue:
+        user.revenue ?? parseFloat((Math.random() * 2400 + 120).toFixed(2)),
       verified: user.verified ?? user.status === 'active',
       avatarUrl:
         user.avatarUrl ||
@@ -102,7 +110,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
         selectedUser.id !== sessionUser.id
       ) {
         showToast(
-          tCommon('adminUsers.accessDenied', "Accès refusé : client non géré."),
+          tCommon('adminUsers.accessDenied', 'Accès refusé : client non géré.'),
           'error',
         );
         return;
@@ -157,7 +165,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
     if (currentRole !== 'super-admin' && sessionUser) {
       if (user.managerId !== sessionUser.id && user.id !== sessionUser.id) {
         showToast(
-          tCommon('adminUsers.accessDenied', "Accès refusé : client non géré."),
+          tCommon('adminUsers.accessDenied', 'Accès refusé : client non géré.'),
           'error',
         );
         return;
@@ -201,7 +209,10 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
     if (currentRole !== 'super-admin' && sessionUser && user) {
       if (user.managerId !== sessionUser.id && user.id !== sessionUser.id) {
         showToast(
-          tCommon('adminUsers.accessDenied', "Accès refusé : impossible de supprimer."),
+          tCommon(
+            'adminUsers.accessDenied',
+            'Accès refusé : impossible de supprimer.',
+          ),
           'error',
         );
         return;
@@ -238,7 +249,10 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
     if (currentRole !== 'super-admin' && sessionUser) {
       if (target.managerId !== sessionUser.id && target.id !== sessionUser.id) {
         showToast(
-          tCommon('adminUsers.accessDenied', "Accès refusé : impossible de modifier le rôle."),
+          tCommon(
+            'adminUsers.accessDenied',
+            'Accès refusé : impossible de modifier le rôle.',
+          ),
           'error',
         );
         return;
@@ -262,7 +276,10 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
     if (currentRole !== 'super-admin' && sessionUser) {
       if (target.managerId !== sessionUser.id && target.id !== sessionUser.id) {
         showToast(
-          tCommon('adminUsers.accessDenied', "Accès refusé : impossible de modifier le statut."),
+          tCommon(
+            'adminUsers.accessDenied',
+            'Accès refusé : impossible de modifier le statut.',
+          ),
           'error',
         );
         return;
@@ -357,10 +374,12 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
             </View>
             <View className="flex flex-wrap gap-2">
               <View className="rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-2 text-[11px] font-black text-slate-700 dark:text-slate-200">
-                {tCommon('adminUsers.statusActive', 'Actifs')} : {filteredUsers.filter(u => u.status === 'active').length}
+                {tCommon('adminUsers.statusActive', 'Actifs')} :{' '}
+                {filteredUsers.filter(u => u.status === 'active').length}
               </View>
               <View className="rounded-full bg-rose-100 dark:bg-rose-900/20 px-3 py-2 text-[11px] font-black text-rose-700 dark:text-rose-200">
-                {tCommon('adminUsers.statusBlocked', 'Bloqués')} : {filteredUsers.filter(u => u.status !== 'active').length}
+                {tCommon('adminUsers.statusBlocked', 'Bloqués')} :{' '}
+                {filteredUsers.filter(u => u.status !== 'active').length}
               </View>
             </View>
           </View>
@@ -370,13 +389,27 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
               <table className="w-full text-xs text-left font-semibold">
                 <thead className="bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 uppercase tracking-widest text-[9.5px] text-slate-400">
                   <tr>
-                    <th className="px-6 py-4">{tCommon('adminUsers.tableClient', 'Client')}</th>
-                    <th className="px-6 py-4">{tCommon('adminUsers.tableContact', 'Contact')}</th>
-                    <th className="px-6 py-4">{tCommon('adminUsers.tableLevel', 'Niveau')}</th>
-                    <th className="px-6 py-4">{tCommon('adminUsers.tableVisits', 'Visites')}</th>
-                    <th className="px-6 py-4">{tCommon('adminUsers.tableCoupons', 'Coupons')}</th>
-                    <th className="px-6 py-4">{tCommon('adminUsers.tableStatus', 'Statut')}</th>
-                    <th className="px-6 py-4 text-center">{tCommon('adminUsers.tableActions', 'Actions')}</th>
+                    <th className="px-6 py-4">
+                      {tCommon('adminUsers.tableClient', 'Client')}
+                    </th>
+                    <th className="px-6 py-4">
+                      {tCommon('adminUsers.tableContact', 'Contact')}
+                    </th>
+                    <th className="px-6 py-4">
+                      {tCommon('adminUsers.tableLevel', 'Niveau')}
+                    </th>
+                    <th className="px-6 py-4">
+                      {tCommon('adminUsers.tableVisits', 'Visites')}
+                    </th>
+                    <th className="px-6 py-4">
+                      {tCommon('adminUsers.tableCoupons', 'Coupons')}
+                    </th>
+                    <th className="px-6 py-4">
+                      {tCommon('adminUsers.tableStatus', 'Statut')}
+                    </th>
+                    <th className="px-6 py-4 text-center">
+                      {tCommon('adminUsers.tableActions', 'Actions')}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-200">
@@ -401,12 +434,16 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
                           </View>
                           <View>
                             <Text>{user.name}</Text>
-                            <Text className="text-[11px] text-slate-500 dark:text-slate-400">{user.lastVisit}</Text>
+                            <Text className="text-[11px] text-slate-500 dark:text-slate-400">
+                              {user.lastVisit}
+                            </Text>
                           </View>
                         </td>
                         <td className="px-6 py-4 text-slate-500 dark:text-slate-400">
                           <Text>{user.email}</Text>
-                          <Text className="text-[11px] text-slate-400">{user.phone || 'N/A'}</Text>
+                          <Text className="text-[11px] text-slate-400">
+                            {user.phone || 'N/A'}
+                          </Text>
                         </td>
                         <td className="px-6 py-4">
                           <Text className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-100">
@@ -451,11 +488,19 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
               <>
                 <View className="flex flex-col items-center gap-4 text-center">
                   <View className="w-28 h-28 rounded-[30px] overflow-hidden border border-slate-700 shadow-lg">
-                    <Image source={{ uri: selectedUser.avatarUrl }} className="w-full h-full" />
+                    <Image
+                      source={{ uri: selectedUser.avatarUrl }}
+                      className="w-full h-full"
+                    />
                   </View>
-                  <Text className="text-2xl font-black">{selectedUser.name}</Text>
+                  <Text className="text-2xl font-black">
+                    {selectedUser.name}
+                  </Text>
                   <Text className="text-slate-400 text-sm">
-                    {tCommon('adminUsers.memberSince', 'Membre depuis Jan 12, 2023')}
+                    {tCommon(
+                      'adminUsers.memberSince',
+                      'Membre depuis Jan 12, 2023',
+                    )}
                   </Text>
                   <View className="flex flex-wrap items-center justify-center gap-2">
                     <View className="rounded-full bg-amber-600 px-3 py-1 text-[11px] font-black uppercase tracking-[0.12em] text-slate-950">
@@ -489,7 +534,10 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
                 <View className="mt-6">
                   <View className="flex items-center justify-between">
                     <Text className="text-sm font-black uppercase tracking-[0.18em] text-slate-400">
-                      {tCommon('adminUsers.recentHistory', 'Historique des Achats')}
+                      {tCommon(
+                        'adminUsers.recentHistory',
+                        'Historique des Achats',
+                      )}
                     </Text>
                     <Text className="text-xs text-slate-500 hover:text-white transition cursor-pointer">
                       {tCommon('adminUsers.viewAll', 'Voir Tout')}
@@ -498,14 +546,26 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
 
                   <View className="mt-4 space-y-3">
                     <View className="rounded-3xl bg-slate-900/70 p-4 border border-slate-800">
-                      <Text className="text-sm font-black text-white">Double Espresso</Text>
-                      <Text className="text-[11px] text-slate-500 mt-1">Nov 24, 2024 • Midtown Branch</Text>
-                      <Text className="text-right text-sm font-black text-emerald-300 mt-2">$4.50</Text>
+                      <Text className="text-sm font-black text-white">
+                        Double Espresso
+                      </Text>
+                      <Text className="text-[11px] text-slate-500 mt-1">
+                        Nov 24, 2024 • Midtown Branch
+                      </Text>
+                      <Text className="text-right text-sm font-black text-emerald-300 mt-2">
+                        $4.50
+                      </Text>
                     </View>
                     <View className="rounded-3xl bg-slate-900/70 p-4 border border-slate-800">
-                      <Text className="text-sm font-black text-white">Pastry Combo</Text>
-                      <Text className="text-[11px] text-slate-500 mt-1">Nov 22, 2024 • Downtown Branch</Text>
-                      <Text className="text-right text-sm font-black text-slate-300 mt-2">FREE</Text>
+                      <Text className="text-sm font-black text-white">
+                        Pastry Combo
+                      </Text>
+                      <Text className="text-[11px] text-slate-500 mt-1">
+                        Nov 22, 2024 • Downtown Branch
+                      </Text>
+                      <Text className="text-right text-sm font-black text-slate-300 mt-2">
+                        FREE
+                      </Text>
                     </View>
                   </View>
                 </View>
@@ -513,9 +573,14 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
                 <View className="mt-6 rounded-3xl border border-rose-600/30 bg-rose-950/80 p-4">
                   <View className="flex items-center justify-between gap-3">
                     <View>
-                      <Text className="font-black text-sm text-white">{tCommon('adminUsers.accountAccess', 'Account Access')}</Text>
+                      <Text className="font-black text-sm text-white">
+                        {tCommon('adminUsers.accountAccess', 'Account Access')}
+                      </Text>
                       <Text className="text-xs text-slate-400 mt-1">
-                        {tCommon('adminUsers.accountAccessHint', 'Prevent client from spinning or login')}
+                        {tCommon(
+                          'adminUsers.accountAccessHint',
+                          'Prevent client from spinning or login',
+                        )}
                       </Text>
                     </View>
                     <TouchableOpacity
@@ -527,9 +592,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
                       }`}
                     >
                       <Text className="text-[11px] font-black text-slate-950">
-                        {selectedUser.status === 'active'
-                          ? 'ON'
-                          : 'OFF'}
+                        {selectedUser.status === 'active' ? 'ON' : 'OFF'}
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -539,7 +602,10 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
                   onPress={handleSendNotification}
                   className="w-full rounded-3xl bg-slate-100 text-slate-900 py-4 font-black text-base hover:bg-slate-200 transition"
                 >
-                  {tCommon('adminUsers.sendNotification', 'Send Custom Reward Notification')}
+                  {tCommon(
+                    'adminUsers.sendNotification',
+                    'Send Custom Reward Notification',
+                  )}
                 </TouchableOpacity>
               </>
             ) : (
@@ -611,8 +677,14 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
                   setEditUserRole(value)
                 }
               >
-                <Picker.Item label={tCommon('adminUsers.roleUser', 'Utilisateur')} value="user" />
-                <Picker.Item label={tCommon('adminUsers.roleAdmin', 'Administrateur')} value="admin" />
+                <Picker.Item
+                  label={tCommon('adminUsers.roleUser', 'Utilisateur')}
+                  value="user"
+                />
+                <Picker.Item
+                  label={tCommon('adminUsers.roleAdmin', 'Administrateur')}
+                  value="admin"
+                />
               </Picker>
             </View>
             <View className="md:col-span-2 flex justify-end gap-3">

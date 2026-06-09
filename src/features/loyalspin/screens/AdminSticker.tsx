@@ -21,13 +21,19 @@ const AdminSticker: React.FC<AdminStickerProps> = ({ t }) => {
       <View className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
         <View className="bg-slate-950/90 dark:bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-xl">
           <Text className="text-sm text-slate-400 mb-6">
-            {tCommon('adminSticker.subtitle', 'Personnalisez le sticker de votre établissement.')}
+            {tCommon(
+              'adminSticker.subtitle',
+              'Personnalisez le sticker de votre établissement.',
+            )}
           </Text>
 
           <View className="space-y-6">
             <View>
               <Text className="text-xs uppercase tracking-widest text-slate-500 mb-2">
-                {tCommon('adminSticker.pageLink', 'Lien de votre page fidélité')}
+                {tCommon(
+                  'adminSticker.pageLink',
+                  'Lien de votre page fidélité',
+                )}
               </Text>
               <TextInput
                 value="loyalspin.app/the-daily-grind"
@@ -41,13 +47,19 @@ const AdminSticker: React.FC<AdminStickerProps> = ({ t }) => {
                 {tCommon('adminSticker.previewLabel', 'Aperçu du code généré')}
               </Text>
               <View className="h-40 rounded-3xl bg-slate-950 border border-slate-700 flex items-center justify-center text-slate-400">
-                {tCommon('adminSticker.qrExample', 'Aperçu rapide du code généré dynamiquement.')}
+                {tCommon(
+                  'adminSticker.qrExample',
+                  'Aperçu rapide du code généré dynamiquement.',
+                )}
               </View>
             </View>
 
             <View>
               <Text className="text-xs uppercase tracking-widest text-slate-500 mb-2">
-                {tCommon('adminSticker.stickerName', 'Nom affiché sur le sticker')}
+                {tCommon(
+                  'adminSticker.stickerName',
+                  'Nom affiché sur le sticker',
+                )}
               </Text>
               <TextInput
                 value="The Daily Grind Café"
@@ -92,13 +104,20 @@ const AdminSticker: React.FC<AdminStickerProps> = ({ t }) => {
                 <Text className="text-xs uppercase tracking-widest text-slate-500 mb-2">
                   {tCommon('adminSticker.sizeLabel', 'Taille du sticker')}
                 </Text>
-                <Text className="text-sm text-slate-100">{tCommon('adminSticker.sizeMedium', 'Moyen (8cm)')}</Text>
+                <Text className="text-sm text-slate-100">
+                  {tCommon('adminSticker.sizeMedium', 'Moyen (8cm)')}
+                </Text>
               </View>
               <View className="rounded-3xl border border-slate-800 bg-slate-900 p-4 flex-1">
                 <Text className="text-xs uppercase tracking-widest text-slate-500 mb-2">
                   {tCommon('adminSticker.printLabel', 'Impression')}
                 </Text>
-                <Text className="text-sm text-slate-100">{tCommon('adminSticker.printAdvice', 'Imprimez et plastifiez votre sticker')}</Text>
+                <Text className="text-sm text-slate-100">
+                  {tCommon(
+                    'adminSticker.printAdvice',
+                    'Imprimez et plastifiez votre sticker',
+                  )}
+                </Text>
               </View>
             </View>
           </View>
@@ -115,7 +134,10 @@ const AdminSticker: React.FC<AdminStickerProps> = ({ t }) => {
               {tCommon('adminSticker.stickerTitle', 'THE DAILY GRIND CAFÉ')}
             </Text>
             <Text className="text-sm text-slate-500 dark:text-slate-400 text-center">
-              {tCommon('adminSticker.scanLabel', 'Scannez & gagnez des cadeaux 🎁')}
+              {tCommon(
+                'adminSticker.scanLabel',
+                'Scannez & gagnez des cadeaux 🎁',
+              )}
             </Text>
             <View className="flex-row gap-3">
               <TouchableOpacity className="rounded-2xl bg-white px-4 py-3 text-sm font-bold text-slate-900">

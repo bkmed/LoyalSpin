@@ -36,14 +36,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   const categories = useSelector(selectAllCategories) || [];
   const users = useSelector(selectAllUsers) || [];
-  const webSession = useSelector((state: RootState) => (state as any).webSession) || {};
+  const webSession =
+    useSelector((state: RootState) => (state as any).webSession) || {};
   const sessionUser = webSession.sessionUser;
   const currentRole = webSession.currentRole as any;
 
   const myClients = React.useMemo(() => {
     if (currentRole === 'super-admin') return users;
     if (!sessionUser) return [];
-    return users.filter(u => u.managerId === sessionUser.id || u.id === sessionUser.id);
+    return users.filter(
+      u => u.managerId === sessionUser.id || u.id === sessionUser.id,
+    );
   }, [users, sessionUser, currentRole]);
   const galleryItems = useSelector(selectGalleryItems) || [];
   const services = useSelector(selectServices) || [];
@@ -87,7 +90,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     {
       title: tCommon('admin.registeredUsersTitle', 'Utilisateurs'),
       count: currentRole === 'super-admin' ? users.length : myClients.length,
-      desc: currentRole === 'super-admin' ? tCommon('admin.registeredUsersDesc', 'Membres inscrits') : tCommon('admin.myClientsDesc','Mes clients'),
+      desc:
+        currentRole === 'super-admin'
+          ? tCommon('admin.registeredUsersDesc', 'Membres inscrits')
+          : tCommon('admin.myClientsDesc', 'Mes clients'),
       icon: '👥',
       iconBg: 'bg-emerald-100 dark:bg-emerald-900/40',
       countColor: 'text-emerald-600 dark:text-emerald-400',

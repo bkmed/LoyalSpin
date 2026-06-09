@@ -92,7 +92,9 @@ export const AppNavigator = () => {
   // Splash Screen
   const [showSplash, setShowSplash] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
-  const [showLandingPage, setShowLandingPage] = useState(!bypassAuth && !sessionUser);
+  const [showLandingPage, setShowLandingPage] = useState(
+    !bypassAuth && !sessionUser,
+  );
 
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
 
@@ -387,8 +389,12 @@ export const AppNavigator = () => {
     dispatch(setCurrentRole(restoredUser.role as Role));
     setBypassAuth(true);
     if (!sessionUser) {
-      if (restoredUser.role === 'super-admin') setActiveTab('SuperAdminAccueil');
-      else setActiveTab(restoredUser.role === 'admin' ? 'AdminAccueil' : 'Accueil');
+      if (restoredUser.role === 'super-admin')
+        setActiveTab('SuperAdminAccueil');
+      else
+        setActiveTab(
+          restoredUser.role === 'admin' ? 'AdminAccueil' : 'Accueil',
+        );
     }
   }, [authUser]);
 
@@ -549,9 +555,7 @@ export const AppNavigator = () => {
             <UserDashboardMobile t={translate} setActiveTab={setActiveTab} />
           )}
 
-          {activeTab === 'UserCoupons' && (
-            <CouponMobile t={translate} />
-          )}
+          {activeTab === 'UserCoupons' && <CouponMobile t={translate} />}
 
           {activeTab === 'UserPurchaseHistory' && (
             <PurchaseHistory t={translate} />

@@ -85,7 +85,11 @@ const AdminGalleryEditor = () => {
       return;
     }
 
-    const arTranslation: { title?: string; subtitle?: string; description?: string } = {};
+    const arTranslation: {
+      title?: string;
+      subtitle?: string;
+      description?: string;
+    } = {};
     if (titleAr.trim()) arTranslation.title = titleAr.trim();
     if (subtitleAr.trim()) arTranslation.subtitle = subtitleAr.trim();
     if (descriptionAr.trim()) arTranslation.description = descriptionAr.trim();
@@ -277,7 +281,11 @@ const AdminGalleryEditor = () => {
                     <Image
                       source={{ uri: item.imageUri }}
                       accessibilityLabel={item.title}
-                      style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        resizeMode: 'cover',
+                      }}
                     />
                   </View>
                   <View className="space-y-2">
@@ -564,7 +572,9 @@ const AdminGalleryEditor = () => {
                 <View className="grid gap-4 md:grid-cols-[1.4fr_0.8fr] items-start">
                   <View>
                     <Text className="block text-sm font-semibold mb-2 text-slate-900 dark:text-slate-100">
-                      {translate('admin.galleryImageLabel', { defaultValue: 'Image de la galerie' })}
+                      {translate('admin.galleryImageLabel', {
+                        defaultValue: 'Image de la galerie',
+                      })}
                     </Text>
                     <View className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4">
                       <CategoryImageInput
@@ -580,9 +590,27 @@ const AdminGalleryEditor = () => {
                       })}
                     </Text>
                     <View className="space-y-2">
-                      <Text>- {translate('admin.tip.chooseImage', { defaultValue: 'Choisissez une image claire et représentative.' })}</Text>
-                      <Text>- {translate('admin.tip.addTitle', { defaultValue: 'Ajoutez un titre court et un sous-titre pertinent.' })}</Text>
-                      <Text>- {translate('admin.tip.descriptionHelp', { defaultValue: 'La description aide vos clients à comprendre la réalisation.' })}</Text>
+                      <Text>
+                        -{' '}
+                        {translate('admin.tip.chooseImage', {
+                          defaultValue:
+                            'Choisissez une image claire et représentative.',
+                        })}
+                      </Text>
+                      <Text>
+                        -{' '}
+                        {translate('admin.tip.addTitle', {
+                          defaultValue:
+                            'Ajoutez un titre court et un sous-titre pertinent.',
+                        })}
+                      </Text>
+                      <Text>
+                        -{' '}
+                        {translate('admin.tip.descriptionHelp', {
+                          defaultValue:
+                            'La description aide vos clients à comprendre la réalisation.',
+                        })}
+                      </Text>
                     </View>
                   </View>
                 </View>

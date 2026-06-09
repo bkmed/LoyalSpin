@@ -32,7 +32,8 @@ const ServicesScreen = ({
     dispatch(trackShare({ platform, item: serviceName }));
     const pageUrl =
       Platform.OS === 'web' && typeof window !== 'undefined'
-        ? (window as any).location?.href || 'https://plombier.example.com/services'
+        ? (window as any).location?.href ||
+          'https://plombier.example.com/services'
         : 'https://plombier.example.com/services';
     const url = encodeURIComponent(pageUrl);
     const text = encodeURIComponent(`Découvrez nos services : ${serviceName}`);
@@ -103,7 +104,10 @@ const ServicesScreen = ({
               <View className="space-y-2.5 font-bold text-xs text-slate-600 dark:text-slate-300">
                 {service.pts &&
                   service.pts.map((point: string, idx2: number) => (
-                    <View key={idx2} className="flex flex-row items-center gap-2">
+                    <View
+                      key={idx2}
+                      className="flex flex-row items-center gap-2"
+                    >
                       <View className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
                       <Text className="text-slate-600 dark:text-slate-300 flex-1">
                         {translateServiceField(point)}

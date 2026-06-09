@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Platform,
+} from 'react-native';
 import { LogoSVG } from './LogoSVG';
 import { Role, WebSessionUser } from '../utils/webTranslations';
 
@@ -97,7 +103,11 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
   ];
 
   if (currentRole === 'super-admin') {
-    adminLinks.unshift({ id: 'SuperAdminAccueil', label: tCommon('web.superAdmin', 'Super Admin'), icon: '⭐' });
+    adminLinks.unshift({
+      id: 'SuperAdminAccueil',
+      label: tCommon('web.superAdmin', 'Super Admin'),
+      icon: '⭐',
+    });
   }
 
   const userLinks = [

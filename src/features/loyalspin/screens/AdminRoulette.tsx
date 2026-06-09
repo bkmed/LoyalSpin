@@ -26,7 +26,10 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t }) => {
       <View className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
         <View className="bg-slate-950/90 dark:bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-xl">
           <Text className="text-sm uppercase tracking-[0.3em] text-slate-400 mb-4">
-            {tCommon('adminRoulette.subtitle', 'Design the visual experience and reward probabilities for your customers.')}
+            {tCommon(
+              'adminRoulette.subtitle',
+              'Design the visual experience and reward probabilities for your customers.',
+            )}
           </Text>
 
           <View className="space-y-6">
@@ -38,7 +41,10 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t }) => {
                 value="Morning Rush Rewards"
                 onChangeText={() => {}}
                 className="w-full rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white placeholder:text-slate-500"
-                placeholder={tCommon('adminRoulette.wheelNamePlaceholder', 'Morning Rush Rewards')}
+                placeholder={tCommon(
+                  'adminRoulette.wheelNamePlaceholder',
+                  'Morning Rush Rewards',
+                )}
               />
             </View>
 
@@ -59,11 +65,16 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t }) => {
               </View>
               <View className="space-y-3">
                 {segments.map((segment, index) => (
-                  <View key={index} className="flex-row items-center gap-3 rounded-2xl bg-slate-900 px-3 py-3 border border-slate-800">
+                  <View
+                    key={index}
+                    className="flex-row items-center gap-3 rounded-2xl bg-slate-900 px-3 py-3 border border-slate-800"
+                  >
                     <View className="h-10 w-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-200">
                       {segment.label.charAt(0)}
                     </View>
-                    <Text className="flex-1 text-sm text-slate-200">{segment.label}</Text>
+                    <Text className="flex-1 text-sm text-slate-200">
+                      {segment.label}
+                    </Text>
                     <View className="flex-row items-center gap-1 bg-slate-950 px-3 py-2 rounded-2xl border border-slate-700 text-slate-300">
                       <Text className="text-xs">{segment.value}</Text>
                       <Text className="text-xs text-slate-400">%</Text>

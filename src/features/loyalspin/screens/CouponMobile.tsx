@@ -27,7 +27,8 @@ const coupons = [
     title: '10 DT offerts',
     code: 'BONUS10',
     expiry: '15/07/2026',
-    description: 'Offre spéciale fidélité pour les 10 premiers clients du mois.',
+    description:
+      'Offre spéciale fidélité pour les 10 premiers clients du mois.',
     status: 'Bientôt',
   },
 ];
@@ -65,7 +66,8 @@ const CouponMobile: React.FC<CouponMobileProps> = ({ t }) => {
             </Text>
             <View className="mt-6 flex flex-col gap-2 text-sm text-slate-600 dark:text-slate-300">
               <Text>
-                {tCommon('web.coupons.expiry', 'Valide jusqu’au')} {coupon.expiry}
+                {tCommon('web.coupons.expiry', 'Valide jusqu’au')}{' '}
+                {coupon.expiry}
               </Text>
               <Text>
                 {tCommon('web.coupons.status', 'Statut')} : {coupon.status}

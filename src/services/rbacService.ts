@@ -37,7 +37,11 @@ class RbacService {
 
   isAdmin(user: User | null): boolean {
     if (!user) return false;
-    return user.role === 'admin' || user.role === 'super-admin' || this.getUserRole(user) === 'admin';
+    return (
+      user.role === 'admin' ||
+      user.role === 'super-admin' ||
+      this.getUserRole(user) === 'admin'
+    );
   }
 
   isSuperAdmin(user: User | null): boolean {

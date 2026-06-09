@@ -39,7 +39,10 @@ const analyticsSlice = createSlice({
       if (!state.pageViews) state.pageViews = {};
       state.pageViews[pageName] = (state.pageViews[pageName] || 0) + 1;
     },
-    trackShare: (state, action: PayloadAction<{ platform: string; item: string }>) => {
+    trackShare: (
+      state,
+      action: PayloadAction<{ platform: string; item: string }>,
+    ) => {
       if (!state.shares) state.shares = {};
       const key = `${action.payload.platform}_${action.payload.item}`;
       state.shares[key] = (state.shares[key] || 0) + 1;
@@ -50,7 +53,13 @@ const analyticsSlice = createSlice({
   },
 });
 
-export const { trackQuery, clearQueries, trackPageView, trackShare, trackCallClick } = analyticsSlice.actions;
+export const {
+  trackQuery,
+  clearQueries,
+  trackPageView,
+  trackShare,
+  trackCallClick,
+} = analyticsSlice.actions;
 
 export const selectChatQueries = (state: { analytics: AnalyticsState }) =>
   state.analytics?.chatQueries || [];
@@ -76,15 +85,23 @@ export const selectQuestionOccurrences = (state: {
 };
 
 export const selectTotalPageViews = (state: { analytics: AnalyticsState }) => {
-  return Object.values(state.analytics?.pageViews || {}).reduce((a, b) => a + b, 0);
+  return Object.values(state.analytics?.pageViews || {}).reduce(
+    (a, b) => a + b,
+    0,
+  );
 };
 
-export const selectPageViews = (state: { analytics: AnalyticsState }) => state.analytics?.pageViews || {};
+export const selectPageViews = (state: { analytics: AnalyticsState }) =>
+  state.analytics?.pageViews || {};
 
 export const selectTotalShares = (state: { analytics: AnalyticsState }) => {
-  return Object.values(state.analytics?.shares || {}).reduce((a, b) => a + b, 0);
+  return Object.values(state.analytics?.shares || {}).reduce(
+    (a, b) => a + b,
+    0,
+  );
 };
 
-export const selectCallClicks = (state: { analytics: AnalyticsState }) => state.analytics?.callClicks || 0;
+export const selectCallClicks = (state: { analytics: AnalyticsState }) =>
+  state.analytics?.callClicks || 0;
 
 export default analyticsSlice.reducer;

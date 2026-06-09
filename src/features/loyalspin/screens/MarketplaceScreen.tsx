@@ -1,5 +1,12 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Linking, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  Linking,
+  Platform,
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import {
@@ -177,7 +184,8 @@ const MarketplaceScreen = ({
 
     const pageUrl =
       Platform.OS === 'web' && typeof window !== 'undefined'
-        ? (window as any).location?.href || 'https://plombier.example.com/marketplace'
+        ? (window as any).location?.href ||
+          'https://plombier.example.com/marketplace'
         : 'https://plombier.example.com/marketplace';
     const url = encodeURIComponent(pageUrl);
     const text = encodeURIComponent(

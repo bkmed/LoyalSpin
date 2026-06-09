@@ -1,5 +1,12 @@
 import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, Linking, Platform, Image } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Linking,
+  Platform,
+  Image,
+} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import {
@@ -40,12 +47,15 @@ const GalleryScreen = () => {
 
     const pageUrl =
       Platform.OS === 'web' && typeof window !== 'undefined'
-        ? (window as any).location?.href || 'https://plombier.example.com/gallery'
+        ? (window as any).location?.href ||
+          'https://plombier.example.com/gallery'
         : 'https://plombier.example.com/gallery';
     const url = encodeURIComponent(pageUrl);
 
     const shareLabel = t('web.share_text', {
-      defaultValue: `${localTitle}${localSubtitle ? ` - ${localSubtitle}` : ''}`,
+      defaultValue: `${localTitle}${
+        localSubtitle ? ` - ${localSubtitle}` : ''
+      }`,
       title: localTitle,
       subtitle: localSubtitle,
     });
@@ -95,7 +105,11 @@ const GalleryScreen = () => {
                   <Image
                     source={{ uri: item.imageUri }}
                     accessibilityLabel={localTitle}
-                    style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      resizeMode: 'cover',
+                    }}
                   />
                 </View>
                 <View className="p-5">

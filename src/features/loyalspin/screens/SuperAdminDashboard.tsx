@@ -10,8 +10,12 @@ interface Props {
 
 export const SuperAdminDashboard: React.FC<Props> = ({ t, setActiveTab }) => {
   const users = useSelector((state: RootState) => state.users?.items || []);
-  const services = useSelector((state: RootState) => state.services?.items || []);
-  const categories = useSelector((state: RootState) => state.categories?.items || []);
+  const services = useSelector(
+    (state: RootState) => state.services?.items || [],
+  );
+  const categories = useSelector(
+    (state: RootState) => state.categories?.items || [],
+  );
 
   const tCommon = (key: string, defaultValue: string) =>
     t(key, { defaultValue });
@@ -24,15 +28,21 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t, setActiveTab }) => {
 
       <View className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <View className="p-6 bg-white rounded-2xl shadow">
-          <Text className="text-sm font-bold">{tCommon('superadmin.users','Total Users')}</Text>
+          <Text className="text-sm font-bold">
+            {tCommon('superadmin.users', 'Total Users')}
+          </Text>
           <Text className="text-2xl font-extrabold">{users.length}</Text>
         </View>
         <View className="p-6 bg-white rounded-2xl shadow">
-          <Text className="text-sm font-bold">{tCommon('superadmin.services','Total Services')}</Text>
+          <Text className="text-sm font-bold">
+            {tCommon('superadmin.services', 'Total Services')}
+          </Text>
           <Text className="text-2xl font-extrabold">{services.length}</Text>
         </View>
         <View className="p-6 bg-white rounded-2xl shadow">
-          <Text className="text-sm font-bold">{tCommon('superadmin.categories','Total Categories')}</Text>
+          <Text className="text-sm font-bold">
+            {tCommon('superadmin.categories', 'Total Categories')}
+          </Text>
           <Text className="text-2xl font-extrabold">{categories.length}</Text>
         </View>
       </View>
@@ -42,7 +52,9 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t, setActiveTab }) => {
           onPress={() => setActiveTab && setActiveTab('GestionUser')}
           className="px-4 py-2 bg-indigo-600 text-white rounded-lg"
         >
-          <Text className="text-white">{tCommon('superadmin.manageUsers','Manage Users')}</Text>
+          <Text className="text-white">
+            {tCommon('superadmin.manageUsers', 'Manage Users')}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

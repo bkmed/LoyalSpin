@@ -57,11 +57,14 @@ const PurchaseHistory: React.FC<PurchaseHistoryProps> = ({ t }) => {
                   {tCommon('web.history.order', 'Commande')} #{order.id}
                 </Text>
                 <Text className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  {order.date} • {order.items.length} {tCommon('web.history.items', 'articles')}
+                  {order.date} • {order.items.length}{' '}
+                  {tCommon('web.history.items', 'articles')}
                 </Text>
               </View>
               <View className="text-right">
-                <Text className="text-xl font-black text-[#F97316]">{order.total}</Text>
+                <Text className="text-xl font-black text-[#F97316]">
+                  {order.total}
+                </Text>
                 <Text className="text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
                   {order.status}
                 </Text>
@@ -69,7 +72,10 @@ const PurchaseHistory: React.FC<PurchaseHistoryProps> = ({ t }) => {
             </View>
             <View className="mt-4 grid gap-2">
               {order.items.map(item => (
-                <View key={item} className="rounded-2xl bg-slate-50 dark:bg-slate-900 p-3 text-sm text-slate-700 dark:text-slate-200">
+                <View
+                  key={item}
+                  className="rounded-2xl bg-slate-50 dark:bg-slate-900 p-3 text-sm text-slate-700 dark:text-slate-200"
+                >
                   {item}
                 </View>
               ))}

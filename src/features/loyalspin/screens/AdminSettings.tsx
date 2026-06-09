@@ -18,16 +18,24 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ t }) => {
       <View className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
         <View className="bg-slate-950/90 dark:bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-xl">
           <Text className="text-sm text-slate-400 mb-6">
-            {tCommon('adminSettings.subtitle', 'Personnalisez l\'apparence de votre programme de fidélité pour refléter l\'identité de votre marque.')}
+            {tCommon(
+              'adminSettings.subtitle',
+              "Personnalisez l'apparence de votre programme de fidélité pour refléter l'identité de votre marque.",
+            )}
           </Text>
 
           <View className="space-y-6">
             <View className="rounded-3xl border border-slate-800 bg-slate-900 p-6">
               <Text className="text-xs uppercase tracking-widest text-slate-500 mb-2">
-                {tCommon('adminSettings.brandingLogo', "Logo de l'établissement")}
+                {tCommon(
+                  'adminSettings.brandingLogo',
+                  "Logo de l'établissement",
+                )}
               </Text>
               <View className="h-36 rounded-3xl border border-dashed border-slate-700 bg-slate-950 flex items-center justify-center text-slate-500">
-                <Text className="text-sm">PNG ou SVG recommandé. Taille max: 2MB.</Text>
+                <Text className="text-sm">
+                  PNG ou SVG recommandé. Taille max: 2MB.
+                </Text>
               </View>
               <TouchableOpacity className="mt-4 rounded-2xl border border-slate-700 bg-slate-800 px-4 py-3 text-sm font-bold text-white">
                 {tCommon('adminSettings.chooseFile', 'Choisir un fichier')}
@@ -47,7 +55,10 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ t }) => {
               </View>
               <View className="rounded-3xl border border-slate-800 bg-slate-900 p-6">
                 <Text className="text-xs uppercase tracking-widest text-slate-500 mb-2">
-                  {tCommon('adminSettings.secondaryColor', 'Couleur Secondaire')}
+                  {tCommon(
+                    'adminSettings.secondaryColor',
+                    'Couleur Secondaire',
+                  )}
                 </Text>
                 <TextInput
                   value="#FFB961"
@@ -62,7 +73,9 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ t }) => {
                 <Text className="text-xs uppercase tracking-widest text-slate-500 mb-2">
                   {tCommon('adminSettings.typography', 'Typographie')}
                 </Text>
-                <Text className="text-sm text-slate-100">Plus Jakarta Sans</Text>
+                <Text className="text-sm text-slate-100">
+                  Plus Jakarta Sans
+                </Text>
               </View>
               <View className="rounded-3xl border border-slate-800 bg-slate-900 p-6">
                 <Text className="text-xs uppercase tracking-widest text-slate-500 mb-2">
@@ -102,9 +115,13 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ t }) => {
             {tCommon('adminSettings.livePreview', 'Aperçu en direct')}
           </Text>
           <View className="rounded-[40px] bg-[#0B1122] p-6 text-slate-100">
-            <Text className="text-lg font-black tracking-tight mb-4">LoyalSpin</Text>
+            <Text className="text-lg font-black tracking-tight mb-4">
+              LoyalSpin
+            </Text>
             <View className="rounded-3xl bg-slate-900 p-6 mb-5">
-              <Text className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-3">{tCommon('adminSettings.memberStatus', 'MEMBRE GOLD')}</Text>
+              <Text className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-3">
+                {tCommon('adminSettings.memberStatus', 'MEMBRE GOLD')}
+              </Text>
               <Text className="text-2xl font-black mb-2">#LS-29384</Text>
               <Text className="text-sm text-slate-400">1,420 pts</Text>
             </View>
@@ -117,8 +134,12 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ t }) => {
               {tCommon('adminSettings.cardLabel', 'Votre carte café')}
             </Text>
             <View className="rounded-3xl bg-slate-900 p-4">
-              <Text className="text-sm text-slate-100">{tCommon('adminSettings.limitedOffer', 'Offre limitée')}</Text>
-              <Text className="text-base font-bold">Spin & Win -50% sur les Lattés</Text>
+              <Text className="text-sm text-slate-100">
+                {tCommon('adminSettings.limitedOffer', 'Offre limitée')}
+              </Text>
+              <Text className="text-base font-bold">
+                Spin & Win -50% sur les Lattés
+              </Text>
             </View>
           </View>
         </View>

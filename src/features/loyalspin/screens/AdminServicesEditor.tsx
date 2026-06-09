@@ -264,7 +264,13 @@ const AdminServicesEditor = () => {
                     })}
                   </Text>
                   <View className="w-28">
-                    <Picker selectedValue={itemsPerPage} onValueChange={value => { setItemsPerPage(Number(value)); setCurrentPage(1); }}>
+                    <Picker
+                      selectedValue={itemsPerPage}
+                      onValueChange={value => {
+                        setItemsPerPage(Number(value));
+                        setCurrentPage(1);
+                      }}
+                    >
                       <Picker.Item label="5" value={5} />
                       <Picker.Item label="10" value={10} />
                       <Picker.Item label="20" value={20} />

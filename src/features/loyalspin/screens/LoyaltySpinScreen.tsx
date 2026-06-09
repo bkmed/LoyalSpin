@@ -22,7 +22,9 @@ const LoyaltySpinScreen: React.FC = () => {
 
   return (
     <View className="p-6 flex-1 items-center justify-start">
-      <Text className="text-2xl font-black mb-6">{t('loyalspin.title', { defaultValue: 'Roulette de fidélité' })}</Text>
+      <Text className="text-2xl font-black mb-6">
+        {t('loyalspin.title', { defaultValue: 'Roulette de fidélité' })}
+      </Text>
       <LoyaltyWheel segments={prizes} onFinish={onFinish} />
     </View>
   );

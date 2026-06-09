@@ -72,7 +72,10 @@ const UserDashboardMobile: React.FC<UserDashboardMobileProps> = ({
         <View className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <View className="max-w-2xl">
             <Text className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white">
-              {tCommon('web.userDashboard.title', 'Bienvenue sur votre tableau de bord')}
+              {tCommon(
+                'web.userDashboard.title',
+                'Bienvenue sur votre tableau de bord',
+              )}
             </Text>
             <Text className="text-slate-500 dark:text-slate-400 text-sm mt-3 leading-relaxed">
               {tCommon(
@@ -85,7 +88,12 @@ const UserDashboardMobile: React.FC<UserDashboardMobileProps> = ({
             onPress={() => setActiveTab?.('UserNotifications')}
             className="inline-flex items-center gap-2 rounded-3xl bg-[#F97316] px-5 py-3 text-sm font-black text-white shadow-lg hover:bg-[#e0630b] transition"
           >
-            <Text>{tCommon('web.userDashboard.showAlerts', 'Voir les notifications')}</Text>
+            <Text>
+              {tCommon(
+                'web.userDashboard.showAlerts',
+                'Voir les notifications',
+              )}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -115,7 +123,10 @@ const UserDashboardMobile: React.FC<UserDashboardMobileProps> = ({
             {tCommon('web.userDashboard.youEarned', 'Vous avez gagné')}
           </Text>
           <Text className="mt-3 text-lg font-semibold text-amber-100">
-            {tCommon('web.userDashboard.vipText', 'Accédez à un service prioritaire et des offres exclusives.')}
+            {tCommon(
+              'web.userDashboard.vipText',
+              'Accédez à un service prioritaire et des offres exclusives.',
+            )}
           </Text>
         </View>
 

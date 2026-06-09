@@ -1689,6 +1689,35 @@
       "bonus_points": "50 نقطة مكافأة",
       "gift": "هدية مجانية"
     }
+    ,
+    "demoDashboard": {
+      "title": "عرض تجريبي LoyalSpin",
+      "subtitle": "استكشف تجربة العميل الكاملة",
+      "pointsAvailable": "النقاط المتاحة",
+      "demoNotice": "ℹ️ هذا عرض تجريبي تفاعلي للقراءة فقط",
+      "rewardsSectionTitle": "المكافآت المتاحة",
+      "spinWheelSectionTitle": "دوران العجلة",
+      "spinWheelTitle": "عجلة ثلاثية الأبعاد",
+      "spinWheelDescription": "في كل زيارة، قم بتدوير العجلة واربح مكافآت فورية!",
+      "couponsSectionTitle": "قسائمك",
+      "activeCouponsTitle": "القسائم النشطة",
+      "activeCouponsDescription": "تحقق من القسائم المتاحة لديك وقدمها عند الصندوق",
+      "loyaltyCardSectionTitle": "بطاقة الولاء الخاصة بك",
+      "digitalCardTitle": "بطاقة ولاء رقمية",
+      "digitalCardDescription": "ادخل إلى رمز الاستجابة السريعة الشخصي الخاص بك لتقديمه في كل زيارة",
+      "rewards": {
+        "freeCoffee": { "title": "قهوة مجانية", "condition": "250 نقطة" },
+        "freeCroissant": { "title": "كرواسون مجاني", "condition": "150 نقطة" },
+        "discount20": { "title": "خصم 20%", "condition": "500 نقطة" },
+        "mysteryGift": { "title": "هدية مفاجئة", "condition": "1000 نقطة" }
+      },
+      "stats": {
+        "totalVisits": "إجمالي الزيارات",
+        "pointsEarned": "النقاط المكتسبة",
+        "rewardsEarned": "المكافآت المكتسبة",
+        "level": "المستوى"
+      }
+    }
   },
   "auth_hardcoded": {
     "signin_title": "تسجيل الدخول",

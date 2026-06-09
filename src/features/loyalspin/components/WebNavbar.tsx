@@ -121,7 +121,9 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
     },
     {
       id: 'CarteFidelite',
-      label: t('web.userDashboard.loyaltyCardTitle', { defaultValue: 'Carte Fidélité' }),
+      label: t('web.userDashboard.loyaltyCardTitle', {
+        defaultValue: 'Carte Fidélité',
+      }),
       icon: '💳',
     },
     {
@@ -136,7 +138,9 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
     },
     {
       id: 'UserNotifications',
-      label: t('web.userDashboard.notifications', { defaultValue: 'Notifications' }),
+      label: t('web.userDashboard.notifications', {
+        defaultValue: 'Notifications',
+      }),
       icon: '🔔',
     },
     {
@@ -258,7 +262,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
                   ? 'AdminAccueil'
                   : currentRole === 'user'
                   ? 'UserDashboard'
-                  : 'Accueil'
+                  : 'Accueil',
               )
             }
             className="flex flex-row items-center gap-3"

@@ -27,9 +27,7 @@ export const ServiceIcon = ({
       role={title ? 'img' : undefined}
     >
       {title && <title>{title}</title>}
-      {Array.isArray(paths) && paths.map(path => (
-        <path key={path} d={path} />
-      ))}
+      {Array.isArray(paths) && paths.map(path => <path key={path} d={path} />)}
     </svg>
   );
 };

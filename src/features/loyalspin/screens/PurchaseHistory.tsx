@@ -53,7 +53,16 @@ const PurchaseHistory: React.FC<PurchaseHistoryProps> = ({ t }) => {
             item.toLowerCase().includes(query.toLowerCase()),
           );
         const matchesStatus =
-          statusFilter === 'Tous' ? true : order.status === tCommon(`web.history.status.${statusFilter.toLowerCase().replace('é', 'e').replace(' ', '')}`, statusFilter);
+          statusFilter === 'Tous'
+            ? true
+            : order.status ===
+              tCommon(
+                `web.history.status.${statusFilter
+                  .toLowerCase()
+                  .replace('é', 'e')
+                  .replace(' ', '')}`,
+                statusFilter,
+              );
         return matchesQuery && matchesStatus;
       }),
     [query, statusFilter, t],
@@ -65,7 +74,10 @@ const PurchaseHistory: React.FC<PurchaseHistoryProps> = ({ t }) => {
   );
 
   const deliveredCount = useMemo(
-    () => filteredOrders.filter(order => order.status === tCommon('web.history.status.livre', 'Livré')).length,
+    () =>
+      filteredOrders.filter(
+        order => order.status === tCommon('web.history.status.livre', 'Livré'),
+      ).length,
     [filteredOrders, t],
   );
 
@@ -150,7 +162,8 @@ const PurchaseHistory: React.FC<PurchaseHistoryProps> = ({ t }) => {
               {tCommon('web.history.monthlySummaryRevenue', 'Revenu estimé')}
             </Text>
             <Text className="mt-3 text-2xl font-black text-[#F97316] dark:text-amber-300">
-              {getOrders(tCommon).reduce((sum, order) => sum + order.total, 0)} DT
+              {getOrders(tCommon).reduce((sum, order) => sum + order.total, 0)}{' '}
+              DT
             </Text>
           </View>
           <View className="rounded-2xl bg-slate-50 dark:bg-slate-900 p-4">
@@ -158,7 +171,13 @@ const PurchaseHistory: React.FC<PurchaseHistoryProps> = ({ t }) => {
               {tCommon('web.history.monthlySummaryPending', 'En attente')}
             </Text>
             <Text className="mt-3 text-2xl font-black text-slate-900 dark:text-white">
-              {getOrders(tCommon).filter(order => order.status === tCommon('web.history.status.encours', 'En cours')).length}
+              {
+                getOrders(tCommon).filter(
+                  order =>
+                    order.status ===
+                    tCommon('web.history.status.encours', 'En cours'),
+                ).length
+              }
             </Text>
           </View>
         </View>

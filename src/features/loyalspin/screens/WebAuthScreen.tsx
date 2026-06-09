@@ -165,8 +165,14 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
 
   const socialProviders = [
     { id: 'gmail', label: tCommon('web.socialProviderGmail', 'Gmail') },
-    { id: 'facebook', label: tCommon('web.socialProviderFacebook', 'Facebook') },
-    { id: 'instagram', label: tCommon('web.socialProviderInstagram', 'Instagram') },
+    {
+      id: 'facebook',
+      label: tCommon('web.socialProviderFacebook', 'Facebook'),
+    },
+    {
+      id: 'instagram',
+      label: tCommon('web.socialProviderInstagram', 'Instagram'),
+    },
     { id: 'tiktok', label: tCommon('web.socialProviderTikTok', 'TikTok') },
   ];
 
@@ -174,10 +180,10 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
     showToast(
       tCommon(
         authTab === 'signin' ? 'web.socialAuthTitle' : 'web.socialAuthTitle',
-        authTab === 'signin'
-          ? 'Social sign in'
-          : 'Social sign up',
-      ) + ': ' + provider,
+        authTab === 'signin' ? 'Social sign in' : 'Social sign up',
+      ) +
+        ': ' +
+        provider,
       'info',
     );
   };

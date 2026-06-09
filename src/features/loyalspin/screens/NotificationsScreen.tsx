@@ -149,7 +149,10 @@ const NotificationsScreen: React.FC<NotificationsScreenProps> = ({ t }) => {
             <View className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
               <View>
                 <Text className="text-sm font-black text-slate-900 dark:text-white">
-                  {tCommon(`web.notifications.items.${notification.id}.title`, notification.title)}
+                  {tCommon(
+                    `web.notifications.items.${notification.id}.title`,
+                    notification.title,
+                  )}
                 </Text>
                 <Text className="text-xs text-slate-500 dark:text-slate-400 mt-2">
                   {notification.createdAt}
@@ -163,7 +166,10 @@ const NotificationsScreen: React.FC<NotificationsScreenProps> = ({ t }) => {
               </Text>
             </View>
             <Text className="mt-4 text-sm text-slate-700 dark:text-slate-200">
-              {tCommon(`web.notifications.items.${notification.id}.message`, notification.message)}
+              {tCommon(
+                `web.notifications.items.${notification.id}.message`,
+                notification.message,
+              )}
             </Text>
             <View className="mt-4 flex flex-wrap gap-2">
               <TouchableOpacity
@@ -211,7 +217,11 @@ const NotificationsScreen: React.FC<NotificationsScreenProps> = ({ t }) => {
               {selectedNotification?.createdAt}
             </Text>
             <Text className="mt-4 text-sm text-slate-700 dark:text-slate-200">
-              {selectedNotification && tCommon(`web.notifications.items.${selectedNotification.id}.message`, selectedNotification.message)}
+              {selectedNotification &&
+                tCommon(
+                  `web.notifications.items.${selectedNotification.id}.message`,
+                  selectedNotification.message,
+                )}
             </Text>
             <View className="mt-6 flex flex-row justify-end gap-3">
               <TouchableOpacity

@@ -8,7 +8,7 @@ import { LogoSVG } from '../features/loyalspin/components/LogoSVG';
 export const LoadingScreen = () => {
   const { theme } = useTheme();
   const styles = createStyles(theme);
-  
+
   const [businessName, setBusinessName] = useState(() => {
     return store.getState()?.appSettings?.businessName || 'LoyalSpin';
   });
@@ -16,7 +16,8 @@ export const LoadingScreen = () => {
   useEffect(() => {
     const unsubscribe = store.subscribe(() => {
       const state = store.getState();
-      const currentBusinessName = state?.appSettings?.businessName || 'LoyalSpin';
+      const currentBusinessName =
+        state?.appSettings?.businessName || 'LoyalSpin';
       if (currentBusinessName !== businessName) {
         setBusinessName(currentBusinessName);
       }
@@ -28,9 +29,7 @@ export const LoadingScreen = () => {
     <View style={styles.container}>
       <View style={styles.logoContainer}>
         <LogoSVG size={120} />
-        <Text style={styles.businessName}>
-          {businessName}
-        </Text>
+        <Text style={styles.businessName}>{businessName}</Text>
       </View>
       <ActivityIndicator size="large" color="#005994" style={styles.spinner} />
     </View>

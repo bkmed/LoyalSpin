@@ -74,7 +74,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
     } else if (signinEmail === 'admin@demo.com' && signinPassword === 'admin123') {
       const adminSession: WebSessionUser = {
         id: 'admin-web-demo',
-        name: 'Admin Plombier',
+        name: 'Admin LoyaltySpin',
         email: 'admin@demo.com',
         role: 'admin',
         phone: '+216 22 000 111',
@@ -173,44 +173,43 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
               {businessName}
             </Text>
             <Text className="text-[9px] text-[#F97316] font-extrabold tracking-widest uppercase mt-0.5">
-              {tCommon('web.branding_services', 'Plomberie · Climatisation · Gaz · Chauffage')}
+              {tCommon('web.branding_services', 'Roulette · Coupons · Récompenses · Partenaires')}
             </Text>
           </View>
         </View>
 
         <View className="my-auto space-y-6 relative z-10 text-left">
           <Text className="bg-[#F97316] text-white text-[9px] font-black px-3.5 py-1.5 rounded-full uppercase tracking-wider leading-none">
-            {tCommon('web.branding_platform', 'PLATEFORME ARTISANALE & MARKETPLACE')}
+            {tCommon('web.branding_platform', 'PLATEFORME LOYALSPIN')}
           </Text>
           <Text className="text-4xl sm:text-5xl font-black text-white leading-tight">
-            {tCommon('web.branding_leader', 'Le leader de la plomberie express en Tunisie.')}
+            {tCommon('web.branding_leader', 'Tournez, gagnez et conservez vos récompenses.')}
           </Text>
           <Text className="text-slate-300 text-sm leading-relaxed font-semibold">
-            {tCommon('web.branding_description', "Bénéficiez de dépannages sanitaires immédiats par des plombiers agréés et d'un marketplace premium pour acheter des pièces détachées d'occasion révisées et garanties.")}
+            {tCommon('web.branding_description', 'Participez à la roue de fidélité, gagnez des coupons et découvrez des offres partenaires sur web, Android et iOS.')}
           </Text>
           <View className="grid grid-cols-2 gap-6 pt-6">
             <View>
               <Text className="text-2xl font-black text-[#F97316]">
-                {tCommon('web.branding_24h', '24h/24')}
+                {tCommon('web.branding_24h', 'Gagnez chaque jour')}
               </Text>
               <Text className="text-[10px] text-slate-400 font-extrabold uppercase mt-1 dark:text-slate-300">
-                {tCommon('web.branding_urgentIntervention', 'Intervention Urgente')}
+                {tCommon('web.branding_urgentIntervention', 'Tournez tous les jours')}
               </Text>
             </View>
             <View>
               <Text className="text-2xl font-black text-[#F97316]">
-                {tCommon('web.branding_tested', '100% testé')}
+                {tCommon('web.branding_tested', 'Récompenses sécurisées')}
               </Text>
               <Text className="text-[10px] text-slate-400 font-extrabold uppercase mt-1 dark:text-slate-300">
-                {tCommon('web.branding_partsWarranty', 'Garantie Pièces')}
+                {tCommon('web.branding_partsWarranty', 'Offres vérifiées')}
               </Text>
             </View>
           </View>
         </View>
 
         <Text className="text-xs text-slate-500 font-bold relative z-10 dark:text-slate-400">
-          {tCommon('web.branding_copyright', '© 2026 {{businessName}}. Développé pour les particuliers et professionnels.', { businessName })}
-        </Text>
+          {tCommon('web.branding_copyright', '© 2026 {{businessName}}. Créé pour les clients fidèles et les partenaires.', { businessName })}
       </View>
 
       {/* Right panel login/register panel */}
@@ -324,7 +323,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                 className="w-full bg-[#1E3A5F] hover:bg-[#152a47] text-white text-xs font-black py-4 rounded-xl transition shadow-lg uppercase tracking-wider hover:scale-[1.01] transform"
               >
                 <Text className="text-white text-xs font-black text-center">
-                  {tCommon('web.secureLoginButton', 'Connexion Sécurisée')}
+                  {tCommon('web.secureLoginButton', 'Secure login')}
                 </Text>
               </TouchableOpacity>
 
@@ -332,7 +331,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                 <Text className="text-[10px] text-slate-400 dark:text-slate-500 text-center font-bold mb-2.5">
                   {tCommon(
                     'web.demoAccountsLabel',
-                    'COMPTES DE DÉMO DE PLOMBERIE (ACCÈS DIRECT)',
+                    'LOYALSPIN DEMO ACCOUNTS (DIRECT ACCESS)',
                   )}
                 </Text>
                 <View className="grid grid-cols-2 gap-3 text-center">
@@ -341,7 +340,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                       setSigninEmail('user@demo.com');
                       setSigninPassword('user123');
                       showToast(
-                        tCommon('web.signingIn', 'Connexion en cours...'),
+                        tCommon('web.signingIn', 'Signing in...'),
                         'info',
                       );
                       setTimeout(() => {
@@ -370,7 +369,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                     className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[10px] font-black py-2.5 rounded-lg transition"
                   >
                     <Text className="text-slate-800 dark:text-slate-200 text-[10px] font-black text-center">
-                      Client (Ahmed Ben Ali)
+                      Client LoyaltySpin (Ahmed Ben Ali)
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -378,13 +377,13 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                       setSigninEmail('admin@demo.com');
                       setSigninPassword('admin123');
                       showToast(
-                        tCommon('web.signingIn', 'Connexion en cours...'),
+                        tCommon('web.signingIn', 'Signing in...'),
                         'info',
                       );
                       setTimeout(() => {
                         const adminSession: WebSessionUser = {
                           id: 'admin-web-demo',
-                          name: 'Admin Plombier',
+                          name: 'Admin LoyaltySpin',
                           email: 'admin@demo.com',
                           role: 'admin',
                           phone: '+216 22 000 111',
@@ -407,7 +406,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                     className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[10px] font-black py-2.5 rounded-lg transition"
                   >
                     <Text className="text-slate-800 dark:text-slate-200 text-[10px] font-black text-center">
-                      Admin Plombier
+                      Admin LoyaltySpin
                     </Text>
                   </TouchableOpacity>
                 </View>

@@ -83,9 +83,9 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({
 
                 <TouchableOpacity
                   onPress={() => Linking.openURL('https://demo.loyalspin.com')}
-                  className={`px-8 py-4 rounded-xl transition font-black text-xs border-2 hover:scale-105 transform ${currentTheme === 'dark' ? 'border-slate-500 text-slate-200 hover:bg-slate-800' : 'border-slate-300 text-slate-700 hover:bg-slate-100'}`}
+                  className={`px-8 py-4 rounded-xl transition font-black text-xs border-2 hover:scale-105 transform ${currentTheme === 'dark' ? 'border-slate-500 hover:bg-slate-800' : 'border-slate-300 hover:bg-slate-100'}`}
                 >
-                  <Text>{tCommon('landing.view_demo', 'Voir la démo')}</Text>
+                  <Text className={`font-black text-xs ${currentTheme === 'dark' ? 'text-slate-200' : 'text-slate-700'}`}>{tCommon('landing.view_demo', 'Voir la démo')}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -203,22 +203,25 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({
           <View className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                name: 'Manuel',
-                price: '49€',
+                nameKey: 'landing.pricing.manual',
+                defaultName: 'Manuel',
+                price: '167 DT',
                 period: '/mois',
                 features: ['landing.pricing_feat_1', 'landing.pricing_feat_2', 'landing.pricing_feat_3'],
                 cta: false,
               },
               {
-                name: 'Trimestriel',
-                price: '45€',
+                nameKey: 'landing.pricing.quarterly',
+                defaultName: 'Trimestriel',
+                price: '153 DT',
                 period: '/mois',
                 features: ['landing.pricing_feat_1', 'landing.pricing_feat_2', 'landing.pricing_feat_3', 'landing.pricing_feat_4'],
                 cta: true,
               },
               {
-                name: 'Annuel',
-                price: '39€',
+                nameKey: 'landing.pricing.annual',
+                defaultName: 'Annuel',
+                price: '133 DT',
                 period: '/mois',
                 features: ['landing.pricing_feat_1', 'landing.pricing_feat_2', 'landing.pricing_feat_3', 'landing.pricing_feat_4', 'landing.pricing_feat_5'],
                 cta: false,
@@ -232,7 +235,7 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({
                 )}
                 
                 <Text className={`text-xl font-black mb-2 ${currentTheme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-                  {plan.name}
+                  {tCommon(plan.nameKey, plan.defaultName)}
                 </Text>
                 <Text className="text-3xl font-black text-[#F97316] mb-1">
                   {plan.price}
@@ -251,9 +254,9 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({
 
                 <TouchableOpacity
                   onPress={() => setShowLandingPage(false)}
-                  className={`w-full py-3 rounded-lg font-black text-center transition ${plan.cta ? 'bg-[#F97316] text-white hover:bg-[#e0630b]' : currentTheme === 'dark' ? 'bg-slate-700 text-white hover:bg-slate-600' : 'bg-slate-200 text-slate-900 hover:bg-slate-300'}`}
+                  className={`w-full py-3 rounded-lg transition items-center justify-center ${plan.cta ? 'bg-[#F97316] hover:bg-[#e0630b]' : currentTheme === 'dark' ? 'bg-slate-700 hover:bg-slate-600' : 'bg-slate-200 hover:bg-slate-300'}`}
                 >
-                  <Text className={plan.cta ? 'text-white' : currentTheme === 'dark' ? 'text-white' : 'text-slate-900'}>
+                  <Text className={`font-black ${plan.cta ? 'text-white' : currentTheme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                     {tCommon('landing.get_started', 'Commencer')}
                   </Text>
                 </TouchableOpacity>

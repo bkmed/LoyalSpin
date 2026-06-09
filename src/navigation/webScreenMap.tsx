@@ -7,6 +7,10 @@ import MarketplaceScreen from '../features/loyalspin/screens/MarketplaceScreen';
 import GalleryScreen from '../features/loyalspin/screens/GalleryScreen';
 import ProfileScreen from '../features/loyalspin/screens/ProfileScreen';
 import LegalPages from '../features/loyalspin/screens/LegalPages';
+import UserDashboardMobile from '../features/loyalspin/screens/UserDashboardMobile';
+import CouponMobile from '../features/loyalspin/screens/CouponMobile';
+import PurchaseHistory from '../features/loyalspin/screens/PurchaseHistory';
+import NotificationsScreen from '../features/loyalspin/screens/NotificationsScreen';
 import AdminDashboard from '../features/loyalspin/screens/AdminDashboard';
 import AdminAnnonces from '../features/loyalspin/screens/AdminAnnonces';
 import AdminCategories from '../features/loyalspin/screens/AdminCategories';
@@ -140,6 +144,17 @@ export const renderWebScreen = ({
           setSelectedProduct={setSelectedProduct}
         />
       );
+    case 'UserDashboard':
+      return <UserDashboardMobile t={translate} setActiveTab={setActiveTab} />;
+
+    case 'UserCoupons':
+      return <CouponMobile t={translate} />;
+
+    case 'UserPurchaseHistory':
+      return <PurchaseHistory t={translate} />;
+
+    case 'UserNotifications':
+      return <NotificationsScreen t={translate} />;
     case 'Informations':
     case 'Politique':
     case 'Conditions':

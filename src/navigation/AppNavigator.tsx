@@ -35,6 +35,10 @@ import ZonesScreen from '../features/loyalspin/screens/ZonesScreen';
 import MarketplaceScreen from '../features/loyalspin/screens/MarketplaceScreen';
 import GalleryScreen from '../features/loyalspin/screens/GalleryScreen';
 import ProfileScreenWeb from '../features/loyalspin/screens/ProfileScreen';
+import UserDashboardMobile from '../features/loyalspin/screens/UserDashboardMobile';
+import CouponMobile from '../features/loyalspin/screens/CouponMobile';
+import PurchaseHistory from '../features/loyalspin/screens/PurchaseHistory';
+import NotificationsScreen from '../features/loyalspin/screens/NotificationsScreen';
 import LegalPages from '../features/loyalspin/screens/LegalPages';
 import AdminDashboard from '../features/loyalspin/screens/AdminDashboard';
 import AdminAnnonces from '../features/loyalspin/screens/AdminAnnonces';
@@ -539,6 +543,22 @@ export const AppNavigator = () => {
               toggleFavorite={toggleFavorite}
               setSelectedProduct={setSelectedProduct}
             />
+          )}
+
+          {activeTab === 'UserDashboard' && (
+            <UserDashboardMobile t={translate} setActiveTab={setActiveTab} />
+          )}
+
+          {activeTab === 'UserCoupons' && (
+            <CouponMobile t={translate} />
+          )}
+
+          {activeTab === 'UserPurchaseHistory' && (
+            <PurchaseHistory t={translate} />
+          )}
+
+          {activeTab === 'UserNotifications' && (
+            <NotificationsScreen t={translate} />
           )}
 
           {['Informations', 'Politique', 'Conditions', 'PlanSite'].includes(

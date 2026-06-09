@@ -1,7 +1,7 @@
 {
   "name": "LoyalSpin",
   "short_name": "LoyalSpin",
-  "description": "Your premium e-commerce shopping destination.",
+  "description": "LoyalSpin: loyalty wheel, rewards and coupon platform.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

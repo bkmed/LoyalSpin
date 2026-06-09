@@ -163,6 +163,25 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
     );
   };
 
+  const socialProviders = [
+    { id: 'gmail', label: tCommon('web.socialProviderGmail', 'Gmail') },
+    { id: 'facebook', label: tCommon('web.socialProviderFacebook', 'Facebook') },
+    { id: 'instagram', label: tCommon('web.socialProviderInstagram', 'Instagram') },
+    { id: 'tiktok', label: tCommon('web.socialProviderTikTok', 'TikTok') },
+  ];
+
+  const handleSocialAuth = (provider: string) => {
+    showToast(
+      tCommon(
+        authTab === 'signin' ? 'web.socialAuthTitle' : 'web.socialAuthTitle',
+        authTab === 'signin'
+          ? 'Social sign in'
+          : 'Social sign up',
+      ) + ': ' + provider,
+      'info',
+    );
+  };
+
   return (
     <View className="min-h-screen grid grid-cols-1 lg:grid-cols-12 bg-slate-50 dark:bg-[#0B0F19] text-slate-800 dark:text-slate-100 transition-colors duration-300">
       {/* Left panel branding visual presentation (desktop only) */}
@@ -328,6 +347,25 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                   onChangeText={setSigninPassword}
                   className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-[#F97316] text-left transition-colors"
                 />
+              </View>
+
+              <View className="space-y-3">
+                <Text className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-left">
+                  {tCommon('web.socialLoginTitle', 'Or sign in with')}
+                </Text>
+                <View className="grid grid-cols-2 gap-3">
+                  {socialProviders.map(provider => (
+                    <TouchableOpacity
+                      key={provider.id}
+                      onPress={() => handleSocialAuth(provider.label)}
+                      className="w-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl py-3 text-xs font-black text-slate-800 dark:text-slate-200 transition"
+                    >
+                      <Text className="text-center text-slate-800 dark:text-slate-200">
+                        {provider.label}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
               </View>
 
               <View className="flex justify-between items-center text-xs text-slate-500 dark:text-slate-400 font-bold">
@@ -732,6 +770,25 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                     onChangeText={setSignupConfirmPassword}
                     className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-[#F97316] transition-colors"
                   />
+                </View>
+              </View>
+
+              <View className="space-y-3">
+                <Text className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-left">
+                  {tCommon('web.socialSignUpTitle', 'Or sign up with')}
+                </Text>
+                <View className="grid grid-cols-2 gap-3">
+                  {socialProviders.map(provider => (
+                    <TouchableOpacity
+                      key={provider.id}
+                      onPress={() => handleSocialAuth(provider.label)}
+                      className="w-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl py-3 text-xs font-black text-slate-800 dark:text-slate-200 transition"
+                    >
+                      <Text className="text-center text-slate-800 dark:text-slate-200">
+                        {provider.label}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
                 </View>
               </View>
 

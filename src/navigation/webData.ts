@@ -20,13 +20,13 @@ export const initialWebCategories: LocalCategory[] = [
 export const initialWebServices = [
   {
     id: 'srv-1',
-    name: 'plomberie_generale',
-    icon: 'plumbing',
-    desc: 'plomberie_desc_long',
-    pts: ['plomberie_desc_1', 'plomberie_desc_2', 'plomberie_desc_3'],
+    name: 'loyalspin_rewards',
+    icon: 'rewards',
+    desc: 'loyalspin_desc_long',
+    pts: ['loyalspin_desc_1', 'loyalspin_desc_2', 'loyalspin_desc_3'],
     whatsappText: 'devis_msg',
-    imgBefore: 'service_before_plomberie',
-    imgAfter: 'service_after_plomberie',
+    imgBefore: 'service_before_rewards',
+    imgAfter: 'service_after_rewards',
   },
   {
     id: 'srv-2',

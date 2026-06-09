@@ -18,7 +18,8 @@ const coupons = [
     title: '15% de réduction',
     code: 'LOYAL15',
     expiry: '31/12/2026',
-    description: 'Réduction utilisable sur votre prochaine récompense LoyalSpin.',
+    description:
+      'Réduction utilisable sur votre prochaine récompense LoyalSpin.',
     status: 'Actif',
   },
   {

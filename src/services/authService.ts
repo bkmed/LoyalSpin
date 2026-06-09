@@ -1,4 +1,5 @@
 import { storageService } from './storage';
+import { subscriptionService } from './subscriptionService';
 import { UserAccount } from '../database/schema';
 
 const AUTH_KEY = 'auth_session';
@@ -119,9 +120,6 @@ export const authService = {
 
     if (!user) throw new Error('Invalid credentials');
 
-    const sessionUser = toSessionUser(user);
-    storageService.setString(AUTH_KEY, JSON.stringify(sessionUser));
-    return sessionUser;
     const sessionUser = toSessionUser(user);
     storageService.setString(AUTH_KEY, JSON.stringify(sessionUser));
 

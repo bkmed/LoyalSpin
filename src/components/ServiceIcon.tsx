@@ -12,7 +12,7 @@ export const ServiceIcon = ({
   className = 'w-6 h-6',
   title,
 }: ServiceIconProps) => {
-  const paths = serviceIconPaths[name] || serviceIconPaths.plumbing;
+  const paths = serviceIconPaths[name] || serviceIconPaths.rewards || [];
 
   return (
     <svg
@@ -27,7 +27,7 @@ export const ServiceIcon = ({
       role={title ? 'img' : undefined}
     >
       {title && <title>{title}</title>}
-      {paths.map(path => (
+      {Array.isArray(paths) && paths.map(path => (
         <path key={path} d={path} />
       ))}
     </svg>

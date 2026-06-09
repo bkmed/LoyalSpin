@@ -112,29 +112,38 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
 
   const userLinks = [
     {
-      id: 'Accueil',
-      label: t('web.accueil', { defaultValue: 'Accueil' }),
+      id: 'UserDashboard',
+      label: t('web.dashboard', { defaultValue: 'Dashboard' }),
       icon: '🏠',
     },
     {
-      id: 'Services',
-      label: t('web.services', { defaultValue: 'Services' }),
-      icon: '🔧',
+      id: 'LoyalSpin',
+      label: t('web.roulette', { defaultValue: 'Roulette' }),
+      icon: '🎯',
     },
     {
-      id: 'Zones',
-      label: t('web.zones', { defaultValue: 'Zones' }),
-      icon: '📍',
+      id: 'CarteFidelite',
+      label: t('web.loyaltyCard', { defaultValue: 'Carte Fidélité' }),
+      icon: '💳',
     },
     {
-      id: 'Marketplace',
-      label: t('web.pieces', { defaultValue: 'Marketplace' }),
-      icon: '🛒',
+      id: 'UserCoupons',
+      label: t('web.coupons', { defaultValue: 'Coupons' }),
+      icon: '🎟️',
     },
-    { id: 'Gallery', label: galleryTitle, icon: '🖼️' },
+    {
+      id: 'UserPurchaseHistory',
+      label: t('web.history', { defaultValue: 'Historique' }),
+      icon: '📜',
+    },
+    {
+      id: 'UserNotifications',
+      label: t('web.notifications', { defaultValue: 'Notifications' }),
+      icon: '🔔',
+    },
     {
       id: 'Profile',
-      label: t('web.mon_profil', { defaultValue: 'Mon profil' }),
+      label: t('web.profil', { defaultValue: 'Profil' }),
       icon: '👤',
     },
   ];

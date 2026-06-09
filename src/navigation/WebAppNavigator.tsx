@@ -237,13 +237,13 @@ export const AppNavigator = () => {
       const initialServices = [
         {
           id: 'srv-1',
-          name: 'plomberie_generale',
-          icon: 'plumbing',
-          desc: 'plomberie_desc_long',
-          pts: ['plomberie_desc_1', 'plomberie_desc_2', 'plomberie_desc_3'],
+          name: 'loyalspin_rewards',
+          icon: 'rewards',
+          desc: 'loyalspin_desc_long',
+          pts: ['loyalspin_desc_1', 'loyalspin_desc_2', 'loyalspin_desc_3'],
           whatsappText: 'devis_msg',
-          imgBefore: 'service_before_plomberie',
-          imgAfter: 'service_after_plomberie',
+          imgBefore: 'service_before_rewards',
+          imgAfter: 'service_after_rewards',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },
@@ -449,7 +449,7 @@ export const AppNavigator = () => {
             </View>
           )}
 
-          {activeTab === 'Profile' && (
+          {(activeTab === 'Profile' || activeTab === 'CarteFidelite') && (
             <ProfileScreen
               currentRole={currentRole}
               businessName={businessName}

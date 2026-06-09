@@ -75,6 +75,20 @@ export const LoginScreen = ({ navigation }: any) => {
     return isValid;
   };
 
+  const socialProviders = [
+    { id: 'gmail', label: t('login.socialProviderGmail') },
+    { id: 'facebook', label: t('login.socialProviderFacebook') },
+    { id: 'instagram', label: t('login.socialProviderInstagram') },
+    { id: 'tiktok', label: t('login.socialProviderTikTok') },
+  ];
+
+  const handleSocialAuth = (provider: string) => {
+    notificationService.showAlert(
+      t('login.socialAuthTitle'),
+      t('login.socialAuthMessage', { provider }),
+    );
+  };
+
   const handleLogin = async () => {
     if (!validateForm()) return;
 
@@ -124,6 +138,21 @@ export const LoginScreen = ({ navigation }: any) => {
           {t('login.forgotPassword')}
         </Text>
       </TouchableOpacity>
+
+      <View style={styles.socialContainer}>
+        <Text style={styles.socialTitle}>{t('login.socialLoginTitle')}</Text>
+        <View style={styles.socialButtons}>
+          {socialProviders.map(provider => (
+            <TouchableOpacity
+              key={provider.id}
+              style={styles.socialButton}
+              onPress={() => handleSocialAuth(provider.label)}
+            >
+              <Text style={styles.socialButtonText}>{provider.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
 
       <TouchableOpacity
         style={[styles.button, loading && styles.buttonDisabled]}
@@ -204,6 +233,37 @@ const createStyles = (theme: Theme) =>
     buttonText: {
       ...theme.textVariants.button,
       color: theme.colors.surface,
+    },
+    socialContainer: {
+      marginBottom: theme.spacing.l,
+    },
+    socialTitle: {
+      ...theme.textVariants.body,
+      color: theme.colors.subText,
+      textAlign: 'center',
+      marginBottom: theme.spacing.s,
+    },
+    socialButtons: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between',
+    },
+    socialButton: {
+      flex: 1,
+      minWidth: 140,
+      marginBottom: theme.spacing.s,
+      marginRight: theme.spacing.s,
+      paddingVertical: theme.spacing.m,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: 1,
+      borderColor: theme.colors.primary + '30',
+      borderRadius: theme.spacing.s,
+      backgroundColor: theme.colors.primaryBackground,
+    },
+    socialButtonText: {
+      ...theme.textVariants.button,
+      color: theme.colors.text,
     },
     footer: {
       flexDirection: 'row',

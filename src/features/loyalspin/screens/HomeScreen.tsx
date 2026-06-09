@@ -138,9 +138,9 @@ export const HomeScreenWeb: React.FC<HomeScreenWebProps> = ({
           {(
             [
               {
-                title: tCommon('web.plomberie_generale'),
-                icon: 'plumbing',
-                desc: tCommon('web.home.service_desc_plumbing'),
+                title: tCommon('web.loyalspin_rewards'),
+                icon: 'rewards',
+                desc: tCommon('web.home.service_desc_rewards'),
               },
               {
                 title: tCommon('web.climatisation'),

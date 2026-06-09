@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useSubscriptionGuard } from '../../context/SubscriptionGuardContext';
+import { useSubscriptionGuard } from '../context/SubscriptionGuardContext';
 
 interface TrialBannerProps {
   onChoosePlan?: () => void;

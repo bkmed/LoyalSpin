@@ -1,7 +1,7 @@
-export type ServiceIconName = 'plumbing' | 'ac' | 'gas' | 'heater';
+export type ServiceIconName = 'rewards' | 'ac' | 'gas' | 'heater';
 
 export const serviceIconPaths: Record<ServiceIconName, string[]> = {
-  plumbing: [
+  rewards: [
     'M7 18h10',
     'M9 18V9a5 5 0 0 1 5-5h3',
     'M17 4v5',

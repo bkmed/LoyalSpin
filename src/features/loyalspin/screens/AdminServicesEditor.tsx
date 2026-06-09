@@ -19,7 +19,7 @@ const AdminServicesEditor = () => {
   const dispatch = useDispatch();
   const services = useSelector(selectServices) as Service[];
   const [nameKey, setNameKey] = useState('loyalspin_rewards');
-  const [icon, setIcon] = useState('plumbing');
+  const [icon, setIcon] = useState('rewards');
   const [descKey, setDescKey] = useState('loyalspin_desc_long');
   const [ptsKeys, setPtsKeys] = useState(
     'loyalspin_desc_1,loyalspin_desc_2,loyalspin_desc_3',
@@ -55,7 +55,7 @@ const AdminServicesEditor = () => {
 
   const reset = ({ clearStatus = true }: { clearStatus?: boolean } = {}) => {
     setNameKey('loyalspin_rewards');
-    setIcon('plumbing');
+    setIcon('rewards');
     setDescKey('loyalspin_desc_long');
     setPtsKeys('loyalspin_desc_1,loyalspin_desc_2,loyalspin_desc_3');
     setEditingId(null);

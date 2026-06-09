@@ -5,9 +5,9 @@ import { ServiceIcon } from './ServiceIcon';
 describe('ServiceIcon', () => {
   it('renders a named service icon', () => {
     const element = ServiceIcon({
-      name: 'plumbing',
+      name: 'rewards',
       className: 'w-8 h-8',
-      title: 'Plumbing',
+      title: 'Rewards',
     });
 
     expect(element.type).toBe('svg');
@@ -16,7 +16,7 @@ describe('ServiceIcon', () => {
     expect(React.Children.count(element.props.children)).toBeGreaterThan(1);
   });
 
-  it('falls back to the plumbing icon for unknown names', () => {
+  it('falls back to the rewards icon for unknown names', () => {
     const element = ServiceIcon({ name: 'unknown' as any });
 
     expect(element.type).toBe('svg');

@@ -331,7 +331,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                 <Text className="text-[10px] text-slate-400 dark:text-slate-500 text-center font-bold mb-2.5">
                   {tCommon(
                     'web.demoAccountsLabel',
-                    'LOYALSPIN DEMO ACCOUNTS (DIRECT ACCESS)',
+                      'LOYALSPIN DEMO ACCOUNTS (DIRECT ACCESS)',
                   )}
                 </Text>
                 <View className="grid grid-cols-2 gap-3 text-center">

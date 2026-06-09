@@ -52,6 +52,7 @@ import galleryReducer from './slices/gallerySlice';
 import uiReducer from './slices/uiSlice';
 import webSessionReducer from './slices/webSessionSlice';
 import loyalReducer from './slices/loyalSpinSlice';
+import subscriptionReducer from './slices/subscriptionSlice';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -68,6 +69,7 @@ const rootReducer = combineReducers({
   parts: partsReducer,
   gallery: galleryReducer,
   loyal: loyalReducer,
+  subscription: subscriptionReducer,
   plombierSettings: plombierSettingsReducer,
   ui: uiReducer,
   webSession: webSessionReducer,
@@ -90,6 +92,7 @@ const persistConfig = {
     'services',
     'parts',
     'loyal',
+    'subscription',
     'gallery',
     'plombierSettings',
     'ui',

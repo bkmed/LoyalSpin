@@ -36,9 +36,25 @@
       "icon": "icone (plumbing|ac|gas|heater)",
       "descKey": "clé description (ex: plomberie_desc_long)",
       "ptsKeys": "clés bullets séparées par ,",
-      "title": "Titre",
-      "subtitle": "Sous-titre",
+      "title": "Title",
+      "subtitle": "Subtitle",
       "description": "Description"
+    },
+    "subscription": {
+      "choosePlan": "Choisissez votre formule",
+      "register": { "title": "Créez votre compte" },
+      "establishment": { "title": "Parlez-nous de votre établissement" },
+      "continue": "Continuer",
+      "summary": { "title": "Récapitulatif" },
+      "proceedToPayment": "Procéder au paiement"
+    },
+    "plans": {
+      "starter": { "name": "Starter", "feature1": "1 établissement" },
+      "business": { "name": "Business", "feature1": "3 établissements" },
+      "enterprise": {
+        "name": "Enterprise",
+        "feature1": "Établissements illimités"
+      }
     },
     "saveButton": "Enregistrer",
     "addServiceModalButton": "+ Ajouter le service",
@@ -1110,6 +1126,18 @@
     "shippingAddress": "Adresse de livraison"
   },
   "payment": {
+    "title": "Paiement",
+    "processing": "Validation de votre abonnement...",
+    "success": {
+      "title": "Bienvenue dans LoyalSpin",
+      "message": "Votre abonnement est maintenant actif.",
+      "goToDashboard": "Aller au tableau de bord"
+    },
+    "failed": {
+      "title": "Paiement échoué",
+      "message": "Votre paiement n'a pas pu être traité."
+    },
+    "retry": "Réessayer le paiement",
     "paymentMethod": "Méthode de paiement",
     "creditCard": "Carte de crédit/débit",
     "paypal": "PayPal",
@@ -1124,6 +1152,10 @@
     "payNow": "Payer maintenant",
     "paymentSuccessful": "Paiement réussi",
     "paymentFailed": "Paiement failed"
+  },
+  "trial": {
+    "start": "L'essai commence le {{date}}",
+    "end": "L'essai se termine le {{date}}"
   },
   "forgotPassword": {
     "backToLogin": "Retour à la connexion",
@@ -1704,6 +1736,46 @@
       "free_shipping": "Livraison gratuite",
       "bonus_points": "50 points bonus",
       "gift": "Cadeau gratuit"
+    },
+    "demoDashboard": {
+      "title": "Demo LoyalSpin",
+      "subtitle": "Explorez l'expérience client complète",
+      "pointsAvailable": "Points disponibles",
+      "demoNotice": "ℹ️ Ceci est une démo interactive en lecture seule",
+      "rewardsSectionTitle": "Récompenses Disponibles",
+      "spinWheelSectionTitle": "Lancer la Roulette",
+      "spinWheelTitle": "Votre Roulette 3D",
+      "spinWheelDescription": "À chaque visite, lancez la roulette et gagnez des récompenses instantanées !",
+      "couponsSectionTitle": "Vos Coupons",
+      "activeCouponsTitle": "Coupons Actifs",
+      "activeCouponsDescription": "Consultez vos coupons disponibles et présentez-les au comptoir",
+      "loyaltyCardSectionTitle": "Votre Carte Fidélité",
+      "digitalCardTitle": "Carte Fidélité Numérique",
+      "digitalCardDescription": "Accédez à votre QR code personnel à présenter à chaque visite",
+      "rewards": {
+        "freeCoffee": {
+          "title": "Café Gratuit",
+          "condition": "250 points"
+        },
+        "freeCroissant": {
+          "title": "Croissant Offert",
+          "condition": "150 points"
+        },
+        "discount20": {
+          "title": "Réduction 20%",
+          "condition": "500 points"
+        },
+        "mysteryGift": {
+          "title": "Cadeau Mystère",
+          "condition": "1000 points"
+        }
+      },
+      "stats": {
+        "totalVisits": "Visites Totales",
+        "pointsEarned": "Points Accumulés",
+        "rewardsEarned": "Récompenses Gagnées",
+        "level": "Niveau"
+      }
     }
   },
   "auth_hardcoded": {

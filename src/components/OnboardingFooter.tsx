@@ -3,7 +3,6 @@ import {
   View,
   TouchableOpacity,
   Text,
-  useWindowDimensions,
   Platform,
   StyleSheet,
 } from 'react-native';
@@ -32,7 +31,6 @@ export const OnboardingFooter: React.FC<OnboardingFooterProps> = ({
   nextLabel,
   finishLabel,
 }) => {
-  const { width } = useWindowDimensions();
   const theme = isDarkMode ? darkTheme : lightTheme;
   const isWeb = Platform.OS === 'web';
   const isLastSlide = currentSlide === totalSlides - 1;

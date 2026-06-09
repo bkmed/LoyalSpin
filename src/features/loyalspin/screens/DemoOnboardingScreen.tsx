@@ -8,10 +8,8 @@ import {
   Platform,
   StyleSheet,
   PanResponder,
-  Animated,
   GestureResponderEvent,
   PanResponderGestureState,
-  Keyboard,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { OnboardingSlide } from '../../../components/OnboardingSlide';
@@ -30,31 +28,54 @@ export const DemoOnboardingScreen: React.FC<{
   onFinish?: () => void;
 }> = ({ isDarkMode = false, onFinish }) => {
   const { t } = useTranslation();
-  const { width, height } = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const theme = isDarkMode ? darkTheme : lightTheme;
   const isWeb = Platform.OS === 'web';
 
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isScrolling, setIsScrolling] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
   const panResponder = useRef<any>(null);
   const lastOffsetRef = useRef<number>(0);
+  const scrollTimeoutRef = useRef<any>(null);
 
   // Slide data
   const slides: Slide[] = [
     {
-      title: t('onboarding.slide1.title'),
-      description: t('onboarding.slide1.description'),
-      badge: t('onboarding.slide1.badge'),
+      title: t('onboarding.slide1.title', {
+        defaultValue: 'Engage your customers with LoyalSpin',
+      }),
+      description: t('onboarding.slide1.description', {
+        defaultValue:
+          'Create a gamified loyalty experience that boosts repeat visits and increases customer satisfaction.',
+      }),
+      badge: t('onboarding.slide1.badge', {
+        defaultValue: 'Engage',
+      }),
     },
     {
-      title: t('onboarding.slide2.title'),
-      description: t('onboarding.slide2.description'),
-      badge: t('onboarding.slide2.badge'),
+      title: t('onboarding.slide2.title', {
+        defaultValue: 'Collect real-time insights',
+      }),
+      description: t('onboarding.slide2.description', {
+        defaultValue:
+          'Monitor rewards, campaigns and customer behavior to make smarter business choices.',
+      }),
+      badge: t('onboarding.slide2.badge', {
+        defaultValue: 'Analyze',
+      }),
     },
     {
-      title: t('onboarding.slide3.title'),
-      description: t('onboarding.slide3.description'),
-      badge: t('onboarding.slide3.badge'),
+      title: t('onboarding.slide3.title', {
+        defaultValue: 'Grow loyalty with every spin',
+      }),
+      description: t('onboarding.slide3.description', {
+        defaultValue:
+          'Launch your interactive wheel and turn casual visits into lasting customer relationships.',
+      }),
+      badge: t('onboarding.slide3.badge', {
+        defaultValue: 'Reward',
+      }),
     },
   ];
 
@@ -78,25 +99,52 @@ export const DemoOnboardingScreen: React.FC<{
         }
       },
     });
+
+    // Cleanup timeout on unmount
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
   }, [currentSlide]);
 
   const handleNextSlide = () => {
     if (currentSlide < slides.length - 1) {
-      setCurrentSlide(currentSlide + 1);
+      const nextSlide = currentSlide + 1;
+      setCurrentSlide(nextSlide);
+      setIsScrolling(true);
       scrollViewRef.current?.scrollTo({
-        x: (currentSlide + 1) * width,
+        x: nextSlide * width,
         animated: true,
       });
+      // Clear any pending scroll timeout
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      // Set a timeout to mark scrolling as complete
+      scrollTimeoutRef.current = setTimeout(() => {
+        setIsScrolling(false);
+      }, 600); // Adjust timing based on animation duration
     }
   };
 
   const handlePrevSlide = () => {
     if (currentSlide > 0) {
-      setCurrentSlide(currentSlide - 1);
+      const prevSlide = currentSlide - 1;
+      setCurrentSlide(prevSlide);
+      setIsScrolling(true);
       scrollViewRef.current?.scrollTo({
-        x: (currentSlide - 1) * width,
+        x: prevSlide * width,
         animated: true,
       });
+      // Clear any pending scroll timeout
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      // Set a timeout to mark scrolling as complete
+      scrollTimeoutRef.current = setTimeout(() => {
+        setIsScrolling(false);
+      }, 600); // Adjust timing based on animation duration
     }
   };
 
@@ -111,15 +159,28 @@ export const DemoOnboardingScreen: React.FC<{
   };
 
   const handleMomentumScrollEnd = (event: any) => {
-    const x = event.nativeEvent.contentOffset.x;
-    const newSlide = Math.round(x / width);
-    if (newSlide !== currentSlide) {
-      setCurrentSlide(newSlide);
+    // Only update slide index if not currently in an animated scroll
+    if (!isScrolling) {
+      const x = event.nativeEvent.contentOffset.x;
+      // Calculate the closest slide index based on position
+      // Use a more intelligent rounding that respects slide boundaries
+      const slideIndex = Math.round(x / width);
+      // Clamp to valid slide range
+      const newSlide = Math.max(0, Math.min(slideIndex, slides.length - 1));
+      if (newSlide !== currentSlide) {
+        setCurrentSlide(newSlide);
+        // Force scroll to correct position if it drifted
+        scrollViewRef.current?.scrollTo({
+          x: newSlide * width,
+          animated: false,
+        });
+      }
     }
   };
 
   const handleScrollWeb = (delta: number) => {
-    if (Math.abs(delta) > 50) {
+    // Don't process scroll gestures if an animated scroll is in progress
+    if (!isScrolling && Math.abs(delta) > 50) {
       if (delta > 0 && currentSlide > 0) {
         handlePrevSlide();
       } else if (delta < 0 && currentSlide < slides.length - 1) {
@@ -215,21 +276,21 @@ export const DemoOnboardingScreen: React.FC<{
         ref={scrollViewRef}
         horizontal
         pagingEnabled
+        snapToInterval={width}
+        decelerationRate="fast"
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         onMomentumScrollEnd={handleMomentumScrollEnd}
         {...(panResponder.current && panResponder.current.panHandlers)}
-        scrollEnabled={!isWeb}
-        onScroll={
-          isWeb
-            ? (event) => {
-                const x = event.nativeEvent.contentOffset.x;
-                handleScrollWeb(lastOffsetRef.current - x);
-                lastOffsetRef.current = x;
-              }
-            : undefined
-        }
         style={styles.scrollContainer}
+        contentContainerStyle={{ flexGrow: 1 }}
+        onScroll={(event) => {
+          const x = event.nativeEvent.contentOffset.x;
+          if (isWeb) {
+            handleScrollWeb(lastOffsetRef.current - x);
+          }
+          lastOffsetRef.current = x;
+        }}
       >
         {slides.map((slide, index) => (
           <View key={index} style={{ width }}>
@@ -261,9 +322,9 @@ export const DemoOnboardingScreen: React.FC<{
           currentSlide={currentSlide}
           totalSlides={slides.length}
           isDarkMode={isDarkMode}
-          skipLabel={t('onboarding.skip')}
-          nextLabel={t('onboarding.next')}
-          finishLabel={t('onboarding.finish')}
+          skipLabel={t('onboarding.skip', { defaultValue: 'Skip' })}
+          nextLabel={t('onboarding.next', { defaultValue: 'Next' })}
+          finishLabel={t('onboarding.finish', { defaultValue: 'Finish' })}
         />
       </View>
     </View>

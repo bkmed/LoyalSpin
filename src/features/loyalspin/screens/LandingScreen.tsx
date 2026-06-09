@@ -18,7 +18,7 @@ interface LandingScreenProps {
   onViewDemo?: () => void;
 }
 
-export const LandingScreen: React.FC<LandingScreenProps> = ({
+const LandingScreen: React.FC<LandingScreenProps> = ({
   businessName,
   currentTheme,
   nextLanguage,

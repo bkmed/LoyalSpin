@@ -1109,22 +1109,6 @@
     "estimatedDelivery": "Estimated Delivery",
     "shippingAddress": "Shipping Address"
   },
-  "payment": {
-    "paymentMethod": "Payment Method",
-    "creditCard": "Credit/Debit Card",
-    "paypal": "PayPal",
-    "applePay": "Apple Pay",
-    "googlePay": "Google Pay",
-    "cashOnDelivery": "Cash on Delivery",
-    "cardNumber": "Card Number",
-    "expiryDate": "Expiry Date",
-    "cvv": "CVV",
-    "cardholderName": "Cardholder Name",
-    "billingAddress": "Billing Address",
-    "payNow": "Pay Now",
-    "paymentSuccessful": "Payment Successful",
-    "paymentFailed": "Payment Failed"
-  },
   "forgotPassword": {
     "backToLogin": "Back to Login",
     "emailLabel": "Email",
@@ -1704,6 +1688,46 @@
       "free_shipping": "Free shipping",
       "bonus_points": "50 bonus points",
       "gift": "Free gift"
+    },
+    "demoDashboard": {
+      "title": "Demo LoyalSpin",
+      "subtitle": "Explore the full customer experience",
+      "pointsAvailable": "Available points",
+      "demoNotice": "ℹ️ This is an interactive read-only demo",
+      "rewardsSectionTitle": "Available rewards",
+      "spinWheelSectionTitle": "Spin the Wheel",
+      "spinWheelTitle": "Your 3D Wheel",
+      "spinWheelDescription": "On every visit, spin the wheel and win instant rewards!",
+      "couponsSectionTitle": "Your Coupons",
+      "activeCouponsTitle": "Active Coupons",
+      "activeCouponsDescription": "Check your available coupons and show them at the counter",
+      "loyaltyCardSectionTitle": "Your Loyalty Card",
+      "digitalCardTitle": "Digital Loyalty Card",
+      "digitalCardDescription": "Access your personal QR code to present at every visit",
+      "rewards": {
+        "freeCoffee": {
+          "title": "Free Coffee",
+          "condition": "250 points"
+        },
+        "freeCroissant": {
+          "title": "Free Croissant",
+          "condition": "150 points"
+        },
+        "discount20": {
+          "title": "20% Discount",
+          "condition": "500 points"
+        },
+        "mysteryGift": {
+          "title": "Mystery Gift",
+          "condition": "1000 points"
+        }
+      },
+      "stats": {
+        "totalVisits": "Total Visits",
+        "pointsEarned": "Points Earned",
+        "rewardsEarned": "Rewards Earned",
+        "level": "Level"
+      }
     }
   },
   "auth_hardcoded": {
@@ -1936,4 +1960,40 @@
     "progressText": "Step {{current}} of 3",
     "footer": "Ready to start your LoyalSpin experience?"
   }
+  ,
+  "subscription": {
+    "choosePlan": "Choose your plan",
+    "register": { "title": "Create your account" },
+    "establishment": { "title": "Tell us about your establishment" },
+    "continue": "Continue",
+    "summary": { "title": "Summary" },
+    "proceedToPayment": "Proceed to payment"
+  },
+  "plans": {
+    "starter": { "name": "Starter", "feature1": "1 establishment" },
+    "business": { "name": "Business", "feature1": "3 establishments" },
+    "enterprise": { "name": "Enterprise", "feature1": "Unlimited establishments" }
+  },
+  "payment": {
+    "title": "Payment",
+    "processing": "Validating your subscription...",
+    "success": { "title": "Welcome to LoyalSpin", "message": "Your subscription is now active.", "goToDashboard": "Go to Dashboard" },
+    "failed": { "title": "Payment failed", "message": "Your payment could not be processed." },
+    "retry": "Retry payment",
+        "paymentMethod": "Payment Method",
+    "creditCard": "Credit/Debit Card",
+    "paypal": "PayPal",
+    "applePay": "Apple Pay",
+    "googlePay": "Google Pay",
+    "cashOnDelivery": "Cash on Delivery",
+    "cardNumber": "Card Number",
+    "expiryDate": "Expiry Date",
+    "cvv": "CVV",
+    "cardholderName": "Cardholder Name",
+    "billingAddress": "Billing Address",
+    "payNow": "Pay Now",
+    "paymentSuccessful": "Payment Successful",
+    "paymentFailed": "Payment Failed"
+  },
+  "trial": { "start": "Trial starts on {{date}}", "end": "Trial ends on {{date}}" }
 }

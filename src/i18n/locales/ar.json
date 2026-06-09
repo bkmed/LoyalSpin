@@ -1109,22 +1109,6 @@
     "estimatedDelivery": "وقت التسليم المتوقع",
     "shippingAddress": "عنوان الشحن"
   },
-  "payment": {
-    "paymentMethod": "طريقة الدفع",
-    "creditCard": "بطاقة ائتمان/خصم",
-    "paypal": "PayPal",
-    "applePay": "Apple Pay",
-    "googlePay": "Google Pay",
-    "cashOnDelivery": "الدفع عند الاستلام",
-    "cardNumber": "رقم البطاقة",
-    "expiryDate": "تاريخ الانتهاء",
-    "cvv": "رمز الأمان (CVV)",
-    "cardholderName": "اسم صاحب البطاقة",
-    "billingAddress": "عنوان الفواتير",
-    "payNow": "ادفع الآن",
-    "paymentSuccessful": "نجحت عملية الدفع",
-    "paymentFailed": "فشلت عملية الدفع"
-  },
   "forgotPassword": {
     "backToLogin": "العودة لتسجيل الدخول",
     "emailLabel": "البريد الإلكتروني",
@@ -1935,5 +1919,42 @@
     "finish": "ابدأ العرض التوضيحي ✓",
     "progressText": "الخطوة {{current}} من 3",
     "footer": "هل أنت جاهز لبدء تجربة LoyalSpin؟"
-  }
+  },
+  "subscription": {
+    "choosePlan": "اختر خطتك",
+    "register": { "title": "إنشاء حسابك" },
+    "establishment": { "title": "أخبرنا عن مؤسستك" },
+    "continue": "متابعة",
+    "summary": { "title": "ملخص" },
+    "proceedToPayment": "المتابعة إلى الدفع"
+  },
+  "plans": {
+    "starter": { "name": "Starter", "feature1": "مؤسسة واحدة" },
+    "business": { "name": "Business", "feature1": "3 مؤسسات" },
+    "enterprise": { "name": "Enterprise", "feature1": "مؤسسات غير محدودة" }
+  },
+  "payment": {
+    "title": "الدفع",
+    "payNow": "ادفع الآن",
+    "processing": "جارٍ التحقق من اشتراكك...",
+    "success": { "title": "مرحبًا بك في LoyalSpin", "message": "لقد تم تفعيل اشتراكك.", "goToDashboard": "الذهاب إلى لوحة القيادة" },
+    "failed": { "title": "فشل الدفع", "message": "لم نتمكن من معالجة دفعتك." },
+    "retry": "إعادة محاولة الدفع",
+
+    "paymentMethod": "طريقة الدفع",
+    "creditCard": "بطاقة ائتمان/خصم",
+    "paypal": "PayPal",
+    "applePay": "Apple Pay",
+    "googlePay": "Google Pay",
+    "cashOnDelivery": "الدفع عند الاستلام",
+    "cardNumber": "رقم البطاقة",
+    "expiryDate": "تاريخ الانتهاء",
+    "cvv": "رمز الأمان (CVV)",
+    "cardholderName": "اسم صاحب البطاقة",
+    "billingAddress": "عنوان الفواتير",
+    "paymentSuccessful": "نجحت عملية الدفع",
+    "paymentFailed": "فشلت عملية الدفع"
+
+  },
+  "trial": { "start": "يبدأ الإصدار التجريبي في {{date}}", "end": "ينتهي الإصدار التجريبي في {{date}}" }
 }

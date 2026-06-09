@@ -78,7 +78,15 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({
               }`}
               onPress={() => setCurrentLang(nextLanguage as any)}
             >
-              <Text>{nextLanguage}</Text>
+              <Text
+                className={
+                  currentTheme === 'dark'
+                    ? 'text-white'
+                    : 'text-slate-900'
+                }
+              >
+                {nextLanguage}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -732,7 +740,7 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({
             }`}
           >
             <Text>
-              © 2024 {businessName}.{' '}
+              © ${new Date().getFullYear()} {businessName}.{' '}
               {tCommon('landing.footer_rights', 'Tous droits réservés.')}
             </Text>
           </View>

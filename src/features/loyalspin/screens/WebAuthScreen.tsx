@@ -226,7 +226,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
         <Text className="text-xs text-slate-500 font-bold relative z-10 dark:text-slate-400">
           {tCommon(
             'web.branding_copyright',
-            '© 2026 {{businessName}}. Créé pour les clients fidèles et les partenaires.',
+            '© ${new Date().getFullYear()}{{businessName}}. Créé pour les clients fidèles et les partenaires.',
             { businessName },
           )}
         </Text>

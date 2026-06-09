@@ -483,9 +483,7 @@ export const AppNavigator = () => {
               <Text className="text-lg">✕</Text>
             </TouchableOpacity>
           </View>
-          <DemoDashboardScreen
-            isDarkMode={currentTheme === 'dark'}
-          />
+          <DemoDashboardScreen isDarkMode={currentTheme === 'dark'} />
         </View>
       )}
 

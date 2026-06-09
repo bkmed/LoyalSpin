@@ -1748,6 +1748,8 @@
     "user_welcome": "Welcome back, Ahmed Ben Ali!",
     "welcomeUser": "Welcome back, Ahmed Ben Ali!",
     "welcomeAdmin": "Welcome to your LoyalSpin admin space!",
+    "invalid_credentials": "Email or password is incorrect",
+    "no_account_text": "Don't have an account?",
     "create_account_link": "Create an account",
     "reset_link_sent": "Password reset link sent successfully!",
     "send_reset_link": "Send reset link",
@@ -1959,8 +1961,7 @@
     "finish": "Start Demo ✓",
     "progressText": "Step {{current}} of 3",
     "footer": "Ready to start your LoyalSpin experience?"
-  }
-  ,
+  },
   "subscription": {
     "choosePlan": "Choose your plan",
     "register": { "title": "Create your account" },
@@ -1972,15 +1973,25 @@
   "plans": {
     "starter": { "name": "Starter", "feature1": "1 establishment" },
     "business": { "name": "Business", "feature1": "3 establishments" },
-    "enterprise": { "name": "Enterprise", "feature1": "Unlimited establishments" }
+    "enterprise": {
+      "name": "Enterprise",
+      "feature1": "Unlimited establishments"
+    }
   },
   "payment": {
     "title": "Payment",
     "processing": "Validating your subscription...",
-    "success": { "title": "Welcome to LoyalSpin", "message": "Your subscription is now active.", "goToDashboard": "Go to Dashboard" },
-    "failed": { "title": "Payment failed", "message": "Your payment could not be processed." },
+    "success": {
+      "title": "Welcome to LoyalSpin",
+      "message": "Your subscription is now active.",
+      "goToDashboard": "Go to Dashboard"
+    },
+    "failed": {
+      "title": "Payment failed",
+      "message": "Your payment could not be processed."
+    },
     "retry": "Retry payment",
-        "paymentMethod": "Payment Method",
+    "paymentMethod": "Payment Method",
     "creditCard": "Credit/Debit Card",
     "paypal": "PayPal",
     "applePay": "Apple Pay",
@@ -1995,5 +2006,8 @@
     "paymentSuccessful": "Payment Successful",
     "paymentFailed": "Payment Failed"
   },
-  "trial": { "start": "Trial starts on {{date}}", "end": "Trial ends on {{date}}" }
+  "trial": {
+    "start": "Trial starts on {{date}}",
+    "end": "Trial ends on {{date}}"
+  }
 }

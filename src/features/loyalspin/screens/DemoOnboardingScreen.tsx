@@ -94,7 +94,10 @@ export const DemoOnboardingScreen: React.FC<{
           handlePrevSlide();
         }
         // Swipe left
-        else if (gestureState.dx < -threshold && currentSlide < slides.length - 1) {
+        else if (
+          gestureState.dx < -threshold &&
+          currentSlide < slides.length - 1
+        ) {
           handleNextSlide();
         }
       },
@@ -284,7 +287,7 @@ export const DemoOnboardingScreen: React.FC<{
         {...(panResponder.current && panResponder.current.panHandlers)}
         style={styles.scrollContainer}
         contentContainerStyle={{ flexGrow: 1 }}
-        onScroll={(event) => {
+        onScroll={event => {
           const x = event.nativeEvent.contentOffset.x;
           if (isWeb) {
             handleScrollWeb(lastOffsetRef.current - x);

@@ -1,5 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Plan, Subscription, SubscriptionStatus } from '../../../src/models/subscription';
+import {
+  Plan,
+  Subscription,
+  SubscriptionStatus,
+} from '../../../src/models/subscription';
 
 interface SubscriptionState {
   availablePlans: Plan[];
@@ -14,7 +18,13 @@ const initialState: SubscriptionState = {
       duration: 'monthly',
       price: 9.99,
       currency: 'EUR',
-      features: ['1 establishment', '500 clients', 'Roulette', 'Coupons', 'Notifications'],
+      features: [
+        '1 establishment',
+        '500 clients',
+        'Roulette',
+        'Coupons',
+        'Notifications',
+      ],
     },
     {
       id: 'business',
@@ -22,7 +32,12 @@ const initialState: SubscriptionState = {
       duration: 'monthly',
       price: 29.99,
       currency: 'EUR',
-      features: ['3 establishments', 'Unlimited clients', 'Advanced analytics', 'Branding'],
+      features: [
+        '3 establishments',
+        'Unlimited clients',
+        'Advanced analytics',
+        'Branding',
+      ],
     },
     {
       id: 'enterprise',
@@ -30,7 +45,12 @@ const initialState: SubscriptionState = {
       duration: 'annual',
       price: 299.0,
       currency: 'EUR',
-      features: ['Unlimited establishments', 'Priority support', 'Multi-admin', 'API'],
+      features: [
+        'Unlimited establishments',
+        'Priority support',
+        'Multi-admin',
+        'API',
+      ],
     },
   ],
   currentSubscription: null,
@@ -45,7 +65,11 @@ const subscriptionSlice = createSlice({
     },
     startTrial(
       state,
-      action: PayloadAction<{ planId: string; startDate: string; endDate: string }>,
+      action: PayloadAction<{
+        planId: string;
+        startDate: string;
+        endDate: string;
+      }>,
     ) {
       const { planId, startDate, endDate } = action.payload;
       state.currentSubscription = {
@@ -56,14 +80,22 @@ const subscriptionSlice = createSlice({
         endDate,
       };
     },
-    activateSubscription(state, action: PayloadAction<{ subscription: Subscription }>) {
+    activateSubscription(
+      state,
+      action: PayloadAction<{ subscription: Subscription }>,
+    ) {
       state.currentSubscription = action.payload.subscription;
     },
-    setSubscriptionStatus(state, action: PayloadAction<{ status: SubscriptionStatus }>) {
-      if (state.currentSubscription) state.currentSubscription.status = action.payload.status;
+    setSubscriptionStatus(
+      state,
+      action: PayloadAction<{ status: SubscriptionStatus }>,
+    ) {
+      if (state.currentSubscription)
+        state.currentSubscription.status = action.payload.status;
     },
     cancelSubscription(state) {
-      if (state.currentSubscription) state.currentSubscription.status = 'cancelled';
+      if (state.currentSubscription)
+        state.currentSubscription.status = 'cancelled';
     },
     clearSubscription(state) {
       state.currentSubscription = null;

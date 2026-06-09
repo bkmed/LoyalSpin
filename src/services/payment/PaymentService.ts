@@ -8,7 +8,11 @@ export class PaymentService {
     this.provider = provider;
   }
 
-  createCheckoutSession(amount: number, currency = 'EUR', metadata?: any): Promise<CheckoutSession> {
+  createCheckoutSession(
+    amount: number,
+    currency = 'EUR',
+    metadata?: any,
+  ): Promise<CheckoutSession> {
     return this.provider.createCheckoutSession(amount, currency, metadata);
   }
 
@@ -17,7 +21,8 @@ export class PaymentService {
   }
 
   cancelPayment(sessionId: string): Promise<void> | undefined {
-    if (this.provider.cancelPayment) return this.provider.cancelPayment(sessionId);
+    if (this.provider.cancelPayment)
+      return this.provider.cancelPayment(sessionId);
     return undefined;
   }
 }

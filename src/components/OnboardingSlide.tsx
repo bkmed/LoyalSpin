@@ -56,7 +56,9 @@ export const OnboardingSlide: React.FC<OnboardingSlideProp> = ({
       justifyContent: 'center',
       alignItems: 'center',
       ...(Platform.OS === 'web' && {
-        boxShadow: `0px 8px 16px ${isDarkMode ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.1)'}`,
+        boxShadow: `0px 8px 16px ${
+          isDarkMode ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.1)'
+        }`,
       }),
     },
     badge: {

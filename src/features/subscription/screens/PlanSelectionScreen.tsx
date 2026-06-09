@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 
@@ -32,7 +38,9 @@ export const PlanSelectionScreen: React.FC = () => {
           onPress={() => navigation.navigate('Subscription.Register')}
         >
           <Text style={styles.planTitle}>{t('plans.enterprise.name')}</Text>
-          <Text style={styles.planFeature}>{t('plans.enterprise.feature1')}</Text>
+          <Text style={styles.planFeature}>
+            {t('plans.enterprise.feature1')}
+          </Text>
         </TouchableOpacity>
       </ScrollView>
     </View>

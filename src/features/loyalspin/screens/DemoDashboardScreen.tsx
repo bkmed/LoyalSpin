@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  View,
-  ScrollView,
-  Text,
-  Platform,
-  StyleSheet,
-} from 'react-native';
+import { View, ScrollView, Text, Platform, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { lightTheme, darkTheme } from '../../../theme';
 
@@ -25,7 +19,7 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
     name: 'Jean Dupont',
     points: 2850,
     level: 'Gold',
-    lastVisit: 'Aujourd\'hui à 14:30',
+    lastVisit: "Aujourd'hui à 14:30",
     visits: 23,
   };
 
@@ -278,7 +272,10 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
       </View>
 
       {/* Content */}
-      <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Profile Card */}
         <View style={styles.profileCard}>
           <View style={styles.profileHeader}>
@@ -327,7 +324,7 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
           })}
         </Text>
         <View style={styles.rewardsGrid}>
-          {rewards.map((reward) => (
+          {rewards.map(reward => (
             <View key={reward.id} style={styles.rewardCard}>
               <Text style={styles.rewardIcon}>{reward.icon}</Text>
               <Text style={styles.rewardTitle}>{reward.title}</Text>

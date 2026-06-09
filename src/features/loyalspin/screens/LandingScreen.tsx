@@ -82,9 +82,7 @@ const LandingScreen: React.FC<LandingScreenProps> = ({
             >
               <Text
                 className={
-                  currentTheme === 'dark'
-                    ? 'text-white'
-                    : 'text-slate-900'
+                  currentTheme === 'dark' ? 'text-white' : 'text-slate-900'
                 }
               >
                 {nextLanguage}
@@ -145,7 +143,11 @@ const LandingScreen: React.FC<LandingScreenProps> = ({
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  onPress={() => onViewDemo ? onViewDemo() : Linking.openURL('https://demo.loyalspin.com')}
+                  onPress={() =>
+                    onViewDemo
+                      ? onViewDemo()
+                      : Linking.openURL('https://demo.loyalspin.com')
+                  }
                   className={`px-8 py-4 rounded-xl transition font-black text-xs border-2 hover:scale-105 transform ${
                     currentTheme === 'dark'
                       ? 'border-slate-500 hover:bg-slate-800'

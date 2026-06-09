@@ -15,7 +15,9 @@ export const SuccessScreen: React.FC = () => {
         style={styles.button}
         onPress={() => navigation.navigate('Dashboard')}
       >
-        <Text style={styles.buttonText}>{t('payment.success.goToDashboard')}</Text>
+        <Text style={styles.buttonText}>
+          {t('payment.success.goToDashboard')}
+        </Text>
       </TouchableOpacity>
     </View>
   );

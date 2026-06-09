@@ -430,22 +430,26 @@ export const AppNavigator = () => {
         </View>
       )}
 
-      {!bypassAuth && !sessionUser && !showLandingPage && !showDemoOnboarding && !showDemoDashboard && (
-        <WebAuthScreen
-          businessName={businessName}
-          nextLanguage={nextLanguage}
-          currentTheme={currentTheme}
-          setCurrentLang={setCurrentLang}
-          setCurrentTheme={setCurrentTheme}
-          t={translate}
-          showToast={showToast}
-          startWebSession={startWebSession}
-          setBypassAuth={setBypassAuth}
-          setCurrentRole={role => dispatch(setCurrentRole(role))}
-          setSessionUser={user => dispatch(setSessionUser(user))}
-          setActiveTab={setActiveTab}
-        />
-      )}
+      {!bypassAuth &&
+        !sessionUser &&
+        !showLandingPage &&
+        !showDemoOnboarding &&
+        !showDemoDashboard && (
+          <WebAuthScreen
+            businessName={businessName}
+            nextLanguage={nextLanguage}
+            currentTheme={currentTheme}
+            setCurrentLang={setCurrentLang}
+            setCurrentTheme={setCurrentTheme}
+            t={translate}
+            showToast={showToast}
+            startWebSession={startWebSession}
+            setBypassAuth={setBypassAuth}
+            setCurrentRole={role => dispatch(setCurrentRole(role))}
+            setSessionUser={user => dispatch(setSessionUser(user))}
+            setActiveTab={setActiveTab}
+          />
+        )}
 
       {(bypassAuth || sessionUser) && (
         <WebNavbar

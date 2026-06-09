@@ -40,22 +40,6 @@
       "subtitle": "Subtitle",
       "description": "Description"
     },
-    "subscription": {
-      "choosePlan": "Choisissez votre formule",
-      "register": { "title": "Créez votre compte" },
-      "establishment": { "title": "Parlez-nous de votre établissement" },
-      "continue": "Continuer",
-      "summary": { "title": "Récapitulatif" },
-      "proceedToPayment": "Procéder au paiement"
-    },
-    "plans": {
-      "starter": { "name": "Starter", "feature1": "1 établissement" },
-      "business": { "name": "Business", "feature1": "3 établissements" },
-      "enterprise": {
-        "name": "Enterprise",
-        "feature1": "Établissements illimités"
-      }
-    },
     "saveButton": "Enregistrer",
     "addServiceModalButton": "+ Ajouter le service",
     "serviceUpdated": "Service mis à jour.",
@@ -1708,6 +1692,22 @@
     "request_name_phone_required": "Nom et téléphone requis",
     "request_submitted": "Demande envoyée avec succès"
   },
+  "subscription": {
+    "choosePlan": "Choisissez votre formule",
+    "register": { "title": "Créez votre compte" },
+    "establishment": { "title": "Parlez-nous de votre établissement" },
+    "continue": "Continuer",
+    "summary": { "title": "Récapitulatif" },
+    "proceedToPayment": "Procéder au paiement"
+  },
+  "plans": {
+    "starter": { "name": "Starter", "feature1": "1 établissement" },
+    "business": { "name": "Business", "feature1": "3 établissements" },
+    "enterprise": {
+      "name": "Enterprise",
+      "feature1": "Établissements illimités"
+    }
+  },
   "loyalspin": {
     "welcome": "Bienvenue sur LoyalSpin",
     "connectPrompt": "Connectez-vous pour accéder à votre tableau de bord personnalisé, vos points et la roulette interactive.",
@@ -1794,6 +1794,8 @@
     "signing_in": "Connexion en cours...",
     "admin_welcome": "Bienvenue dans votre espace d'administration LoyalSpin !",
     "user_welcome": "Ravi de vous revoir, Ahmed Ben Ali!",
+    "welcomeUser": "Ravi de vous revoir, Ahmed Ben Ali !",
+    "welcomeAdmin": "Bienvenue dans votre espace d'administration !",
     "invalid_credentials": "Identifiants invalides",
     "no_account_text": "Nouveau sur LoyalSpin ?",
     "create_account_link": "Créer un compte",

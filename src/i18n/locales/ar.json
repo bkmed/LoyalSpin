@@ -1688,8 +1688,7 @@
       "free_shipping": "شحن مجاني",
       "bonus_points": "50 نقطة مكافأة",
       "gift": "هدية مجانية"
-    }
-    ,
+    },
     "demoDashboard": {
       "title": "عرض تجريبي LoyalSpin",
       "subtitle": "استكشف تجربة العميل الكاملة",
@@ -1735,6 +1734,8 @@
     "signing_in": "جاري تسجيل الدخول...",
     "admin_welcome": "مرحباً بك حضرة المدير",
     "user_welcome": "مرحباً بك أحمد بن علي",
+    "welcomeUser": "مرحباً بك أحمد بن علي",
+    "welcomeAdmin": "مرحباً بك حضرة المدير",
     "invalid_credentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
     "no_account_text": "ليس لديك حساب?",
     "create_account_link": "أنشئ حساباً جديداً",
@@ -1966,7 +1967,11 @@
     "title": "الدفع",
     "payNow": "ادفع الآن",
     "processing": "جارٍ التحقق من اشتراكك...",
-    "success": { "title": "مرحبًا بك في LoyalSpin", "message": "لقد تم تفعيل اشتراكك.", "goToDashboard": "الذهاب إلى لوحة القيادة" },
+    "success": {
+      "title": "مرحبًا بك في LoyalSpin",
+      "message": "لقد تم تفعيل اشتراكك.",
+      "goToDashboard": "الذهاب إلى لوحة القيادة"
+    },
     "failed": { "title": "فشل الدفع", "message": "لم نتمكن من معالجة دفعتك." },
     "retry": "إعادة محاولة الدفع",
 
@@ -1983,7 +1988,9 @@
     "billingAddress": "عنوان الفواتير",
     "paymentSuccessful": "نجحت عملية الدفع",
     "paymentFailed": "فشلت عملية الدفع"
-
   },
-  "trial": { "start": "يبدأ الإصدار التجريبي في {{date}}", "end": "ينتهي الإصدار التجريبي في {{date}}" }
+  "trial": {
+    "start": "يبدأ الإصدار التجريبي في {{date}}",
+    "end": "ينتهي الإصدار التجريبي في {{date}}"
+  }
 }

@@ -24,7 +24,12 @@ export const EstablishmentScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
   title: { fontSize: 20, fontWeight: '700', marginBottom: 12 },
-  button: { backgroundColor: '#0a84ff', padding: 12, borderRadius: 8, marginTop: 24 },
+  button: {
+    backgroundColor: '#0a84ff',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 24,
+  },
   buttonText: { color: '#fff', textAlign: 'center', fontWeight: '600' },
 });
 

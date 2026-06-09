@@ -74,7 +74,7 @@ export const OnboardingFooter: React.FC<OnboardingFooterProps> = ({
       backgroundColor: theme.colors.primary,
     },
     actionButtonText: {
-      color: theme.colors.white,
+      color: theme.textVariants.button.color,
       fontSize: 15,
       fontWeight: '600',
     },

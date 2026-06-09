@@ -4,10 +4,11 @@ import { useTranslation } from 'react-i18next';
 import LoyaltyWheel from '../components/LoyaltyWheel';
 import { useDispatch } from 'react-redux';
 import { claimPrize } from '../../../store/slices/loyalSpinSlice';
+import type { AppDispatch } from '../../../store';
 
 const LoyaltySpinScreen: React.FC = () => {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const prizes = [
     t('loyalspin.prize.discount10', { defaultValue: '10% off' }),
     t('loyalspin.prize.free_shipping', { defaultValue: 'Free shipping' }),

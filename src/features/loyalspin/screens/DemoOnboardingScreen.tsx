@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
+  Text,
   ScrollView,
   TouchableOpacity,
   useWindowDimensions,
@@ -13,10 +14,10 @@ import {
   Keyboard,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { OnboardingSlide } from '../components/OnboardingSlide';
-import { OnboardingPagination } from '../components/OnboardingPagination';
-import { OnboardingFooter } from '../components/OnboardingFooter';
-import { lightTheme, darkTheme } from '../theme';
+import { OnboardingSlide } from '../../../components/OnboardingSlide';
+import { OnboardingPagination } from '../../../components/OnboardingPagination';
+import { OnboardingFooter } from '../../../components/OnboardingFooter';
+import { lightTheme, darkTheme } from '../../../theme';
 
 interface Slide {
   title: string;
@@ -197,7 +198,7 @@ export const DemoOnboardingScreen: React.FC<{
                 backgroundColor: theme.colors.primary,
               }}
             />
-            <View style={styles.logo}>LOYALSPIN</View>
+            <Text style={styles.logo}>LOYALSPIN</Text>
           </View>
         </View>
         <TouchableOpacity
@@ -205,7 +206,7 @@ export const DemoOnboardingScreen: React.FC<{
           onPress={handleSkip}
           activeOpacity={0.7}
         >
-          <View style={styles.closeButtonText}>✕</View>
+          <Text style={styles.closeButtonText}>✕</Text>
         </TouchableOpacity>
       </View>
 

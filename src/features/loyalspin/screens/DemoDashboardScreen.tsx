@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
-import { lightTheme, darkTheme } from '../theme';
+import { lightTheme, darkTheme } from '../../../theme';
 
 interface DemoDashboardScreenProps {
   isDarkMode?: boolean;
@@ -266,7 +266,7 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
                 <Text style={styles.statValue}>
                   {stat.value} {stat.unit}
                 </Text>
-              </Text>
+              </View>
             ))}
           </View>
         </View>
@@ -291,7 +291,7 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
         {/* Spin Wheel Section */}
         <Text style={styles.sectionTitle}>Lancer la Roulette</Text>
         <View style={styles.rewardCard}>
-          <View style={{ fontSize: 60, marginBottom: 12 }}>🎡</View>
+          <Text style={{ fontSize: 60, marginBottom: 12 }}>🎡</Text>
           <Text style={styles.rewardTitle}>Votre Roulette 3D</Text>
           <Text style={styles.rewardCondition}>
             À chaque visite, lancez la roulette et gagnez des récompenses
@@ -302,7 +302,7 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
         {/* Coupon Section */}
         <Text style={styles.sectionTitle}>Vos Coupons</Text>
         <View style={styles.rewardCard}>
-          <View style={{ fontSize: 60, marginBottom: 12 }}>🎟️</View>
+          <Text style={{ fontSize: 60, marginBottom: 12 }}>🎟️</Text>
           <Text style={styles.rewardTitle}>Coupons Actifs</Text>
           <Text
             style={[
@@ -320,7 +320,7 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
         {/* Card Section */}
         <Text style={styles.sectionTitle}>Votre Carte Fidélité</Text>
         <View style={styles.rewardCard}>
-          <View style={{ fontSize: 60, marginBottom: 12 }}>💳</View>
+          <Text style={{ fontSize: 60, marginBottom: 12 }}>💳</Text>
           <Text style={styles.rewardTitle}>Carte Fidélité Numérique</Text>
           <Text style={styles.rewardCondition}>
             Accédez à votre QR code personnel à présenter à chaque visite

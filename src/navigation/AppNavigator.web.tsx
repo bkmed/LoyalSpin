@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View } from 'react-native';
+import { View, TouchableOpacity, Text } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
@@ -54,6 +54,8 @@ import AdminRoulette from '../features/loyalspin/screens/AdminRoulette';
 import AdminSticker from '../features/loyalspin/screens/AdminSticker';
 import AdminSettings from '../features/loyalspin/screens/AdminSettings';
 import AdminManage from '../features/loyalspin/screens/AdminManage';
+import DemoOnboardingScreen from '../features/loyalspin/screens/DemoOnboardingScreen';
+import DemoDashboardScreen from '../features/loyalspin/screens/DemoDashboardScreen';
 
 import {
   Role,
@@ -99,6 +101,8 @@ export const AppNavigator = () => {
   const [showSplash, setShowSplash] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [showLandingPage, setShowLandingPage] = useState(true);
+  const [showDemoOnboarding, setShowDemoOnboarding] = useState(false);
+  const [showDemoDashboard, setShowDemoDashboard] = useState(false);
 
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
 
@@ -186,6 +190,22 @@ export const AppNavigator = () => {
         'success',
       );
     }
+  };
+
+  const handleViewDemo = () => {
+    setShowLandingPage(false);
+    setShowDemoOnboarding(true);
+  };
+
+  const handleFinishDemo = () => {
+    setShowDemoOnboarding(false);
+    setShowDemoDashboard(true);
+  };
+
+  const closeDemoOnboarding = () => {
+    setShowDemoOnboarding(false);
+    setShowDemoDashboard(false);
+    setShowLandingPage(true);
   };
 
   // Seed Initial state
@@ -381,10 +401,36 @@ export const AppNavigator = () => {
           setCurrentTheme={setCurrentTheme}
           t={translate}
           setShowLandingPage={setShowLandingPage}
+          onViewDemo={handleViewDemo}
         />
       )}
 
-      {!bypassAuth && !sessionUser && !showLandingPage && (
+      {!bypassAuth && !sessionUser && showDemoOnboarding && (
+        <DemoOnboardingScreen
+          isDarkMode={currentTheme === 'dark'}
+          onFinish={handleFinishDemo}
+        />
+      )}
+
+      {!bypassAuth && !sessionUser && showDemoDashboard && (
+        <View className="flex-1">
+          <View className="absolute top-4 right-4 z-50">
+            <TouchableOpacity
+              onPress={closeDemoOnboarding}
+              className={`p-2 rounded-lg ${
+                currentTheme === 'dark'
+                  ? 'bg-slate-700 hover:bg-slate-600'
+                  : 'bg-slate-100 hover:bg-slate-200'
+              }`}
+            >
+              <Text className="text-lg">✕</Text>
+            </TouchableOpacity>
+          </View>
+          <DemoDashboardScreen isDarkMode={currentTheme === 'dark'} />
+        </View>
+      )}
+
+      {!bypassAuth && !sessionUser && !showLandingPage && !showDemoOnboarding && !showDemoDashboard && (
         <WebAuthScreen
           businessName={businessName}
           nextLanguage={nextLanguage}

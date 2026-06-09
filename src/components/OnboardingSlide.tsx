@@ -68,7 +68,7 @@ export const OnboardingSlide: React.FC<OnboardingSlideProp> = ({
       alignSelf: 'center',
     },
     badgeText: {
-      color: theme.colors.white,
+      color: theme.textVariants.button.color,
       fontSize: 11,
       fontWeight: '700',
       letterSpacing: 0.5,

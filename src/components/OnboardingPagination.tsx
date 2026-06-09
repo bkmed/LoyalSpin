@@ -26,7 +26,6 @@ export const OnboardingPagination: React.FC<OnboardingPaginationProps> = ({
       width: 8,
       height: 8,
       borderRadius: 4,
-      transition: 'all 0.3s ease',
     },
     activeDot: {
       backgroundColor: theme.colors.primary,

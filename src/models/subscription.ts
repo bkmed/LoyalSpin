@@ -27,6 +27,23 @@ export interface Subscription {
   currency?: string;
 }
 
+export interface Subscription {
+  id: string;
+  establishmentId?: string;
+  userId?: string;
+  planId: string;
+  status: SubscriptionStatus;
+  trialLimit?: number;
+  trialUsed?: number;
+  startDate?: string;
+  endDate?: string;
+  renewalDate?: string;
+  amount?: number;
+  currency?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface PaymentRecord {
   id: string;
   subscriptionId?: string;

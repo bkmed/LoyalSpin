@@ -16,6 +16,8 @@ import {
   setCurrentRole,
   clearSession,
 } from '../store/slices/webSessionSlice';
+import { useSubscriptionGuard } from '../context/SubscriptionGuardContext';
+import SubscriptionExpiredScreen from '../features/subscription/screens/SubscriptionExpiredScreen';
 import { addCategory } from '../store/slices/categoriesSlice';
 import { setServices } from '../store/slices/servicesSlice';
 import { toggleFavoriteAction } from '../store/slices/partsSlice';
@@ -91,6 +93,8 @@ export const AppNavigator = () => {
 
   const { sessionUser, currentRole } =
     useSelector((state: RootState) => (state as any).webSession) || {};
+
+  const { isTrialExpired } = useSubscriptionGuard();
 
   // Splash Screen
   const [showSplash, setShowSplash] = useState(true);
@@ -526,151 +530,162 @@ export const AppNavigator = () => {
         />
       )}
 
-      {(bypassAuth || sessionUser) && (
-        <View className="min-h-[calc(100vh-280px)] bg-slate-50 text-slate-800 dark:bg-[#0B0F19] dark:text-slate-100 transition-colors duration-300">
-          {activeTab === 'Accueil' && (
-            <HomeScreenWeb
-              nextLanguage={nextLanguage}
-              experienceYears={experienceYears}
-              dispoVal={dispoVal}
-              govVal={govVal}
-              supportWhatsAppDigits={supportWhatsAppDigits}
-              galleryItems={galleryItems}
-              products={products}
-              favorites={favorites}
-              t={translate}
-              setActiveTab={setActiveTab}
-              setSelectedProduct={setSelectedProduct}
-              toggleFavorite={toggleFavorite}
-            />
-          )}
+      {(bypassAuth || sessionUser) ? (
+        isTrialExpired ? (
+          <SubscriptionExpiredScreen
+            onChoosePlan={() => setActiveTab('AdminAccueil')}
+            onContactSupport={() => {
+              if (typeof window !== 'undefined') {
+                window.open(`mailto:${supportEmail || 'support@loyalspin.com'}`);
+              }
+            }}
+          />
+        ) : (
+          <View className="min-h-[calc(100vh-280px)] bg-slate-50 text-slate-800 dark:bg-[#0B0F19] dark:text-slate-100 transition-colors duration-300">
+            {activeTab === 'Accueil' && (
+              <HomeScreenWeb
+                nextLanguage={nextLanguage}
+                experienceYears={experienceYears}
+                dispoVal={dispoVal}
+                govVal={govVal}
+                supportWhatsAppDigits={supportWhatsAppDigits}
+                galleryItems={galleryItems}
+                products={products}
+                favorites={favorites}
+                t={translate}
+                setActiveTab={setActiveTab}
+                setSelectedProduct={setSelectedProduct}
+                toggleFavorite={toggleFavorite}
+              />
+            )}
 
-          {activeTab === 'Services' && (
-            <ServicesScreen supportWhatsAppDigits={supportWhatsAppDigits} />
-          )}
+            {activeTab === 'Services' && (
+              <ServicesScreen supportWhatsAppDigits={supportWhatsAppDigits} />
+            )}
 
-          {activeTab === 'Zones' && (
-            <ZonesScreen
-              t={translate}
-              supportWhatsAppDigits={supportWhatsAppDigits}
-              supportWhatsAppNumber={supportWhatsAppNumber}
-              interventionZones={plombierSettings.interventionZones}
-            />
-          )}
+            {activeTab === 'Zones' && (
+              <ZonesScreen
+                t={translate}
+                supportWhatsAppDigits={supportWhatsAppDigits}
+                supportWhatsAppNumber={supportWhatsAppNumber}
+                interventionZones={plombierSettings.interventionZones}
+              />
+            )}
 
-          {activeTab === 'Marketplace' && (
-            <MarketplaceScreen
-              t={translate}
-              setSelectedProduct={setSelectedProduct}
-            />
-          )}
+            {activeTab === 'Marketplace' && (
+              <MarketplaceScreen
+                t={translate}
+                setSelectedProduct={setSelectedProduct}
+              />
+            )}
 
-          {activeTab === 'Gallery' && (
-            <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in text-left">
-              <GalleryScreen />
-            </View>
-          )}
+            {activeTab === 'Gallery' && (
+              <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in text-left">
+                <GalleryScreen />
+              </View>
+            )}
 
-          {activeTab === 'LoyalSpin' && (
-            <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in text-left">
-              <LoyaltySpinScreen />
-            </View>
-          )}
+            {activeTab === 'LoyalSpin' && (
+              <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in text-left">
+                <LoyaltySpinScreen />
+              </View>
+            )}
 
-          {activeTab === 'Profile' && (
-            <ProfileScreenWeb
-              currentRole={currentRole}
-              businessName={businessName}
-              profileName={profileName}
-              profileEmail={profileEmail}
-              profilePhone={profilePhone}
-              profileCity={profileCity}
-              favorites={favorites}
-              products={products}
-              t={translate}
-              showToast={showToast}
-              setBypassAuth={setBypassAuth}
-              setSigninEmail={() => {}}
-              setSigninPassword={() => {}}
-              setActiveTab={setActiveTab}
-              toggleFavorite={toggleFavorite}
-              setSelectedProduct={setSelectedProduct}
-            />
-          )}
+            {activeTab === 'Profile' && (
+              <ProfileScreenWeb
+                currentRole={currentRole}
+                businessName={businessName}
+                profileName={profileName}
+                profileEmail={profileEmail}
+                profilePhone={profilePhone}
+                profileCity={profileCity}
+                favorites={favorites}
+                products={products}
+                t={translate}
+                showToast={showToast}
+                setBypassAuth={setBypassAuth}
+                setSigninEmail={() => {}}
+                setSigninPassword={() => {}}
+                setActiveTab={setActiveTab}
+                toggleFavorite={toggleFavorite}
+                setSelectedProduct={setSelectedProduct}
+              />
+            )}
 
-          {activeTab === 'UserDashboard' && (
-            <UserDashboardMobile t={translate} setActiveTab={setActiveTab} />
-          )}
+            {activeTab === 'UserDashboard' && (
+              <UserDashboardMobile t={translate} setActiveTab={setActiveTab} />
+            )}
 
-          {activeTab === 'UserCoupons' && <CouponMobile t={translate} />}
+            {activeTab === 'UserCoupons' && <CouponMobile t={translate} />}
 
-          {activeTab === 'UserPurchaseHistory' && (
-            <PurchaseHistory t={translate} />
-          )}
+            {activeTab === 'UserPurchaseHistory' && (
+              <PurchaseHistory t={translate} />
+            )}
 
-          {activeTab === 'UserNotifications' && (
-            <NotificationsScreen t={translate} />
-          )}
+            {activeTab === 'UserNotifications' && (
+              <NotificationsScreen t={translate} />
+            )}
 
-          {activeTab === 'UserSocialGate' && <SocialGateScreen t={translate} />}
+            {activeTab === 'UserSocialGate' && <SocialGateScreen t={translate} />}
 
-          {['Informations', 'Politique', 'Conditions', 'PlanSite'].includes(
-            activeTab,
-          ) && (
-            <LegalPages
-              page={activeTab as any}
-              t={translate}
-              setActiveTab={setActiveTab}
-            />
-          )}
+            {['Informations', 'Politique', 'Conditions', 'PlanSite'].includes(
+              activeTab,
+            ) && (
+              <LegalPages
+                page={activeTab as any}
+                t={translate}
+                setActiveTab={setActiveTab}
+              />
+            )}
 
-          {activeTab === 'AdminAccueil' && (
-            <AdminDashboard
-              t={translate}
-              businessName={businessName}
-              products={products}
-              setActiveTab={setActiveTab}
-            />
-          )}
+            {activeTab === 'AdminAccueil' && (
+              <AdminDashboard
+                t={translate}
+                businessName={businessName}
+                products={products}
+                setActiveTab={setActiveTab}
+              />
+            )}
 
-          {activeTab === 'AdminManage' && (
-            <AdminManage t={translate} setActiveTab={setActiveTab} />
-          )}
+            {activeTab === 'AdminManage' && (
+              <AdminManage t={translate} setActiveTab={setActiveTab} />
+            )}
 
-          {activeTab === 'GestionAnnonce' && (
-            <AdminAnnonces showToast={showToast} translate={translate} />
-          )}
+            {activeTab === 'GestionAnnonce' && (
+              <AdminAnnonces showToast={showToast} translate={translate} />
+            )}
 
-          {activeTab === 'GestionCategorie' && (
-            <AdminCategories showToast={showToast} translate={translate} />
-          )}
+            {activeTab === 'GestionCategorie' && (
+              <AdminCategories showToast={showToast} translate={translate} />
+            )}
 
-          {activeTab === 'AdminGallery' && (
-            <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in text-left">
-              <AdminGalleryEditor />
-            </View>
-          )}
+            {activeTab === 'AdminGallery' && (
+              <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in text-left">
+                <AdminGalleryEditor />
+              </View>
+            )}
 
-          {activeTab === 'AdminServices' && (
-            <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in text-left">
-              <AdminServicesEditor />
-            </View>
-          )}
+            {activeTab === 'AdminServices' && (
+              <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in text-left">
+                <AdminServicesEditor />
+              </View>
+            )}
 
-          {activeTab === 'GestionUser' && (
-            <AdminUsers showToast={showToast} t={translate} />
-          )}
+            {activeTab === 'GestionUser' && (
+              <AdminUsers showToast={showToast} t={translate} />
+            )}
 
-          {activeTab === 'AdminProfile' && (
-            <AdminProfileScreen
-              currentLang={currentLang as any}
-              t={translate}
-            />
-          )}
+            {activeTab === 'AdminProfile' && (
+              <AdminProfileScreen
+                currentLang={currentLang as any}
+                t={translate}
+              />
+            )}
 
-          {activeTab === 'Analytics' && <AdminAnalyticsScreen t={translate} />}
-        </View>
-      )}
+            {activeTab === 'Analytics' && <AdminAnalyticsScreen t={translate} />}
+          </View>
+        )
+      ) : null}
 
       <ProductDetailModal
         selectedProduct={selectedProduct}

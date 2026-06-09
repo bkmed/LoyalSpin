@@ -261,7 +261,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
                 className="text-[9px] font-black tracking-widest uppercase leading-none"
                 style={{ color: '#F97316' } as any}
               >
-                {t('web.tagline', { defaultValue: 'Expert Plombier' })}
+                {t('web.tagline', { defaultValue: 'Expert LoyalSpin' })}
               </Text>
             </View>
           </TouchableOpacity>

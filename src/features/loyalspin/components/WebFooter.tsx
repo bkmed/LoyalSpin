@@ -28,7 +28,10 @@ export const WebFooter: React.FC<WebFooterProps> = ({
     t(key, { defaultValue: fallback });
 
   const openWhatsApp = () => {
-    const msg = tc('web.whatsapp_msg', "Bonjour, j'ai besoin d'un plombier.");
+    const msg = tc(
+      'web.whatsapp_msg',
+      "Bonjour, j'ai besoin d'une assistance LoyalSpin.",
+    );
     const url = `https://wa.me/${supportWhatsAppDigits}?text=${encodeURIComponent(
       msg,
     )}`;

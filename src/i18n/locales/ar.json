@@ -2083,20 +2083,6 @@
     "progressText": "الخطوة {{current}} من 3",
     "footer": "هل أنت جاهز لبدء تجربة LoyalSpin؟"
   },
-  "subscription": {
-    "choosePlan": "اختر خطتك",
-    "register": {
-      "title": "إنشاء حسابك"
-    },
-    "establishment": {
-      "title": "أخبرنا عن مؤسستك"
-    },
-    "continue": "متابعة",
-    "summary": {
-      "title": "ملخص"
-    },
-    "proceedToPayment": "المتابعة إلى الدفع"
-  },
   "plans": {
     "starter": {
       "name": "البدء",
@@ -2142,5 +2128,57 @@
   "trial": {
     "start": "يبدأ الإصدار التجريبي في {{date}}",
     "end": "ينتهي الإصدار التجريبي في {{date}}"
+  },
+  "subscription": {
+    "register": {
+      "title": "إنشاء حسابك"
+    },
+    "establishment": {
+      "title": "أخبرنا عن مؤسستك"
+    },
+    "continue": "متابعة",
+    "summary": {
+      "title": "ملخص"
+    },
+    "proceedToPayment": "المتابعة إلى الدفع",
+    "trialBanner": {
+      "title": "🎯 النسخة التجريبية مفعلة",
+      "message": "{{remaining}} استخدام متبقي من {{limit}}"
+    },
+    "trialExpired": {
+      "title": "انتهت فترة النسخة التجريبية",
+      "subtitle": "اختر خطة اشتراك لمتابعة استخدام LoyalSpin."
+    },
+    "choosePlan": "اختر خطة",
+    "subscribe": "اشترك الآن",
+    "contactSupport": "اتصل بالدعم",
+    "popular": "الخيار الشهير",
+    "trialUsed": "الاستخدامات المستخدمة:",
+    "plans": {
+      "starter": {
+        "name": "مبتدئ",
+        "description": "للبدء",
+        "f1": "مؤسسة واحدة",
+        "f2": "500 عميل",
+        "f3": "عجلة الحظ",
+        "f4": "القسائم"
+      },
+      "business": {
+        "name": "أعمال",
+        "description": "موصى به",
+        "f1": "3 مؤسسات",
+        "f2": "عملاء غير محدودين",
+        "f3": "تحليلات متقدمة",
+        "f4": "الهوية البصرية"
+      },
+      "enterprise": {
+        "name": "مؤسسة",
+        "description": "للمشاريع الكبيرة",
+        "f1": "مؤسسات غير محدودة",
+        "f2": "دعم الأولوية",
+        "f3": "متعدد المشرفين",
+        "f4": "API"
+      }
+    }
   }
 }

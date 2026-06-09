@@ -8,6 +8,8 @@ import {
   selectCallClicks,
   selectPageViews,
 } from '../../../store/slices/analyticsSlice';
+import { useSubscriptionGuard } from '../../../context/SubscriptionGuardContext';
+import { TrialBanner } from '../../../components/TrialBanner';
 import { selectAllCategories } from '../../../store/slices/categoriesSlice';
 import { selectAllUsers } from '../../../store/slices/usersSlice';
 import { selectGalleryItems } from '../../../store/slices/gallerySlice';
@@ -49,6 +51,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     );
   }, [users, sessionUser, currentRole]);
   const galleryItems = useSelector(selectGalleryItems) || [];
+
+  const { isTrialActive } = useSubscriptionGuard();
   const services = useSelector(selectServices) || [];
 
   const totalViews = useSelector(selectTotalPageViews);
@@ -223,6 +227,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           })}
         </Text>
       </View>
+
+      {isTrialActive && (
+        <TrialBanner onChoosePlan={() => setActiveTab?.('AdminAccueil')} />
+      )}
 
       {/* ── Overview Stats ── */}
       <Text className="text-[11px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-4">

@@ -2084,14 +2084,6 @@
     "progressText": "Step {{current}} of 3",
     "footer": "Ready to start your LoyalSpin experience?"
   },
-  "subscription": {
-    "choosePlan": "Choose your plan",
-    "register": { "title": "Create your account" },
-    "establishment": { "title": "Tell us about your establishment" },
-    "continue": "Continue",
-    "summary": { "title": "Summary" },
-    "proceedToPayment": "Proceed to payment"
-  },
   "plans": {
     "starter": { "name": "Starter", "feature1": "1 establishment" },
     "business": { "name": "Business", "feature1": "3 establishments" },
@@ -2131,5 +2123,51 @@
   "trial": {
     "start": "Trial starts on {{date}}",
     "end": "Trial ends on {{date}}"
+  },
+  "subscription": {
+    "register": { "title": "Create your account" },
+    "establishment": { "title": "Tell us about your establishment" },
+    "continue": "Continue",
+    "summary": { "title": "Summary" },
+    "proceedToPayment": "Proceed to payment",
+    "trialBanner": {
+      "title": "🎯 Active free trial",
+      "message": "{{remaining}} uses remaining out of {{limit}}"
+    },
+    "trialExpired": {
+      "title": "Your trial period has ended",
+      "subtitle": "Choose a subscription to continue using LoyalSpin."
+    },
+    "choosePlan": "CHOOSE A PLAN",
+    "subscribe": "Subscribe",
+    "contactSupport": "Contact support",
+    "popular": "POPULAR",
+    "trialUsed": "Trial uses:",
+    "plans": {
+      "starter": {
+        "name": "Starter",
+        "description": "To get started",
+        "f1": "1 establishment",
+        "f2": "500 clients",
+        "f3": "Wheel of fortune",
+        "f4": "Coupons"
+      },
+      "business": {
+        "name": "Business",
+        "description": "Recommended",
+        "f1": "3 establishments",
+        "f2": "Unlimited clients",
+        "f3": "Advanced analytics",
+        "f4": "Branding"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "description": "For large projects",
+        "f1": "Unlimited establishments",
+        "f2": "Priority support",
+        "f3": "Multi-admin",
+        "f4": "API"
+      }
+    }
   }
 }

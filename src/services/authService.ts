@@ -122,6 +122,16 @@ export const authService = {
     const sessionUser = toSessionUser(user);
     storageService.setString(AUTH_KEY, JSON.stringify(sessionUser));
     return sessionUser;
+      const sessionUser = toSessionUser(user);
+      storageService.setString(AUTH_KEY, JSON.stringify(sessionUser));
+
+      // Initialize trial subscription if user doesn't have one
+      const existingSubscription = await subscriptionService.getSubscription();
+      if (!existingSubscription) {
+        await subscriptionService.initializeSubscription(sessionUser.id);
+      }
+
+      return sessionUser;
   },
 
   register: async (
@@ -160,6 +170,15 @@ export const authService = {
 
     const sessionUser = toSessionUser(
       newUser as UserAccount & { password?: string },
+        const sessionUser = toSessionUser(
+          newUser as UserAccount & { password?: string },
+        );
+        storageService.setString(AUTH_KEY, JSON.stringify(sessionUser));
+
+        // Initialize trial subscription for new user
+        await subscriptionService.initializeSubscription(sessionUser.id);
+
+        return sessionUser;
     );
     storageService.setString(AUTH_KEY, JSON.stringify(sessionUser));
     return sessionUser;

@@ -33,8 +33,8 @@ const ServicesScreen = ({
     const pageUrl =
       Platform.OS === 'web' && typeof window !== 'undefined'
         ? (window as any).location?.href ||
-          'https://plombier.example.com/services'
-        : 'https://plombier.example.com/services';
+          'https://www.loyalspin.com/services'
+        : 'https://www.loyalspin.com/services';
     const url = encodeURIComponent(pageUrl);
     const text = encodeURIComponent(`Découvrez nos services : ${serviceName}`);
 

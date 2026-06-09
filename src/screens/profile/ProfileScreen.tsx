@@ -86,7 +86,7 @@ export const ProfileScreen = () => {
           </View>
           <View className="flex-1">
             <Text className="font-headline text-lg font-extrabold text-on-surface">
-              {user?.name || 'Plombier User'}
+              {user?.name || 'LoyalSpin User'}
             </Text>
             <Text className="mt-1 font-body text-xs text-on-surface-variant">
               {user?.email}

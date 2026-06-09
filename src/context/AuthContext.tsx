@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { setUser, logout } from '../store/slices/authSlice';
 import { authService, User } from '../services/authService';
+import { subscriptionService } from '../services/subscriptionService';
 import { sessionService } from '../services/sessionService';
 
 export type { User };
@@ -63,11 +64,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signIn = async (loggedInUser: User) => {
     dispatch(setUser(loggedInUser));
+    await subscriptionService.initializeSubscription(loggedInUser.id);
     await sessionService.initSession(loggedInUser);
   };
 
   const signUp = async (registeredUser: User) => {
     dispatch(setUser(registeredUser));
+    await subscriptionService.initializeSubscription(registeredUser.id);
     await sessionService.initSession(registeredUser);
   };
 

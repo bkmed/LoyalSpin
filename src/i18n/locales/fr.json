@@ -1811,14 +1811,6 @@
     "request_name_phone_required": "Nom et téléphone requis",
     "request_submitted": "Demande envoyée avec succès"
   },
-  "subscription": {
-    "choosePlan": "Choisissez votre formule",
-    "register": { "title": "Créez votre compte" },
-    "establishment": { "title": "Parlez-nous de votre établissement" },
-    "continue": "Continuer",
-    "summary": { "title": "Récapitulatif" },
-    "proceedToPayment": "Procéder au paiement"
-  },
   "plans": {
     "starter": { "name": "Starter", "feature1": "1 établissement" },
     "business": { "name": "Business", "feature1": "3 établissements" },
@@ -2131,5 +2123,51 @@
     "finish": "Terminer la démo ✓",
     "progressText": "Étape {{current}} sur 3",
     "footer": "Prêt à commencer votre expérience LoyalSpin ?"
+  },
+  "subscription": {
+    "register": { "title": "Créez votre compte" },
+    "establishment": { "title": "Parlez-nous de votre établissement" },
+    "continue": "Continuer",
+    "summary": { "title": "Récapitulatif" },
+    "proceedToPayment": "Procéder au paiement",
+    "trialBanner": {
+      "title": "🎯 Essai gratuit actif",
+      "message": "{{remaining}} utilisations restantes sur {{limit}}"
+    },
+    "trialExpired": {
+      "title": "Votre période d'essai est terminée",
+      "subtitle": "Choisissez un abonnement pour continuer à utiliser LoyalSpin."
+    },
+    "choosePlan": "CHOISIR UN ABONNEMENT",
+    "subscribe": "Souscrire",
+    "contactSupport": "Contacter le support",
+    "popular": "POPULAIRE",
+    "trialUsed": "Essais utilisés:",
+    "plans": {
+      "starter": {
+        "name": "Starter",
+        "description": "Pour débuter",
+        "f1": "1 établissement",
+        "f2": "500 clients",
+        "f3": "Roulette",
+        "f4": "Coupons"
+      },
+      "business": {
+        "name": "Business",
+        "description": "Recommandé",
+        "f1": "3 établissements",
+        "f2": "Clients illimités",
+        "f3": "Analytiques avancées",
+        "f4": "Branding"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "description": "Pour les grands projets",
+        "f1": "Établissements illimités",
+        "f2": "Support prioritaire",
+        "f3": "Multi-admin",
+        "f4": "API"
+      }
+    }
   }
 }

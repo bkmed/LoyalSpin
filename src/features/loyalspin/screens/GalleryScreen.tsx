@@ -48,8 +48,8 @@ const GalleryScreen = () => {
     const pageUrl =
       Platform.OS === 'web' && typeof window !== 'undefined'
         ? (window as any).location?.href ||
-          'https://plombier.example.com/gallery'
-        : 'https://plombier.example.com/gallery';
+          'https://www.loyalspin.com/gallery'
+        : 'https://www.loyalspin.com/gallery';
     const url = encodeURIComponent(pageUrl);
 
     const shareLabel = t('web.share_text', {

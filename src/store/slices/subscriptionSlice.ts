@@ -97,6 +97,51 @@ const subscriptionSlice = createSlice({
       if (state.currentSubscription)
         state.currentSubscription.status = 'cancelled';
     },
+    initializeTrial(
+      state,
+      action: PayloadAction<{
+        trialLimit?: number;
+        userId?: string;
+        establishmentId?: string;
+      }>,
+    ) {
+      const { trialLimit = 15, userId, establishmentId } = action.payload;
+      state.currentSubscription = {
+        id: `sub_trial_${Date.now()}`,
+        userId,
+        establishmentId,
+        planId: 'trial',
+        status: 'trial',
+        trialLimit,
+        trialUsed: 0,
+        startDate: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+    },
+    incrementTrialUsed(state) {
+      if (state.currentSubscription && state.currentSubscription.status === 'trial') {
+        const current = state.currentSubscription.trialUsed || 0;
+        const limit = state.currentSubscription.trialLimit || 15;
+        
+        if (current < limit) {
+          state.currentSubscription.trialUsed = current + 1;
+          state.currentSubscription.updatedAt = new Date().toISOString();
+
+          // Check if trial is now expired
+          if (state.currentSubscription.trialUsed >= limit) {
+            state.currentSubscription.status = 'expired';
+            state.currentSubscription.endDate = new Date().toISOString();
+          }
+        }
+      }
+    },
+    setSubscription(
+      state,
+      action: PayloadAction<Subscription>,
+    ) {
+      state.currentSubscription = action.payload;
+    },
     clearSubscription(state) {
       state.currentSubscription = null;
     },
@@ -106,7 +151,10 @@ const subscriptionSlice = createSlice({
 export const {
   setAvailablePlans,
   startTrial,
+  initializeTrial,
+  incrementTrialUsed,
   activateSubscription,
+  setSubscription,
   setSubscriptionStatus,
   cancelSubscription,
   clearSubscription,

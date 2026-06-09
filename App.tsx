@@ -15,6 +15,7 @@ import { WebThemeHandler } from './src/components/WebThemeHandler';
 import './src/i18n'; // Initialize i18n
 
 import { LoadingScreen } from './src/components/LoadingScreen';
+import { SubscriptionGuardProvider } from './src/context/SubscriptionGuardContext';
 
 const App = () => {
   const [loading, setLoading] = React.useState(true);
@@ -85,17 +86,19 @@ const App = () => {
     <Provider store={store}>
       <PersistGate loading={<LoadingScreen />} persistor={persistor}>
         <ThemeProvider>
-          <AuthProvider>
-            <ToastProvider>
-              <ModalProvider>
-                <SafeAreaProvider style={{ flex: 1 }}>
-                  <WebThemeHandler />
-                  <OfflineIndicator />
-                  <AppNavigator />
-                </SafeAreaProvider>
-              </ModalProvider>
-            </ToastProvider>
-          </AuthProvider>
+          <SubscriptionGuardProvider>
+            <AuthProvider>
+              <ToastProvider>
+                <ModalProvider>
+                  <SafeAreaProvider style={{ flex: 1 }}>
+                    <WebThemeHandler />
+                    <OfflineIndicator />
+                    <AppNavigator />
+                  </SafeAreaProvider>
+                </ModalProvider>
+              </ToastProvider>
+            </AuthProvider>
+          </SubscriptionGuardProvider>
         </ThemeProvider>
       </PersistGate>
     </Provider>

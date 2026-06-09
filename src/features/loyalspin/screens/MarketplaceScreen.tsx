@@ -185,8 +185,8 @@ const MarketplaceScreen = ({
     const pageUrl =
       Platform.OS === 'web' && typeof window !== 'undefined'
         ? (window as any).location?.href ||
-          'https://plombier.example.com/marketplace'
-        : 'https://plombier.example.com/marketplace';
+          'https://www.loyalspin.com/marketplace'
+        : 'https://www.loyalspin.com/marketplace';
     const url = encodeURIComponent(pageUrl);
     const text = encodeURIComponent(
       `Découvrez cette pièce : ${product.title} - ${product.price} TND`,

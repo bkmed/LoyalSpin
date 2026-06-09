@@ -11,8 +11,8 @@
     "title": "التحليلات",
     "noData": "لا توجد بيانات متاحة بعد",
     "trends": "اتجاهات المبيعات",
-    "avgOrderValue": "Avg Order Value",
-    "weeklySales": "Weekly Sales"
+    "avgOrderValue": "متوسط قيمة الطلب",
+    "weeklySales": "المبيعات الأسبوعية"
   },
   "admin": {
     "servicesTitle": "إدارة الخدمات",
@@ -201,18 +201,18 @@
       "revenue": "إجمالي الإيرادات",
       "noPurchases": "لم يتم العثور على مشتريات",
       "edit": "تعديل الشراء",
-      "actions": "Purchase Actions",
-      "statusUpdated": "Purchase status updated",
-      "detail": "Purchase Detail"
+      "actions": "إجراءات الشراء",
+      "statusUpdated": "تم تحديث حالة الشراء",
+      "detail": "تفاصيل الشراء"
     },
     "reclamations": {
       "title": "إدارة المطالبات",
       "noReclamations": "لم يتم العثور على مطالبات",
-      "statusUpdated": "Status updated successfully",
-      "viewOrder": "View Order",
-      "detail": "Reclamation Detail",
-      "edit": "Edit Reclamation",
-      "actions": "Reclamation Actions"
+      "statusUpdated": "تم تحديث الحالة بنجاح",
+      "viewOrder": "عرض الطلب",
+      "detail": "تفاصيل الشكوى",
+      "edit": "تعديل المطالبة",
+      "actions": "إجراءات المطالبة"
     },
     "confirmDeleteZone": "هل أنت متأكد أنك تريد حذف هذه المنطقة؟",
     "dispoValLabel": "التوفر",
@@ -339,13 +339,13 @@
     "shippingAddress": "عنوان الشحن",
     "discount": "خصم",
     "paymentMethod": "طريقة الدفع",
-    "promoNotApplicable": "Promo code not applicable",
-    "addressRequired": "Address is required",
-    "promoCode": "Promo Code",
-    "placeOrder": "Place Order",
-    "invalidPromo": "Invalid promo code",
-    "discountApplied": "Discount applied",
-    "orderPlaced": "Order placed successfully"
+    "promoNotApplicable": "رمز الخصم غير قابل للتطبيق",
+    "addressRequired": "العنوان مطلوب",
+    "promoCode": "رمز الترويج",
+    "placeOrder": "تأكيد الطلب",
+    "invalidPromo": "رمز ترويجي غير صالح",
+    "discountApplied": "تم تطبيق الخصم",
+    "orderPlaced": "تم تقديم الطلب بنجاح"
   },
   "catalog": {
     "addNewProduct": "إضافة منتج جديد",
@@ -398,20 +398,20 @@
     "GBP": "GBP"
   },
   "categories": {
-    "food": "Food",
-    "transport": "Transport",
-    "drinks": "Drinks",
-    "shopping": "Shopping",
-    "health": "Health",
-    "entertainment": "Entertainment",
-    "home": "Home",
-    "education": "Education",
-    "travel": "Travel",
-    "salary": "Salary",
-    "freelance": "Freelance",
-    "gift": "Gift",
-    "investment": "Investment",
-    "other": "Other",
+    "food": "طعام",
+    "transport": "مواصلات",
+    "drinks": "مشروبات",
+    "shopping": "تسوق",
+    "health": "صحة",
+    "entertainment": "ترفيه",
+    "home": "منزل",
+    "education": "تعليم",
+    "travel": "سفر",
+    "salary": "راتب",
+    "freelance": "عمل حر",
+    "gift": "هدية",
+    "investment": "استثمار",
+    "other": "أخرى",
     "robinetterie": "الحنفيات",
     "chauffe_eau": "سخانات المياه",
     "canalisation": "الأنابيب",
@@ -421,9 +421,9 @@
     "autre": "أخرى"
   },
   "chat": {
-    "noMessages": "No messages yet. Say hi!",
+    "noMessages": "لا توجد رسائل حتى الآن. قل مرحبًا!",
     "title": "المحادثة",
-    "typeMessage": "Type a message..."
+    "typeMessage": "اكتب رسالة..."
   },
   "chatBot": {
     "greeting": "مرحباً {{name}}! أنا مساعد التسوق الخاص بك. كيف يمكنني مساعدتك اليوم؟",
@@ -509,10 +509,10 @@
     "chooseDelivery": "اختر طريقة التوصيل",
     "addnewaddress": "إضافة عنوان جديد",
     "address": "العنوان",
-    "choosePayment": "Choose Payment Method",
-    "payment": "Payment",
-    "review": "Review Order",
-    "addNewAddress": "Add New Address"
+    "choosePayment": "اختر طريقة الدفع",
+    "payment": "الدفع",
+    "review": "مراجعة الطلب",
+    "addNewAddress": "إضافة عنوان جديد"
   },
   "dashboard": {
     "hi": "مرحباً",
@@ -582,7 +582,7 @@
     "select": "اختر",
     "selectCategory": "اختر الفئة",
     "send": "إرسال",
-    "sku": "SKU",
+    "sku": "رمز المنتج",
     "stock": "مخزون",
     "submit": "إرسال",
     "success": "نجاح",
@@ -593,9 +593,9 @@
     "unitPrice": "سعر الوحدة",
     "unknown": "غير معروف",
     "yes": "نعم",
-    "active": "Active",
-    "inactive": "Inactive",
-    "assistant": "Assistant",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "assistant": "مساعد",
     "category": "الفئة",
     "loadFailed": "فشل تحميل البيانات",
     "logout": "تسجيل الخروج",
@@ -615,9 +615,9 @@
     "orderId": "معرف الطلب",
     "namePlaceholder": "أدخل الاسم...",
     "welcome": "مرحباً",
-    "ourStores": "Our Stores",
-    "contactUs": "Contact Us",
-    "copyrightText": "All rights reserved.",
+    "ourStores": "متاجرنا",
+    "contactUs": "اتصل بنا",
+    "copyrightText": "جميع الحقوق محفوظة.",
     "user": "مستخدم",
     "currency": "عملة",
     "status": "حالة",
@@ -625,44 +625,44 @@
     "fillRequired": "يرجى ملء جميع الحقول المطلوبة",
     "done": "تم",
     "continue": "استمرار",
-    "link": "Link",
-    "errorLoad": "Failed to load",
-    "deleteConfirm": "Are you sure you want to delete this?",
-    "deletedSuccessfully": "Deleted successfully",
-    "reference": "Reference",
-    "date": "Date",
-    "remove": "Remove",
-    "saving": "Saving...",
-    "notLoggedIn": "Please log in to continue",
-    "items": "Items",
-    "notFound": "Not Found",
-    "guest": "Guest",
-    "notes": "Notes",
-    "updatedSuccessfully": "Updated successfully",
-    "added": "Added",
-    "downloadSuccess": "Download successful",
-    "downloading": "Downloading...",
-    "errorEmptyFields": "Please fill all fields",
-    "requiredFields": "Required fields",
-    "info": "Information",
-    "fillAllFields": "Please fill all fields",
-    "selectTime": "Select Time",
-    "saved": "Saved",
-    "savedSuccessfully": "Saved successfully",
-    "online": "Online",
-    "customerService": "CUSTOMER SERVICE",
+    "link": "رابط",
+    "errorLoad": "فشل التحميل",
+    "deleteConfirm": "هل أنت متأكد أنك تريد حذف هذا؟",
+    "deletedSuccessfully": "تم الحذف بنجاح",
+    "reference": "مرجع",
+    "date": "التاريخ",
+    "remove": "إزالة",
+    "saving": "جارٍ الحفظ...",
+    "notLoggedIn": "الرجاء تسجيل الدخول للمتابعة",
+    "items": "العناصر",
+    "notFound": "غير موجود",
+    "guest": "زائر",
+    "notes": "ملاحظات",
+    "updatedSuccessfully": "تم التحديث بنجاح",
+    "added": "تمت الإضافة",
+    "downloadSuccess": "تم التنزيل بنجاح",
+    "downloading": "جارٍ التنزيل...",
+    "errorEmptyFields": "الرجاء ملء جميع الحقول",
+    "requiredFields": "الحقول المطلوبة",
+    "info": "معلومات",
+    "fillAllFields": "الرجاء ملء جميع الحقول",
+    "selectTime": "اختر الوقت",
+    "saved": "تم الحفظ",
+    "savedSuccessfully": "تم الحفظ بنجاح",
+    "online": "متصل",
+    "customerService": "خدمة العملاء",
     "contactEmail": "contact@mytek.tn",
-    "workingHours": "Mon-Fri: 8am-7pm / Sat: 8am-3pm",
-    "information": "INFORMATION",
-    "aboutUs": "About Us",
-    "termsAndConditions": "Terms & Conditions",
-    "reclamationNotFound": "Reclamation not found"
+    "workingHours": "الإثنين-الجمعة: 8ص-7م / السبت: 8ص-3م",
+    "information": "معلومات",
+    "aboutUs": "من نحن",
+    "termsAndConditions": "الشروط والأحكام",
+    "reclamationNotFound": "لم يتم العثور على الشكوى"
   },
   "home": {
-    "portfolio_stable": "Your portfolio is stable today.",
-    "greeting_morning": "Good morning",
-    "greeting_afternoon": "Good afternoon",
-    "greeting_evening": "Good evening"
+    "portfolio_stable": "محفظتك مستقرة اليوم.",
+    "greeting_morning": "صباح الخير",
+    "greeting_afternoon": "مساء الخير",
+    "greeting_evening": "مساء الخير"
   },
   "languages": {
     "ar": "العربية",
@@ -704,7 +704,7 @@
     "tipTitle": "بيانات اعتماد العرض"
   },
   "navigation": {
-    "home": "Home"
+    "home": "الصفحة الرئيسية"
   },
   "navigation_label": "أقسام الموقع",
   "services_local": {
@@ -755,7 +755,7 @@
     "userAdded": "تمت إضافة المستخدم الجديد {{name}} إلى النظام",
     "userEdited": "تم تحديث المستخدم {{name}}",
     "userDeleted": "تمت إزالة المستخدم {{name}} من النظام",
-    "broadcast": "Broadcast"
+    "broadcast": "البث"
   },
   "orders": {
     "orderDetails": "تفاصيل الطلب",
@@ -775,11 +775,11 @@
     "delivered": "تم التوصيل",
     "cancelled": "ملغي",
     "status": {
-      "pending": "Pending",
-      "processing": "Processing",
-      "shipped": "Shipped",
-      "delivered": "Delivered",
-      "cancelled": "Cancelled"
+      "pending": "قيد الانتظار",
+      "processing": "قيد المعالجة",
+      "shipped": "تم الشحن",
+      "delivered": "تم التوصيل",
+      "cancelled": "ملغاة"
     },
     "shippingInfo": "معلومات الشحن",
     "estimatedDelivery": "وقت التسليم المتوقع",
@@ -797,11 +797,11 @@
     "addressPlaceholder": "العنوان...",
     "customer": "عميل",
     "order": "طلب",
-    "enterTracking": "Enter Tracking Number",
-    "created": "Order created successfully",
-    "notFound": "Order not found",
-    "info": "Order Info",
-    "trackingNumber": "Tracking Number"
+    "enterTracking": "أدخل رقم التتبع",
+    "created": "تم إنشاء الطلب بنجاح",
+    "notFound": "لم يتم العثور على الطلب",
+    "info": "معلومات الطلب",
+    "trackingNumber": "رقم التتبع"
   },
   "purchases": {
     "title": "سجل المشتريات",
@@ -844,11 +844,11 @@
       "rejected": "مرفوض"
     },
     "submitted": "تم التقديم",
-    "description": "Description",
+    "description": "الوصف",
     "orderId": "رقم الطلب",
     "orderIdPlaceholder": "TLB-001",
     "descriptionPlaceholder": "وصف...",
-    "reasonPlaceholder": "Enter reason..."
+    "reasonPlaceholder": "أدخل السبب..."
   },
   "inventory": {
     "inventoryControl": "التحكم في المخزون",
@@ -882,12 +882,12 @@
     "changePlaceholder": "٠",
     "stockHealthy": "مخزون صحي",
     "reasonPlaceholder": "السبب...",
-    "lowStock": "Low Stock",
-    "adjustStock": "Adjust Stock",
-    "reorderSoon": "Reorder Soon",
-    "adjusted": "Stock adjusted successfully",
-    "noLogs": "No activity logs found",
-    "outOfStock": "Out of Stock"
+    "lowStock": "المخزون منخفض",
+    "adjustStock": "تعديل المخزون",
+    "reorderSoon": "أعد الطلب قريبًا",
+    "adjusted": "تم تعديل المخزون بنجاح",
+    "noLogs": "لا توجد سجلات نشاط",
+    "outOfStock": "نفد من المخزون"
   },
   "payroll": {
     "currency": "العملة",
@@ -967,8 +967,8 @@
     "stockManager": "مدير مخزون",
     "customer": "عميل",
     "user": "مستخدم",
-    "updatedSuccessfully": "User updated successfully",
-    "createdSuccessfully": "User created successfully"
+    "updatedSuccessfully": "تم تحديث المستخدم بنجاح",
+    "createdSuccessfully": "تم إنشاء المستخدم بنجاح"
   },
   "roles": {
     "admin": "مشرف",
@@ -977,7 +977,7 @@
     "user": "مستخدم",
     "title": "الأدوار",
     "anonyme": "ضيف",
-    "detail": "Role Detail"
+    "detail": "تفاصيل الدور"
   },
   "search": {
     "noResultsFor": "لم يتم العثور على نتائج لـ"
@@ -1082,8 +1082,8 @@
     "detail": "تفاصيل قائمة الأمنيات",
     "search": "البحث في قائمة الأمنيات",
     "add": "إضافة إلى قائمة الأمنيات",
-    "noItems": "No items in wishlist",
-    "myWishlist": "My Wishlist"
+    "noItems": "لا توجد عناصر في قائمة الأمنيات",
+    "myWishlist": "قائمة أمنياتي"
   },
   "reviews": {
     "writeReview": "كتابة مراجعة",
@@ -1157,7 +1157,7 @@
     "supplierPrice": "سعر المورد",
     "supplierSKU": "رمز المورد (SKU)",
     "productLinked": "تم ربط المنتج بنجاح",
-    "manageProducts": "Manage Products"
+    "manageProducts": "إدارة المنتجات"
   },
   "stockReception": {
     "title": "استلام المخزون",
@@ -1185,10 +1185,10 @@
     "added": "تم إنشاء الاستلام بنجاح",
     "updated": "تم تحديث الاستلام بنجاح",
     "completedSuccess": "تم إكمال استلام المخزون",
-    "selectSupplier": "Select Supplier",
-    "addProduct": "Add Product to Reception",
-    "errorNoItems": "Please add at least one item",
-    "edit": "Edit Stock Reception"
+    "selectSupplier": "اختر المورد",
+    "addProduct": "إضافة منتج إلى الاستلام",
+    "errorNoItems": "الرجاء إضافة عنصر واحد على الأقل",
+    "edit": "تعديل استلام المخزون"
   },
   "pickPack": {
     "title": "الالتقاط والتعبئة",
@@ -1223,10 +1223,10 @@
     "markPacked": "تحديد كمكتمل التعبئة",
     "shippingMethod": "طريقة الشحن",
     "trackingNumber": "رقم التتبع",
-    "noPendingOrders": "No pending orders to pick",
-    "createdSuccessfully": "Pick & Pack session created",
-    "add": "New Pick & Pack",
-    "selectOrder": "Select Order"
+    "noPendingOrders": "لا توجد طلبات معلّقة لالتقاطها",
+    "createdSuccessfully": "تم إنشاء جلسة التجميع والتغليف",
+    "add": "استلام وتغليف جديد",
+    "selectOrder": "اختر طلبًا"
   },
   "adminPurchases": {
     "title": "إدارة المشتريات",
@@ -1237,8 +1237,8 @@
     "totalPurchases": "إجمالي المشتريات",
     "totalRevenue": "إجمالي الإيرادات",
     "details": "تفاصيل الشراء",
-    "add": "Add Purchase",
-    "edit": "Edit Purchase"
+    "add": "إضافة عملية شراء",
+    "edit": "تعديل عملية شراء"
   },
   "offline": {
     "limitedFunctionality": "قد تكون بعض الميزات غير متوفرة",
@@ -1249,84 +1249,84 @@
   "window": "نافذة",
   "USD": "USD",
   "adminReclamations": {
-    "edit": "Edit Reclamation",
-    "add": "Add Reclamation"
+    "edit": "تعديل مطالبة",
+    "add": "إضافة مطالبة"
   },
   "days": {
-    "mon": "Mon",
-    "tue": "Tue",
-    "wed": "Wed",
-    "thu": "Thu",
-    "fri": "Fri",
-    "sat": "Sat",
-    "sun": "Sun"
+    "mon": "الإثنين",
+    "tue": "الثلاثاء",
+    "wed": "الأربعاء",
+    "thu": "الخميس",
+    "fri": "الجمعة",
+    "sat": "السبت",
+    "sun": "الأحد"
   },
   "shortcuts": {
-    "coffee": "Coffee",
-    "transport": "Transport",
-    "dining": "Dining",
-    "retail": "Retail",
-    "utility": "Utility",
-    "fuel": "Fuel",
-    "custom": "Custom"
+    "coffee": "قهوة",
+    "transport": "مواصلات",
+    "dining": "تناول الطعام",
+    "retail": "تجزئة",
+    "utility": "مرافق",
+    "fuel": "وقود",
+    "custom": "مخصص"
   },
   "history": {
-    "title": "History",
-    "empty": "No transactions yet",
-    "search": "Search...",
-    "total_spent": "Total spent",
-    "total_income": "Total income",
-    "high_badge": "High"
+    "title": "السجل",
+    "empty": "لا توجد معاملات حتى الآن",
+    "search": "بحث...",
+    "total_spent": "إجمالي المصروفات",
+    "total_income": "إجمالي الدخل",
+    "high_badge": "مرتفع"
   },
   "reports": {
-    "title": "Reports",
-    "financial_health": "Financial Health",
-    "cash_flow": "Cash Flow",
-    "allocation": "Allocation",
-    "velocity": "Velocity",
-    "budget_title": "Active Budgets",
-    "income": "Income",
-    "expenses": "Expenses",
-    "net": "Net",
-    "download_csv": "Download CSV",
-    "alert": "Alert",
-    "good": "Good",
-    "no_data": "No data"
+    "title": "التقارير",
+    "financial_health": "الصحة المالية",
+    "cash_flow": "التدفق النقدي",
+    "allocation": "التوزيع",
+    "velocity": "السرعة",
+    "budget_title": "الميزانيات النشطة",
+    "income": "الدخل",
+    "expenses": "المصروفات",
+    "net": "الصافي",
+    "download_csv": "تنزيل CSV",
+    "alert": "تنبيه",
+    "good": "جيد",
+    "no_data": "لا توجد بيانات"
   },
   "accounts": {
-    "title": "Accounts",
-    "add": "Add",
-    "balance": "Balance",
-    "recurring_bills": "Recurring Bills",
-    "mark_paid": "Mark paid",
-    "pay_now": "Pay Now",
-    "pending_badge": "Pending",
-    "recent_transactions": "Recent Transactions",
-    "view_all": "View All",
-    "due_soon": "Due Soon"
+    "title": "الحسابات",
+    "add": "إضافة",
+    "balance": "الرصيد",
+    "recurring_bills": "الفواتير المتكررة",
+    "mark_paid": "وضع علامة مدفوعة",
+    "pay_now": "ادفع الآن",
+    "pending_badge": "قيد الانتظار",
+    "recent_transactions": "المعاملات الأخيرة",
+    "view_all": "عرض الكل",
+    "due_soon": "مستحق قريبًا"
   },
   "goals": {
-    "title": "Goals",
-    "tagline": "Your future, curated.",
-    "add": "New Goal",
-    "add_funds": "Add Funds",
-    "target": "Goal",
-    "current": "Current",
-    "completed": "Completed",
-    "progress": "Progress",
-    "remaining": "Remaining",
-    "boost_savings": "Boost Savings",
-    "victories": "Victories",
-    "estimated": "Estimated",
-    "low_progress": "Low Progress"
+    "title": "الأهداف",
+    "tagline": "مستقبلك منسق.",
+    "add": "هدف جديد",
+    "add_funds": "إضافة أموال",
+    "target": "الهدف",
+    "current": "الحالي",
+    "completed": "مكتمل",
+    "progress": "التقدم",
+    "remaining": "المتبقي",
+    "boost_savings": "تعزيز المدخرات",
+    "victories": "الإنجازات",
+    "estimated": "مقدّر",
+    "low_progress": "تقدّم منخفض"
   },
   "toast": {
-    "added": "✓ Added",
-    "deleted": "Deleted",
-    "saved": "Saved",
-    "exported": "Exported",
-    "goal_updated": "Goal updated",
-    "paid_marked": "Marked as paid"
+    "added": "✓ تمت الإضافة",
+    "deleted": "تم الحذف",
+    "saved": "تم الحفظ",
+    "exported": "تم التصدير",
+    "goal_updated": "تم تحديث الهدف",
+    "paid_marked": "تم وضع علامة دفع"
   },
   "informations": "معلومات قانونية",
   "politique": "سياسة الخصوصية والأمان",
@@ -1349,15 +1349,15 @@
   "sitemap_page_profil": "الملف الشخصي",
   "sitemap_page_contact": "التواصل والدعم",
   "status": {
-    "cleared": "Cleared",
-    "pending": "Pending",
-    "failed": "Failed"
+    "cleared": "تم المسح",
+    "pending": "قيد الانتظار",
+    "failed": "فشل"
   },
   "frequency": {
-    "daily": "Daily",
-    "weekly": "Weekly",
-    "monthly": "Monthly",
-    "yearly": "Yearly"
+    "daily": "يومي",
+    "weekly": "أسبوعي",
+    "monthly": "شهري",
+    "yearly": "سنوي"
   },
   "demander_devis": "طلب تقدير سعر",
   "devis_msg": "مرحباً، أود طلب كشف وتقدير لخدمة: ",
@@ -1705,10 +1705,22 @@
       "digitalCardTitle": "بطاقة ولاء رقمية",
       "digitalCardDescription": "ادخل إلى رمز الاستجابة السريعة الشخصي الخاص بك لتقديمه في كل زيارة",
       "rewards": {
-        "freeCoffee": { "title": "قهوة مجانية", "condition": "250 نقطة" },
-        "freeCroissant": { "title": "كرواسون مجاني", "condition": "150 نقطة" },
-        "discount20": { "title": "خصم 20%", "condition": "500 نقطة" },
-        "mysteryGift": { "title": "هدية مفاجئة", "condition": "1000 نقطة" }
+        "freeCoffee": {
+          "title": "قهوة مجانية",
+          "condition": "250 نقطة"
+        },
+        "freeCroissant": {
+          "title": "كرواسون مجاني",
+          "condition": "150 نقطة"
+        },
+        "discount20": {
+          "title": "خصم 20%",
+          "condition": "500 نقطة"
+        },
+        "mysteryGift": {
+          "title": "هدية مفاجئة",
+          "condition": "1000 نقطة"
+        }
       },
       "stats": {
         "totalVisits": "إجمالي الزيارات",
@@ -1952,16 +1964,31 @@
   },
   "subscription": {
     "choosePlan": "اختر خطتك",
-    "register": { "title": "إنشاء حسابك" },
-    "establishment": { "title": "أخبرنا عن مؤسستك" },
+    "register": {
+      "title": "إنشاء حسابك"
+    },
+    "establishment": {
+      "title": "أخبرنا عن مؤسستك"
+    },
     "continue": "متابعة",
-    "summary": { "title": "ملخص" },
+    "summary": {
+      "title": "ملخص"
+    },
     "proceedToPayment": "المتابعة إلى الدفع"
   },
   "plans": {
-    "starter": { "name": "Starter", "feature1": "مؤسسة واحدة" },
-    "business": { "name": "Business", "feature1": "3 مؤسسات" },
-    "enterprise": { "name": "Enterprise", "feature1": "مؤسسات غير محدودة" }
+    "starter": {
+      "name": "البدء",
+      "feature1": "مؤسسة واحدة"
+    },
+    "business": {
+      "name": "الأعمال",
+      "feature1": "3 مؤسسات"
+    },
+    "enterprise": {
+      "name": "المؤسسة",
+      "feature1": "مؤسسات غير محدودة"
+    }
   },
   "payment": {
     "title": "الدفع",
@@ -1972,9 +1999,11 @@
       "message": "لقد تم تفعيل اشتراكك.",
       "goToDashboard": "الذهاب إلى لوحة القيادة"
     },
-    "failed": { "title": "فشل الدفع", "message": "لم نتمكن من معالجة دفعتك." },
+    "failed": {
+      "title": "فشل الدفع",
+      "message": "لم نتمكن من معالجة دفعتك."
+    },
     "retry": "إعادة محاولة الدفع",
-
     "paymentMethod": "طريقة الدفع",
     "creditCard": "بطاقة ائتمان/خصم",
     "paypal": "PayPal",

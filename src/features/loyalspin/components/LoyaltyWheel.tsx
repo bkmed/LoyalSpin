@@ -8,7 +8,9 @@ import {
   StyleSheet,
   Modal,
 } from 'react-native';
+import ConfettiCannon from 'react-native-confetti-cannon';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '../../../context/ThemeContext';
 
 interface LoyaltyWheelProps {
   segments: string[];
@@ -19,9 +21,12 @@ const SEGMENT_ANGLE = 360;
 
 const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const spinAnim = useRef(new Animated.Value(0)).current;
   const [spinning, setSpinning] = useState(false);
   const [result, setResult] = useState<string | null>(null);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [confettiKey, setConfettiKey] = useState(0);
 
   const spin = () => {
     if (spinning || segments.length === 0) return;
@@ -42,6 +47,8 @@ const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
     }).start(() => {
       const prize = segments[targetIndex];
       setResult(prize);
+      setShowConfetti(true);
+      setConfettiKey(prev => prev + 1);
       setSpinning(false);
       spinAnim.setValue(targetDeg % 360);
       onFinish?.(prize);
@@ -73,29 +80,41 @@ const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
             </View>
           ))}
         </Animated.View>
-        <View style={styles.indicator} />
+        <View style={[styles.indicator, { borderBottomColor: theme.colors.accent }]} />
       </View>
 
       <TouchableOpacity
         onPress={spin}
         disabled={spinning}
-        style={[styles.spinButton, spinning && styles.disabledButton]}
+        style={[styles.spinButton, spinning && styles.disabledButton, { backgroundColor: theme.colors.primary }]}
       >
         <Text style={styles.spinButtonText}>
           {t('loyalspin.spinButton', { defaultValue: 'Spin' })}
         </Text>
       </TouchableOpacity>
 
+      {showConfetti && (
+        <ConfettiCannon
+          key={`confetti-${confettiKey}`}
+          count={120}
+          origin={{ x: 120, y: 0 }}
+          fadeOut
+          fallSpeed={3000}
+          colors={[theme.colors.primary, theme.colors.accent, theme.colors.secondary || '#F97316']}
+          onAnimationEnd={() => setShowConfetti(false)}
+        />
+      )}
       <Modal visible={!!result} transparent animationType="fade">
         <View style={styles.modalBg}>
-          <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>
+          <View style={[styles.modalCard, { backgroundColor: theme.colors.card }]}> 
+            <Text style={[styles.modalTitle, { color: theme.colors.text }] }>
               {t('loyalspin.congrats', { defaultValue: 'Félicitations !' })}
             </Text>
-            <Text style={styles.modalPrize}>{result}</Text>
+            <Text style={[styles.modalPrize, { color: theme.colors.text }]}>{result}</Text>
+            <Text style={{ fontSize: 36, marginVertical: 8 }}>🎉</Text>
             <TouchableOpacity
               onPress={() => setResult(null)}
-              style={styles.closeBtn}
+              style={[styles.closeBtn, { backgroundColor: theme.colors.primary }]}
             >
               <Text style={styles.closeBtnText}>
                 {t('loyalspin.close', { defaultValue: 'Fermer' })}
@@ -153,7 +172,8 @@ const styles = StyleSheet.create({
   },
   spinButton: {
     marginTop: 16,
-    backgroundColor: '#F97316',
+    paddingHorizontal: 24,
+    paddingVertical: 10,
     paddingHorizontal: 24,
     paddingVertical: 10,
     borderRadius: 12,

@@ -612,9 +612,7 @@ export const AppNavigator = () => {
             <NotificationsScreen t={translate} />
           )}
 
-          {activeTab === 'UserSocialGate' && (
-            <SocialGateScreen t={translate} />
-          )}
+          {activeTab === 'UserSocialGate' && <SocialGateScreen t={translate} />}
 
           {['Informations', 'Politique', 'Conditions', 'PlanSite'].includes(
             activeTab,

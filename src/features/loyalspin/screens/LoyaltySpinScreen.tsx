@@ -25,22 +25,69 @@ const LoyaltySpinScreen: React.FC = () => {
 
   return (
     <ScrollView contentContainerStyle={{ padding: 16 }}>
-      <Text style={{ fontSize: 22, fontWeight: '900', color: theme.colors.text, marginBottom: 12 }}>
+      <Text
+        style={{
+          fontSize: 22,
+          fontWeight: '900',
+          color: theme.colors.text,
+          marginBottom: 12,
+        }}
+      >
         {t('loyalspin.title', { defaultValue: 'Roulette de fidélité' })}
       </Text>
 
       <View style={{ marginBottom: 16 }}>
-        <Text style={{ color: theme.colors.subText }}>{t('loyalspin.yourLevel', { defaultValue: 'Niveau fidélité' })}</Text>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 8 }}>
-          <Text style={{ fontWeight: '800', color: theme.colors.primary }}>Silver</Text>
-          <TouchableOpacity onPress={() => {}} style={{ backgroundColor: theme.colors.primary, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 8 }}>
-            <Text style={{ color: theme.colors.card, fontWeight: '800' }}>{t('loyalspin.spin', { defaultValue: 'Spin' })}</Text>
+        <Text style={{ color: theme.colors.subText }}>
+          {t('loyalspin.yourLevel', { defaultValue: 'Niveau fidélité' })}
+        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginTop: 8,
+          }}
+        >
+          <Text style={{ fontWeight: '800', color: theme.colors.primary }}>
+            Silver
+          </Text>
+          <TouchableOpacity
+            onPress={() => {}}
+            style={{
+              backgroundColor: theme.colors.primary,
+              paddingHorizontal: 12,
+              paddingVertical: 8,
+              borderRadius: 8,
+            }}
+          >
+            <Text style={{ color: theme.colors.card, fontWeight: '800' }}>
+              {t('loyalspin.spin', { defaultValue: 'Spin' })}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
 
-      <View style={{ marginBottom: 18, borderRadius: 24, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: theme.colors.card, padding: 18 }}>
-        <Text style={{ fontWeight: '900', color: theme.colors.text, marginBottom: 8 }}>{t('loyalspin.howItWorksTitle', { defaultValue: 'Comment ça marche' })}</Text>
+      <View
+        style={{
+          marginBottom: 18,
+          borderRadius: 24,
+          borderWidth: 1,
+          borderColor: theme.colors.border,
+          backgroundColor: theme.colors.card,
+          padding: 18,
+        }}
+      >
+        <Text
+          style={{
+            fontWeight: '900',
+            color: theme.colors.text,
+            marginBottom: 8,
+          }}
+        >
+          {t('loyalspin.howItWorksTitle', {
+            defaultValue: 'Comment ça marche',
+          })}
+        </Text>
         <Text style={{ color: theme.colors.subText, lineHeight: 20 }}>
           {t('loyalspin.howItWorksText', {
             defaultValue:
@@ -49,8 +96,23 @@ const LoyaltySpinScreen: React.FC = () => {
         </Text>
         <View style={{ marginTop: 14 }}>
           {prizes.map((prize, index) => (
-            <View key={index} style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-              <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: theme.colors.primary }} />
+            <View
+              key={index}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 8,
+                marginBottom: 8,
+              }}
+            >
+              <View
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: 4,
+                  backgroundColor: theme.colors.primary,
+                }}
+              />
               <Text style={{ color: theme.colors.text }}>{prize}</Text>
             </View>
           ))}
@@ -60,16 +122,41 @@ const LoyaltySpinScreen: React.FC = () => {
       <LoyaltyWheel segments={prizes} onFinish={onFinish} />
 
       <View style={{ marginTop: 20 }}>
-        <Text style={{ fontWeight: '800', color: theme.colors.text, marginBottom: 8 }}>{t('loyalspin.recentWinsTitle', { defaultValue: 'Derniers gains' })}</Text>
+        <Text
+          style={{
+            fontWeight: '800',
+            color: theme.colors.text,
+            marginBottom: 8,
+          }}
+        >
+          {t('loyalspin.recentWinsTitle', { defaultValue: 'Derniers gains' })}
+        </Text>
         {claimed.length === 0 ? (
-          <Text style={{ color: theme.colors.subText }}>{t('loyalspin.noWins', { defaultValue: 'Aucun gain récent' })}</Text>
+          <Text style={{ color: theme.colors.subText }}>
+            {t('loyalspin.noWins', { defaultValue: 'Aucun gain récent' })}
+          </Text>
         ) : (
-          claimed.slice(-5).reverse().map((c, idx) => (
-            <View key={idx} style={{ padding: 12, borderRadius: 12, backgroundColor: theme.colors.card, marginBottom: 8 }}>
-              <Text style={{ fontWeight: '700', color: theme.colors.text }}>{c.prize}</Text>
-              <Text style={{ color: theme.colors.subText, fontSize: 12 }}>{new Date(c.claimedAt).toLocaleString()}</Text>
-            </View>
-          ))
+          claimed
+            .slice(-5)
+            .reverse()
+            .map((c, idx) => (
+              <View
+                key={idx}
+                style={{
+                  padding: 12,
+                  borderRadius: 12,
+                  backgroundColor: theme.colors.card,
+                  marginBottom: 8,
+                }}
+              >
+                <Text style={{ fontWeight: '700', color: theme.colors.text }}>
+                  {c.prize}
+                </Text>
+                <Text style={{ color: theme.colors.subText, fontSize: 12 }}>
+                  {new Date(c.claimedAt).toLocaleString()}
+                </Text>
+              </View>
+            ))
         )}
       </View>
     </ScrollView>

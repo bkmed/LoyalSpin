@@ -117,7 +117,10 @@ const UserDashboardMobile: React.FC<UserDashboardMobileProps> = ({
             }}
           >
             <Text style={{ color: theme.colors.card, fontWeight: '800' }}>
-              {tCommon('web.userDashboard.showAlerts', 'Voir les notifications')}
+              {tCommon(
+                'web.userDashboard.showAlerts',
+                'Voir les notifications',
+              )}
             </Text>
           </TouchableOpacity>
         </View>
@@ -140,18 +143,39 @@ const UserDashboardMobile: React.FC<UserDashboardMobileProps> = ({
       </View>
 
       {/* Loyalty Card & Progress */}
-      <View className="mt-8 rounded-3xl p-6" style={{ backgroundColor: theme.colors.card }}>
+      <View
+        className="mt-8 rounded-3xl p-6"
+        style={{ backgroundColor: theme.colors.card }}
+      >
         <View className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <View>
-            <Text style={{ color: theme.colors.text, fontWeight: '800', fontSize: 20 }}>
-              {tCommon('web.userDashboard.loyaltyCardTitle', 'Votre Carte LoyalSpin')}
+            <Text
+              style={{
+                color: theme.colors.text,
+                fontWeight: '800',
+                fontSize: 20,
+              }}
+            >
+              {tCommon(
+                'web.userDashboard.loyaltyCardTitle',
+                'Votre Carte LoyalSpin',
+              )}
             </Text>
             <Text style={{ color: theme.colors.subText, marginTop: 6 }}>
-              {tCommon('web.userDashboard.loyaltyCardSub', 'Niveau et progression fidélité')}
+              {tCommon(
+                'web.userDashboard.loyaltyCardSub',
+                'Niveau et progression fidélité',
+              )}
             </Text>
           </View>
           <View style={{ alignItems: 'flex-end' }}>
-            <Text style={{ color: theme.colors.primary, fontWeight: '900', fontSize: 22 }}>
+            <Text
+              style={{
+                color: theme.colors.primary,
+                fontWeight: '900',
+                fontSize: 22,
+              }}
+            >
               {loyaltyPoints}
             </Text>
             <Text style={{ color: theme.colors.subText, fontSize: 12 }}>
@@ -161,11 +185,28 @@ const UserDashboardMobile: React.FC<UserDashboardMobileProps> = ({
         </View>
 
         <View className="mt-6">
-          <View style={{ height: 12, borderRadius: 999, backgroundColor: theme.colors.border }}>
-            <View style={{ height: 12, borderRadius: 999, width: `${Math.round(progress * 100)}%`, backgroundColor: theme.colors.primary }} />
+          <View
+            style={{
+              height: 12,
+              borderRadius: 999,
+              backgroundColor: theme.colors.border,
+            }}
+          >
+            <View
+              style={{
+                height: 12,
+                borderRadius: 999,
+                width: `${Math.round(progress * 100)}%`,
+                backgroundColor: theme.colors.primary,
+              }}
+            />
           </View>
           <Text style={{ marginTop: 8, color: theme.colors.subText }}>
-            {tCommon('web.userDashboard.progressText', 'Progression vers le niveau suivant')}: {Math.round(progress * 100)}%
+            {tCommon(
+              'web.userDashboard.progressText',
+              'Progression vers le niveau suivant',
+            )}
+            : {Math.round(progress * 100)}%
           </Text>
         </View>
       </View>

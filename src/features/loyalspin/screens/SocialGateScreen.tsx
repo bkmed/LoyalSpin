@@ -9,7 +9,8 @@ const networks = [
   {
     id: 'facebook',
     label: 'Facebook',
-    description: 'Share your LoyalSpin progress on Facebook and earn bonus points.',
+    description:
+      'Share your LoyalSpin progress on Facebook and earn bonus points.',
   },
   {
     id: 'whatsapp',
@@ -116,8 +117,8 @@ const SocialGateScreen: React.FC<SocialGateScreenProps> = ({ t }) => {
           )}
         </Text>
         <Text className="mt-4 text-sm font-semibold text-slate-900 dark:text-white">
-          {tCommon(
-            'web.socialGate.completedSteps', 'Connected networks:')} {connected.length}
+          {tCommon('web.socialGate.completedSteps', 'Connected networks:')}{' '}
+          {connected.length}
         </Text>
       </View>
     </ScrollView>

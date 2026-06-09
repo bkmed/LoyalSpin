@@ -1,5 +1,12 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, RefreshControl, Modal } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  RefreshControl,
+  Modal,
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import {
@@ -20,14 +27,11 @@ const NotificationsScreen: React.FC<NotificationsScreenProps> = ({ t }) => {
   );
   const dispatch = useDispatch();
   const [activeCategory, setActiveCategory] = useState<
-    | 'all'
-    | 'info'
-    | 'success'
-    | 'warning'
-    | 'error'
+    'all' | 'info' | 'success' | 'warning' | 'error'
   >('all');
   const [refreshing, setRefreshing] = useState(false);
-  const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
+  const [selectedNotification, setSelectedNotification] =
+    useState<Notification | null>(null);
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
   const tCommon = (key: string, defaultValue: string) =>
@@ -37,10 +41,17 @@ const NotificationsScreen: React.FC<NotificationsScreenProps> = ({ t }) => {
     () => [
       { key: 'all', label: tCommon('web.notifications.all', 'All') },
       { key: 'info', label: tCommon('web.notifications.info', 'Info') },
-      { key: 'success', label: tCommon('web.notifications.success', 'Success') },
-      { key: 'warning', label: tCommon('web.notifications.warning', 'Warning') },
+      {
+        key: 'success',
+        label: tCommon('web.notifications.success', 'Success'),
+      },
+      {
+        key: 'warning',
+        label: tCommon('web.notifications.warning', 'Warning'),
+      },
       { key: 'error', label: tCommon('web.notifications.error', 'Error') },
-    ], [t],
+    ],
+    [t],
   );
 
   const categoryCounts = useMemo(
@@ -145,7 +156,10 @@ const NotificationsScreen: React.FC<NotificationsScreenProps> = ({ t }) => {
                 </Text>
               </View>
               <Text className="text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-                {tCommon(`web.notifications.${notification.type}`, notification.type)}
+                {tCommon(
+                  `web.notifications.${notification.type}`,
+                  notification.type,
+                )}
               </Text>
             </View>
             <Text className="mt-4 text-sm text-slate-700 dark:text-slate-200">
@@ -184,7 +198,10 @@ const NotificationsScreen: React.FC<NotificationsScreenProps> = ({ t }) => {
         <View className="flex-1 bg-black/50 justify-center px-4 py-8">
           <View className="rounded-3xl bg-white dark:bg-slate-950 p-6">
             <Text className="text-xl font-black text-slate-900 dark:text-white mb-2">
-              {tCommon('web.notifications.detailsTitle', 'Notification details')}
+              {tCommon(
+                'web.notifications.detailsTitle',
+                'Notification details',
+              )}
             </Text>
             <Text className="text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
               {tCommon('web.notifications.category', 'Category')}:{' '}

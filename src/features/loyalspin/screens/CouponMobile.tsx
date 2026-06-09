@@ -67,7 +67,10 @@ const CouponMobile: React.FC<CouponMobileProps> = ({ t }) => {
     }
     Alert.alert(
       tCommon('web.coupons.copied', 'Code copié !'),
-      `${code} ${tCommon('web.coupons.copiedSuffix', 'a été copié dans le presse-papiers.')}`,
+      `${code} ${tCommon(
+        'web.coupons.copiedSuffix',
+        'a été copié dans le presse-papiers.',
+      )}`,
     );
   };
 
@@ -87,7 +90,10 @@ const CouponMobile: React.FC<CouponMobileProps> = ({ t }) => {
         <TextInput
           value={search}
           onChangeText={setSearch}
-          placeholder={tCommon('web.coupons.searchPlaceholder', 'Chercher un coupon...')}
+          placeholder={tCommon(
+            'web.coupons.searchPlaceholder',
+            'Chercher un coupon...',
+          )}
           className="w-full sm:w-1/2 rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-5 py-3 text-sm text-slate-900 dark:text-white focus:border-[#F97316]"
         />
         <View className="inline-flex rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 p-1">
@@ -133,13 +139,16 @@ const CouponMobile: React.FC<CouponMobileProps> = ({ t }) => {
 
             <View className="mt-6 flex flex-col gap-2 text-sm text-slate-600 dark:text-slate-300">
               <Text>
-                {tCommon('web.coupons.expiry', 'Valide jusqu’au')} {coupon.expiry}
+                {tCommon('web.coupons.expiry', 'Valide jusqu’au')}{' '}
+                {coupon.expiry}
               </Text>
             </View>
 
             <View className="mt-6 grid gap-3 sm:grid-cols-2">
               <TouchableOpacity
-                onPress={() => setSelectedId(coupon.id === selectedId ? null : coupon.id)}
+                onPress={() =>
+                  setSelectedId(coupon.id === selectedId ? null : coupon.id)
+                }
                 className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 px-4 py-3 text-sm font-black text-slate-900 dark:text-white hover:bg-[#F97316]/10 transition"
               >
                 {tCommon('web.coupons.showQr', 'Voir le QR')}
@@ -160,7 +169,10 @@ const CouponMobile: React.FC<CouponMobileProps> = ({ t }) => {
                   </Text>
                 </View>
                 <Text className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                  {tCommon('web.coupons.presentAtCheckout', 'Montrez ce QR à la caisse pour valider votre coupon.')}
+                  {tCommon(
+                    'web.coupons.presentAtCheckout',
+                    'Montrez ce QR à la caisse pour valider votre coupon.',
+                  )}
                 </Text>
               </View>
             )}

@@ -31,7 +31,9 @@ const orders = [
 
 const PurchaseHistory: React.FC<PurchaseHistoryProps> = ({ t }) => {
   const [query, setQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'Tous' | 'Livré' | 'En cours' | 'Réglé'>('Tous');
+  const [statusFilter, setStatusFilter] = useState<
+    'Tous' | 'Livré' | 'En cours' | 'Réglé'
+  >('Tous');
 
   const tCommon = (key: string, defaultValue: string) =>
     t(key, { defaultValue });
@@ -76,7 +78,7 @@ const PurchaseHistory: React.FC<PurchaseHistoryProps> = ({ t }) => {
       <View className="mt-8 grid gap-4 lg:grid-cols-3">
         <View className="rounded-3xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
           <Text className="text-xs font-black uppercase tracking-[0.24em] text-slate-400 dark:text-slate-500">
-            {tCommon('web.history.totalOrders', 'Commandes')} 
+            {tCommon('web.history.totalOrders', 'Commandes')}
           </Text>
           <Text className="mt-4 text-4xl font-black text-slate-900 dark:text-white">
             {filteredOrders.length}

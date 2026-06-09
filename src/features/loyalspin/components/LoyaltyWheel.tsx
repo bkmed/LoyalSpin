@@ -44,7 +44,7 @@ const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
       setResult(prize);
       setSpinning(false);
       spinAnim.setValue(targetDeg % 360);
-      onFinish && onFinish(prize);
+      onFinish?.(prize);
     });
   };
 

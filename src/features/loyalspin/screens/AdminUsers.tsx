@@ -160,24 +160,6 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
     );
   };
 
-  const handleStartEditUser = (user: any) => {
-    // ensure admin can only edit their clients
-    if (currentRole !== 'super-admin' && sessionUser) {
-      if (user.managerId !== sessionUser.id && user.id !== sessionUser.id) {
-        showToast(
-          tCommon('adminUsers.accessDenied', 'Accès refusé : client non géré.'),
-          'error',
-        );
-        return;
-      }
-    }
-    setEditingUser(user);
-    setEditUserName(user.name);
-    setEditUserEmail(user.email);
-    setEditUserPhone(user.phone || '');
-    setEditUserRole(user.role === 'admin' ? 'admin' : 'user');
-  };
-
   const handleCancelEditUser = () => {
     setEditingUser(null);
   };
@@ -203,27 +185,6 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
     setEditingUser(null);
   };
 
-  const handleDeleteUserClick = (userId: string, role: string) => {
-    if (role === 'admin') return;
-    const user = usersList.find(u => u.id === userId);
-    if (currentRole !== 'super-admin' && sessionUser && user) {
-      if (user.managerId !== sessionUser.id && user.id !== sessionUser.id) {
-        showToast(
-          tCommon(
-            'adminUsers.accessDenied',
-            'Accès refusé : impossible de supprimer.',
-          ),
-          'error',
-        );
-        return;
-      }
-    }
-    if (user) {
-      setUserToDelete(user);
-      setShowDeleteConfirm(true);
-    }
-  };
-
   const confirmDeleteUser = () => {
     if (!userToDelete) return;
     if (editingUser?.id === userToDelete.id) {
@@ -241,85 +202,6 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
   const cancelDeleteUser = () => {
     setShowDeleteConfirm(false);
     setUserToDelete(null);
-  };
-
-  const handleToggleUserRole = (userId: string, currentVal: string) => {
-    const target = usersList.find(u => u.id === userId);
-    if (!target) return;
-    if (currentRole !== 'super-admin' && sessionUser) {
-      if (target.managerId !== sessionUser.id && target.id !== sessionUser.id) {
-        showToast(
-          tCommon(
-            'adminUsers.accessDenied',
-            'Accès refusé : impossible de modifier le rôle.',
-          ),
-          'error',
-        );
-        return;
-      }
-    }
-    const updated = {
-      ...target,
-      role: currentVal === 'admin' ? 'user' : 'admin',
-      updatedAt: new Date().toISOString(),
-    };
-    dispatch(updateUser(updated));
-    showToast(
-      tCommon('adminUsers.roleUpdated', "Rôle de l'utilisateur modifié !"),
-      'success',
-    );
-  };
-
-  const handleToggleUserStatus = (userId: string, currentStatus: string) => {
-    const target = usersList.find(u => u.id === userId);
-    if (!target) return;
-    if (currentRole !== 'super-admin' && sessionUser) {
-      if (target.managerId !== sessionUser.id && target.id !== sessionUser.id) {
-        showToast(
-          tCommon(
-            'adminUsers.accessDenied',
-            'Accès refusé : impossible de modifier le statut.',
-          ),
-          'error',
-        );
-        return;
-      }
-    }
-
-    if (
-      sessionUser &&
-      target.email.toLowerCase() === sessionUser.email.toLowerCase()
-    ) {
-      showToast(
-        tCommon(
-          'adminUsers.cannotBlockSelf',
-          'Impossible de bloquer votre propre compte admin !',
-        ),
-        'error',
-      );
-      return;
-    }
-
-    const newStatus = (currentStatus === 'active' ? 'rejected' : 'active') as
-      | 'active'
-      | 'rejected';
-    const updated: any = {
-      ...target,
-      status: newStatus,
-      updatedAt: new Date().toISOString(),
-    };
-    dispatch(updateUser(updated));
-    showToast(
-      tCommon(
-        currentStatus === 'active'
-          ? 'adminUsers.userBlocked'
-          : 'adminUsers.userReactivated',
-        currentStatus === 'active'
-          ? 'Utilisateur bloqué avec succès !'
-          : 'Compte réactivé !',
-      ),
-      'info',
-    );
   };
 
   return (

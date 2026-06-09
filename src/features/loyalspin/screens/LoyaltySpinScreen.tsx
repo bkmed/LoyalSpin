@@ -2,8 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import LoyaltyWheel from '../components/LoyaltyWheel';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../store';
+import { useDispatch } from 'react-redux';
 import { claimPrize } from '../../../store/slices/loyalSpinSlice';
 
 const LoyaltySpinScreen: React.FC = () => {

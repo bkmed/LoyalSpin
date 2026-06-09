@@ -36,8 +36,6 @@ interface WebScreenMapProps {
   toggleFavorite: (id: string, e?: React.MouseEvent) => void;
   supportWhatsAppNumber: string;
   interventionZones: string[];
-  usersList?: any[];
-  reduxCategories?: any[];
   currentRole: string;
   currentLang: string;
   businessName: string;
@@ -67,8 +65,6 @@ export const renderWebScreen = ({
   toggleFavorite,
   supportWhatsAppNumber,
   interventionZones,
-  usersList,
-  reduxCategories,
   currentRole,
   currentLang,
   businessName,

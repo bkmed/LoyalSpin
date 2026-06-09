@@ -68,10 +68,13 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
       };
       startWebSession(superSession, 'SuperAdminAccueil');
       showToast(
-        tCommon('web.welcomeSuper', "Bienvenue Super Admin !"),
+        tCommon('web.welcomeSuper', 'Bienvenue Super Admin !'),
         'success',
       );
-    } else if (signinEmail === 'admin@demo.com' && signinPassword === 'admin123') {
+    } else if (
+      signinEmail === 'admin@demo.com' &&
+      signinPassword === 'admin123'
+    ) {
       const adminSession: WebSessionUser = {
         id: 'admin-web-demo',
         name: 'Admin LoyaltySpin',
@@ -173,7 +176,10 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
               {businessName}
             </Text>
             <Text className="text-[9px] text-[#F97316] font-extrabold tracking-widest uppercase mt-0.5">
-              {tCommon('web.branding_services', 'Roulette · Coupons · Récompenses · Partenaires')}
+              {tCommon(
+                'web.branding_services',
+                'Roulette · Coupons · Récompenses · Partenaires',
+              )}
             </Text>
           </View>
         </View>
@@ -183,10 +189,16 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
             {tCommon('web.branding_platform', 'PLATEFORME LOYALSPIN')}
           </Text>
           <Text className="text-4xl sm:text-5xl font-black text-white leading-tight">
-            {tCommon('web.branding_leader', 'Tournez, gagnez et conservez vos récompenses.')}
+            {tCommon(
+              'web.branding_leader',
+              'Tournez, gagnez et conservez vos récompenses.',
+            )}
           </Text>
           <Text className="text-slate-300 text-sm leading-relaxed font-semibold">
-            {tCommon('web.branding_description', 'Participez à la roue de fidélité, gagnez des coupons et découvrez des offres partenaires sur web, Android et iOS.')}
+            {tCommon(
+              'web.branding_description',
+              'Participez à la roue de fidélité, gagnez des coupons et découvrez des offres partenaires sur web, Android et iOS.',
+            )}
           </Text>
           <View className="grid grid-cols-2 gap-6 pt-6">
             <View>
@@ -194,7 +206,10 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                 {tCommon('web.branding_24h', 'Gagnez chaque jour')}
               </Text>
               <Text className="text-[10px] text-slate-400 font-extrabold uppercase mt-1 dark:text-slate-300">
-                {tCommon('web.branding_urgentIntervention', 'Tournez tous les jours')}
+                {tCommon(
+                  'web.branding_urgentIntervention',
+                  'Tournez tous les jours',
+                )}
               </Text>
             </View>
             <View>
@@ -209,7 +224,11 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
         </View>
 
         <Text className="text-xs text-slate-500 font-bold relative z-10 dark:text-slate-400">
-          {tCommon('web.branding_copyright', '© 2026 {{businessName}}. Créé pour les clients fidèles et les partenaires.', { businessName })}
+          {tCommon(
+            'web.branding_copyright',
+            '© 2026 {{businessName}}. Créé pour les clients fidèles et les partenaires.',
+            { businessName },
+          )}
         </Text>
       </View>
 
@@ -332,7 +351,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                 <Text className="text-[10px] text-slate-400 dark:text-slate-500 text-center font-bold mb-2.5">
                   {tCommon(
                     'web.demoAccountsLabel',
-                      'LOYALSPIN DEMO ACCOUNTS (DIRECT ACCESS)',
+                    'LOYALSPIN DEMO ACCOUNTS (DIRECT ACCESS)',
                   )}
                 </Text>
                 <View className="grid grid-cols-2 gap-3 text-center">

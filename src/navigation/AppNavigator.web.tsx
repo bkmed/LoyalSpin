@@ -63,7 +63,7 @@ import {
 import { User } from '../services/authService';
 
 export const AppNavigator = () => {
-  const { colorScheme, setColorScheme } = useColorScheme();
+  const { setColorScheme } = useColorScheme();
   const { user: authUser, signIn, signOut } = useAuth();
   const { showToast } = useToast();
   const { t: translate, i18n } = useTranslation();

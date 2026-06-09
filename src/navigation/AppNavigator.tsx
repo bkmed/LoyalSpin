@@ -39,6 +39,7 @@ import UserDashboardMobile from '../features/loyalspin/screens/UserDashboardMobi
 import CouponMobile from '../features/loyalspin/screens/CouponMobile';
 import PurchaseHistory from '../features/loyalspin/screens/PurchaseHistory';
 import NotificationsScreen from '../features/loyalspin/screens/NotificationsScreen';
+import SocialGateScreen from '../features/loyalspin/screens/SocialGateScreen';
 import LegalPages from '../features/loyalspin/screens/LegalPages';
 import AdminDashboard from '../features/loyalspin/screens/AdminDashboard';
 import AdminAnnonces from '../features/loyalspin/screens/AdminAnnonces';
@@ -609,6 +610,10 @@ export const AppNavigator = () => {
 
           {activeTab === 'UserNotifications' && (
             <NotificationsScreen t={translate} />
+          )}
+
+          {activeTab === 'UserSocialGate' && (
+            <SocialGateScreen t={translate} />
           )}
 
           {['Informations', 'Politique', 'Conditions', 'PlanSite'].includes(

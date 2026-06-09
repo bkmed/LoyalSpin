@@ -1377,17 +1377,111 @@
       "quickActions": "Quick actions",
       "coupons": "My coupons",
       "couponsDesc": "Access your active discount vouchers.",
+      "spin": "Loyalty Wheel",
+      "spinDesc": "Play the LoyalSpin wheel to win rewards.",
       "history": "History",
       "historyDesc": "Review your recent orders and earned points.",
       "notifications": "Notifications",
       "notificationsDesc": "See recent alerts and announcements.",
       "profile": "Profile",
       "profileDesc": "Edit your information and preferences.",
+      "socialGate": "Social Gate",
+      "socialGateDesc": "Share and earn points by activating your social networks.",
       "loyaltyCardTitle": "Your LoyalSpin Card",
       "loyaltyCardSub": "Level and loyalty progress",
       "progressText": "Progress toward next level"
     },
+    "profile": {
+      "loyaltyTitle": "Digital Loyalty Card",
+      "loyaltySub": "Your prestige status and rewards",
+      "points": "Points",
+      "level": "Level",
+      "card": "Loyalty code",
+      "shareCard": "Share your code and earn extra points by inviting friends.",
+      "shareButton": "Share my card"
+    },
+    "socialGate": {
+      "title": "Social Gate",
+      "subtitle": "Connect your social networks to unlock bonus rewards.",
+      "connectButton": "Connect & Share",
+      "connectedButton": "Connected",
+      "benefitsTitle": "Why connect?",
+      "benefitsText": "Linking your accounts helps us deliver more personalized rewards and exclusive bonuses.",
+      "completedSteps": "Connected networks:",
+      "sharedTitle": "Network connected!",
+      "sharedMessage": "Your account is now linked. You will receive loyalty credit for your next referral.",
+      "networks": {
+        "facebook": {
+          "label": "Facebook",
+          "description": "Share your LoyalSpin progress on Facebook and earn bonus points."
+        },
+        "whatsapp": {
+          "label": "WhatsApp",
+          "description": "Invite friends via WhatsApp to unlock a loyalty reward."
+        },
+        "instagram": {
+          "label": "Instagram",
+          "description": "Post your LoyalSpin achievement for extra loyalty perks."
+        }
+      }
+    },
+    "coupons": {
+      "title": "My loyalty coupons",
+      "subtitle": "Use your exclusive offers on upcoming services.",
+      "searchPlaceholder": "Search coupons...",
+      "expiry": "Valid until",
+      "showQr": "Show QR",
+      "copyCode": "Copy code",
+      "copied": "Code copied!",
+      "copiedSuffix": "was copied to the clipboard.",
+      "qrPlaceholder": "QR Code",
+      "presentAtCheckout": "Show this QR at checkout to redeem your coupon.",
+      "empty": "No coupons found.",
+      "filter": {
+        "Tous": "All",
+        "Actif": "Active",
+        "Expiré": "Expired"
+      }
+    },
+    "history": {
+      "title": "Purchase history",
+      "subtitle": "Find your orders, totals and delivery statuses.",
+      "totalOrders": "Orders",
+      "totalSpent": "Total spent",
+      "deliveredOrders": "Delivered",
+      "search": "Search",
+      "filter": {
+        "Tous": "All",
+        "Livré": "Delivered",
+        "En cours": "In progress",
+        "Réglé": "Settled"
+      },
+      "monthlySummary": "Monthly summary",
+      "monthlySummaryOrders": "Orders this month",
+      "monthlySummaryRevenue": "Estimated revenue",
+      "monthlySummaryPending": "Pending",
+      "order": "Order",
+      "items": "items",
+      "empty": "No matching history."
+    },
     "autoText21": "Please enter a category name.",
+    "notifications": {
+      "title": "Notifications",
+      "subtitle": "Keep an eye on your alerts and announcements.",
+      "markAll": "Mark all as read",
+      "markRead": "Mark read",
+      "delete": "Delete",
+      "all": "All",
+      "info": "Info",
+      "success": "Success",
+      "warning": "Warning",
+      "error": "Error",
+      "unread": "unread",
+      "empty": "No notifications yet.",
+      "detailsTitle": "Notification details",
+      "category": "Category",
+      "close": "Close"
+    },
     "autoText22": "Category already exists.",
     "autoText23": "Category added successfully!",
     "autoText25": "Category updated!",

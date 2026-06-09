@@ -48,6 +48,14 @@ const UserDashboardMobile: React.FC<UserDashboardMobileProps> = ({
       tab: 'UserCoupons',
     },
     {
+      label: tCommon('web.userDashboard.spin', 'Roulette'),
+      desc: tCommon(
+        'web.userDashboard.spinDesc',
+        'Jouez à la roue LoyalSpin pour gagner des récompenses.',
+      ),
+      tab: 'LoyalSpin',
+    },
+    {
       label: tCommon('web.userDashboard.history', 'Historique'),
       desc: tCommon(
         'web.userDashboard.historyDesc',
@@ -62,6 +70,14 @@ const UserDashboardMobile: React.FC<UserDashboardMobileProps> = ({
         'Voir les alertes et annonces récentes.',
       ),
       tab: 'UserNotifications',
+    },
+    {
+      label: tCommon('web.userDashboard.socialGate', 'Social Gate'),
+      desc: tCommon(
+        'web.userDashboard.socialGateDesc',
+        'Partagez et gagnez des points en activant vos réseaux sociaux.',
+      ),
+      tab: 'UserSocialGate',
     },
     {
       label: tCommon('web.userDashboard.profile', 'Profil'),

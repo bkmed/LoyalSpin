@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { Alert, Platform, Share, TextInput, TouchableOpacity, View, Text } from 'react-native';
 import { ProductVisual } from '../components/ProductSVGs';
 import { Role } from '../utils/webTranslations';
 
@@ -45,6 +45,40 @@ export const ProfileScreenWeb: React.FC<ProfileScreenWebProps> = ({
   const [currentMdp, setCurrentMdp] = React.useState('');
   const [newMdp, setNewMdp] = React.useState('');
   const [newsletterEmail, setNewsletterEmail] = React.useState('');
+
+  const loyaltyPoints = 4300;
+  const loyaltyLevel = 'Silver';
+  const loyaltyCode = 'LOYAL-4320';
+
+  const handleShareLoyaltyCard = async () => {
+    const message = tCommon(
+      'web.profile.shareMessage',
+      `Je viens de gagner ${loyaltyPoints} points LoyalSpin ! Rejoins-moi et profite des offres exclusives. Code : ${loyaltyCode}`,
+    );
+
+    try {
+      if (Platform.OS === 'web' && navigator.clipboard) {
+        await navigator.clipboard.writeText(message);
+        Alert.alert(
+          tCommon('web.profile.shareSuccess', 'Partage prêt'),
+          tCommon(
+            'web.profile.shareCopiedWeb',
+            'Le message de partage a été copié dans le presse-papiers.',
+          ),
+        );
+      } else {
+        await Share.share({ message });
+      }
+    } catch (error) {
+      Alert.alert(
+        tCommon('web.profile.shareError', 'Erreur de partage'),
+        tCommon(
+          'web.profile.shareErrorDetails',
+          'Impossible de partager pour le moment. Réessayez plus tard.',
+        ),
+      );
+    }
+  };
 
   return (
     <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in text-left">
@@ -98,6 +132,51 @@ export const ProfileScreenWeb: React.FC<ProfileScreenWebProps> = ({
               'Gérez vos favoris, votre sécurité et vos préférences.',
             )}
           </Text>
+
+          <View className="mt-8 rounded-3xl bg-gradient-to-br from-[#1E3A5F] to-[#F97316] p-6 text-white shadow-lg">
+            <Text className="text-sm font-black uppercase tracking-[0.24em] text-amber-100">
+              {tCommon('web.profile.loyaltyTitle', 'Carte LoyalSpin numérique')}
+            </Text>
+            <Text className="mt-3 text-3xl font-black tracking-tight">
+              {tCommon('web.profile.loyaltySub', 'Votre statut prestige et vos avantages')}
+            </Text>
+            <View className="mt-6 grid gap-4 sm:grid-cols-3">
+              <View>
+                <Text className="text-xs uppercase tracking-[0.24em] text-amber-100/80">
+                  {tCommon('web.profile.points', 'Points')}
+                </Text>
+                <Text className="mt-2 text-3xl font-black">{loyaltyPoints}</Text>
+              </View>
+              <View>
+                <Text className="text-xs uppercase tracking-[0.24em] text-amber-100/80">
+                  {tCommon('web.profile.level', 'Niveau')}
+                </Text>
+                <Text className="mt-2 text-3xl font-black">{loyaltyLevel}</Text>
+              </View>
+              <View>
+                <Text className="text-xs uppercase tracking-[0.24em] text-amber-100/80">
+                  {tCommon('web.profile.card', 'Code fidélité')}
+                </Text>
+                <Text className="mt-2 text-3xl font-black tracking-widest">
+                  {loyaltyCode}
+                </Text>
+              </View>
+            </View>
+            <View className="mt-6 bg-white/10 rounded-3xl p-4 border border-white/15">
+              <Text className="text-sm font-semibold text-white/90">
+                {tCommon(
+                  'web.profile.shareCard',
+                  'Partagez votre code et gagnez des points supplémentaires en invitant vos amis.',
+                )}
+              </Text>
+              <TouchableOpacity
+                onPress={handleShareLoyaltyCard}
+                className="mt-4 inline-flex items-center justify-center rounded-3xl bg-white px-5 py-3 text-sm font-black text-[#1E3A5F] hover:bg-slate-100 transition"
+              >
+                {tCommon('web.profile.shareButton', 'Partager ma carte')}
+              </TouchableOpacity>
+            </View>
+          </View>
 
           <View className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-10 items-start">
             {/* Left details (lg:col-span-4) */}

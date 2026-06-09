@@ -39,6 +39,24 @@ const LoyaltySpinScreen: React.FC = () => {
         </View>
       </View>
 
+      <View style={{ marginBottom: 18, borderRadius: 24, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: theme.colors.card, padding: 18 }}>
+        <Text style={{ fontWeight: '900', color: theme.colors.text, marginBottom: 8 }}>{t('loyalspin.howItWorksTitle', { defaultValue: 'Comment ça marche' })}</Text>
+        <Text style={{ color: theme.colors.subText, lineHeight: 20 }}>
+          {t('loyalspin.howItWorksText', {
+            defaultValue:
+              'Appuyez sur la roue pour la lancer, remportez une récompense instantanée et conservée dans votre compte LoyalSpin.',
+          })}
+        </Text>
+        <View style={{ marginTop: 14 }}>
+          {prizes.map((prize, index) => (
+            <View key={index} style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+              <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: theme.colors.primary }} />
+              <Text style={{ color: theme.colors.text }}>{prize}</Text>
+            </View>
+          ))}
+        </View>
+      </View>
+
       <LoyaltyWheel segments={prizes} onFinish={onFinish} />
 
       <View style={{ marginTop: 20 }}>

@@ -1409,17 +1409,111 @@
       "quickActions": "Actions rapides",
       "coupons": "Mes coupons",
       "couponsDesc": "Accédez à vos bons de réduction actifs.",
+      "spin": "Roulette",
+      "spinDesc": "Jouez à la roue LoyalSpin pour gagner des récompenses.",
       "history": "Historique",
       "historyDesc": "Consultez vos dernières commandes et points gagnés.",
       "notifications": "Notifications",
       "notificationsDesc": "Voir les alertes et annonces récentes.",
       "profile": "Profil",
       "profileDesc": "Modifier vos informations et préférences.",
+      "socialGate": "Social Gate",
+      "socialGateDesc": "Partagez et gagnez des points en activant vos réseaux sociaux.",
       "loyaltyCardTitle": "Votre Carte LoyalSpin",
       "loyaltyCardSub": "Niveau et progression fidélité",
       "progressText": "Progression vers le niveau suivant"
     },
-    "autoText21": "Veuillez saisir un nom de catégorie.",
+    "profile": {
+      "loyaltyTitle": "Carte de fidélité numérique",
+      "loyaltySub": "Votre statut prestige et vos récompenses",
+      "points": "Points",
+      "level": "Niveau",
+      "card": "Code fidélité",
+      "shareCard": "Partagez votre code et gagnez des points supplémentaires en invitant vos amis.",
+      "shareButton": "Partager ma carte"
+    },
+    "socialGate": {
+      "title": "Social Gate",
+      "subtitle": "Connectez vos réseaux sociaux pour débloquer des récompenses bonus.",
+      "connectButton": "Connecter & Partager",
+      "connectedButton": "Connecté",
+      "benefitsTitle": "Pourquoi connecter ?",
+      "benefitsText": "La connexion de vos comptes nous aide à proposer des récompenses personnalisées et des bonus exclusifs.",
+      "completedSteps": "Réseaux connectés :",
+      "sharedTitle": "Réseau connecté !",
+      "sharedMessage": "Votre compte est maintenant lié. Vous recevrez un crédit fidélité pour votre prochaine recommandation.",
+      "networks": {
+        "facebook": {
+          "label": "Facebook",
+          "description": "Partagez votre progression LoyalSpin sur Facebook et gagnez des points bonus."
+        },
+        "whatsapp": {
+          "label": "WhatsApp",
+          "description": "Invitez des amis via WhatsApp pour débloquer une récompense fidélité."
+        },
+        "instagram": {
+          "label": "Instagram",
+          "description": "Publiez votre réussite LoyalSpin pour des avantages fidélité supplémentaires."
+        }
+      }
+    },
+    "coupons": {
+      "title": "Mes coupons fidélité",
+      "subtitle": "Utilisez vos offres exclusives sur vos prochains services.",
+      "searchPlaceholder": "Cherchez un coupon...",
+      "expiry": "Valide jusqu’au",
+      "showQr": "Voir le QR",
+      "copyCode": "Copier le code",
+      "copied": "Code copié !",
+      "copiedSuffix": "a été copié dans le presse-papiers.",
+      "qrPlaceholder": "QR Code",
+      "presentAtCheckout": "Montrez ce QR à la caisse pour valider votre coupon.",
+      "empty": "Aucun coupon trouvé.",
+      "filter": {
+        "Tous": "Tous",
+        "Actif": "Actif",
+        "Expiré": "Expiré"
+      }
+    },
+    "history": {
+      "title": "Historique des commandes",
+      "subtitle": "Retrouvez vos commandes, montants et statuts.",
+      "totalOrders": "Commandes",
+      "totalSpent": "Total dépensé",
+      "deliveredOrders": "Livrées",
+      "search": "Rechercher",
+      "filter": {
+        "Tous": "Tous",
+        "Livré": "Livré",
+        "En cours": "En cours",
+        "Réglé": "Réglé"
+      },
+      "monthlySummary": "Résumé mensuel",
+      "monthlySummaryOrders": "Commandes ce mois",
+      "monthlySummaryRevenue": "Revenu estimé",
+      "monthlySummaryPending": "En attente",
+      "order": "Commande",
+      "items": "articles",
+      "empty": "Aucun historique correspondant."
+    },
+    "autoText21": "Veuillez entrer un nom de catégorie.",
+    "notifications": {
+      "title": "Notifications",
+      "subtitle": "Gardez un œil sur vos alertes et annonces importantes.",
+      "markAll": "Tout marquer lu",
+      "markRead": "Marquer lu",
+      "delete": "Supprimer",
+      "all": "Toutes",
+      "info": "Info",
+      "success": "Succès",
+      "warning": "Alerte",
+      "error": "Urgence",
+      "unread": "non lus",
+      "empty": "Aucune notification pour le moment.",
+      "detailsTitle": "Détails de la notification",
+      "category": "Catégorie",
+      "close": "Fermer"
+    },
     "autoText22": "Catégorie déjà existante.",
     "autoText23": "Catégorie ajoutée avec succès !",
     "autoText25": "Catégorie modifiée !",

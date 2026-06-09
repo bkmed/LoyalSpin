@@ -293,7 +293,13 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
           </View>
 
           {authTab === 'signin' && (
-            <View className="space-y-4">
+            <form
+              className="space-y-4"
+              onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+                event.preventDefault();
+                handleSignIn();
+              }}
+            >
               <View className="space-y-2">
                 <Text className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-left">
                   {tCommon('web.emailLabel', 'Adresse Email')}
@@ -313,6 +319,10 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                 </Text>
                 <TextInput
                   secureTextEntry
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  autoComplete="current-password"
+                  textContentType="password"
                   placeholder="••••••••"
                   value={signinPassword}
                   onChangeText={setSigninPassword}
@@ -357,63 +367,26 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                 <View className="grid grid-cols-2 gap-3 text-center">
                   <TouchableOpacity
                     onPress={() => {
-                      setSigninEmail('user@demo.com');
-                      setSigninPassword('user123');
+                      setSigninEmail('super@demo.com');
+                      setSigninPassword('super123');
                       showToast(
                         tCommon('web.signingIn', 'Signing in...'),
                         'info',
                       );
                       setTimeout(() => {
-                        const userSession: WebSessionUser = {
-                          id: 'user-web-demo',
-                          name: 'Ahmed Ben Ali',
-                          email: 'user@demo.com',
-                          role: 'user',
-                          phone: '+216 22 456 789',
-                          status: 'active',
-                          addresses: ['Ariana'],
-                          city: 'Ariana',
-                          createdAt: new Date().toISOString(),
-                          updatedAt: new Date().toISOString(),
-                        };
-                        startWebSession(userSession, 'Accueil');
-                        showToast(
-                          tCommon(
-                            'web.welcomeUser',
-                            'Ravi de vous revoir, Ahmed Ben Ali !',
-                          ),
-                          'success',
-                        );
-                      }, 250);
-                    }}
-                    className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[10px] font-black py-2.5 rounded-lg transition"
-                  >
-                    <Text className="text-slate-800 dark:text-slate-200 text-[10px] font-black text-center">
-                      Client LoyaltySpin (Ahmed Ben Ali)
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setSigninEmail('admin@demo.com');
-                      setSigninPassword('admin123');
-                      showToast(
-                        tCommon('web.signingIn', 'Signing in...'),
-                        'info',
-                      );
-                      setTimeout(() => {
-                        const adminSession: WebSessionUser = {
-                          id: 'admin-web-demo',
-                          name: 'Admin LoyaltySpin',
-                          email: 'admin@demo.com',
-                          role: 'admin',
-                          phone: '+216 22 000 111',
+                        const superSession: WebSessionUser = {
+                          id: 'super-web-demo',
+                          name: 'Super Admin LoyaltySpin',
+                          email: 'super@demo.com',
+                          role: 'super-admin',
+                          phone: '+216 22 999 999',
                           status: 'active',
                           addresses: ['Tunis'],
                           city: 'Tunis',
                           createdAt: new Date().toISOString(),
                           updatedAt: new Date().toISOString(),
                         };
-                        startWebSession(adminSession, 'AdminAccueil');
+                        startWebSession(superSession, 'AdminAccueil');
                         showToast(
                           tCommon(
                             'web.welcomeAdmin',
@@ -426,7 +399,159 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                     className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[10px] font-black py-2.5 rounded-lg transition"
                   >
                     <Text className="text-slate-800 dark:text-slate-200 text-[10px] font-black text-center">
-                      Admin LoyaltySpin
+                      Super Admin LoyaltySpin
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSigninEmail('admin1@demo.com');
+                      setSigninPassword('admin123');
+                      showToast(
+                        tCommon('web.signingIn', 'Signing in...'),
+                        'info',
+                      );
+                      setTimeout(() => {
+                        const admin1Session: WebSessionUser = {
+                          id: 'admin1-web-demo',
+                          name: 'Admin LoyaltySpin 1',
+                          email: 'admin1@demo.com',
+                          role: 'admin',
+                          phone: '+216 22 000 111',
+                          status: 'active',
+                          addresses: ['Tunis'],
+                          city: 'Tunis',
+                          createdAt: new Date().toISOString(),
+                          updatedAt: new Date().toISOString(),
+                        };
+                        startWebSession(admin1Session, 'AdminAccueil');
+                        showToast(
+                          tCommon(
+                            'web.welcomeAdmin',
+                            "Bienvenue dans votre espace d'administration !",
+                          ),
+                          'success',
+                        );
+                      }, 250);
+                    }}
+                    className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[10px] font-black py-2.5 rounded-lg transition"
+                  >
+                    <Text className="text-slate-800 dark:text-slate-200 text-[10px] font-black text-center">
+                      Admin LoyaltySpin 1
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSigninEmail('admin2@demo.com');
+                      setSigninPassword('admin234');
+                      showToast(
+                        tCommon('web.signingIn', 'Signing in...'),
+                        'info',
+                      );
+                      setTimeout(() => {
+                        const admin2Session: WebSessionUser = {
+                          id: 'admin2-web-demo',
+                          name: 'Admin LoyaltySpin 2',
+                          email: 'admin2@demo.com',
+                          role: 'admin',
+                          phone: '+216 22 000 222',
+                          status: 'active',
+                          addresses: ['Sfax'],
+                          city: 'Sfax',
+                          createdAt: new Date().toISOString(),
+                          updatedAt: new Date().toISOString(),
+                        };
+                        startWebSession(admin2Session, 'AdminAccueil');
+                        showToast(
+                          tCommon(
+                            'web.welcomeAdmin',
+                            "Bienvenue dans votre espace d'administration !",
+                          ),
+                          'success',
+                        );
+                      }, 250);
+                    }}
+                    className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[10px] font-black py-2.5 rounded-lg transition"
+                  >
+                    <Text className="text-slate-800 dark:text-slate-200 text-[10px] font-black text-center">
+                      Admin LoyaltySpin 2
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSigninEmail('user1@demo.com');
+                      setSigninPassword('user123');
+                      showToast(
+                        tCommon('web.signingIn', 'Signing in...'),
+                        'info',
+                      );
+                      setTimeout(() => {
+                        const client1Session: WebSessionUser = {
+                          id: 'user1-web-demo',
+                          name: 'Client LoyaltySpin 1',
+                          email: 'user1@demo.com',
+                          role: 'user',
+                          phone: '+216 22 456 789',
+                          status: 'active',
+                          addresses: ['Ariana'],
+                          city: 'Ariana',
+                          createdAt: new Date().toISOString(),
+                          updatedAt: new Date().toISOString(),
+                        };
+                        startWebSession(client1Session, 'Accueil');
+                        showToast(
+                          tCommon(
+                            'web.welcomeUser',
+                            'Ravi de vous revoir, Ahmed Ben Ali !',
+                          ),
+                          'success',
+                        );
+                      }, 250);
+                    }}
+                    className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[10px] font-black py-2.5 rounded-lg transition"
+                  >
+                    <Text className="text-slate-800 dark:text-slate-200 text-[10px] font-black text-center">
+                      Client LoyaltySpin 1
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSigninEmail('user2@demo.com');
+                      setSigninPassword('user234');
+                      showToast(
+                        tCommon('web.signingIn', 'Signing in...'),
+                        'info',
+                      );
+                      setTimeout(() => {
+                        const client2Session: WebSessionUser = {
+                          id: 'user2-web-demo',
+                          name: 'Client LoyaltySpin 2',
+                          email: 'user2@demo.com',
+                          role: 'user',
+                          phone: '+216 22 456 790',
+                          status: 'active',
+                          addresses: ['Sousse'],
+                          city: 'Sousse',
+                          createdAt: new Date().toISOString(),
+                          updatedAt: new Date().toISOString(),
+                        };
+                        startWebSession(client2Session, 'Accueil');
+                        showToast(
+                          tCommon(
+                            'web.welcomeUser',
+                            'Ravi de vous revoir, Ahmed Ben Ali !',
+                          ),
+                          'success',
+                        );
+                      }, 250);
+                    }}
+                    className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[10px] font-black py-2.5 rounded-lg transition"
+                  >
+                    <Text className="text-slate-800 dark:text-slate-200 text-[10px] font-black text-center">
+                      Client LoyaltySpin 2
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -452,11 +577,17 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                   </TouchableOpacity>
                 </Text>
               </View>
-            </View>
+            </form>
           )}
 
           {authTab === 'forgot' && (
-            <View className="space-y-4">
+            <form
+              className="space-y-4"
+              onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+                event.preventDefault();
+                handleForgotSubmit();
+              }}
+            >
               <View className="space-y-2">
                 <Text className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-left">
                   {tCommon('web.emailLabel', 'Adresse Email')}
@@ -500,11 +631,17 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                   </Text>
                 </TouchableOpacity>
               </View>
-            </View>
+            </form>
           )}
 
           {authTab === 'signup' && (
-            <View className="space-y-4">
+            <form
+              className="space-y-4"
+              onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+                event.preventDefault();
+                handleSignUp();
+              }}
+            >
               <View className="space-y-2">
                 <Text className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-left">
                   {tCommon('web.fullNameLabel', 'Nom Complet')}
@@ -570,6 +707,10 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                   </Text>
                   <TextInput
                     secureTextEntry
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    autoComplete="new-password"
+                    textContentType="newPassword"
                     placeholder="••••••••"
                     value={signupPassword}
                     onChangeText={setSignupPassword}
@@ -582,6 +723,10 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                   </Text>
                   <TextInput
                     secureTextEntry
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    autoComplete="new-password"
+                    textContentType="newPassword"
                     placeholder="••••••••"
                     value={signupConfirmPassword}
                     onChangeText={setSignupConfirmPassword}
@@ -622,7 +767,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                   </TouchableOpacity>
                 </Text>
               </View>
-            </View>
+            </form>
           )}
 
           {/* BYPASS AUTH / CONTINUE AS GUEST */}

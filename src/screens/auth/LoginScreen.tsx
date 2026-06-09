@@ -26,6 +26,34 @@ export const LoginScreen = ({ navigation }: any) => {
   const [errors, setErrors] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
 
+  const demoAccounts = [
+    {
+      label: 'Super Admin',
+      email: 'super@demo.com',
+      password: 'super123',
+    },
+    {
+      label: 'Admin 1',
+      email: 'admin1@demo.com',
+      password: 'admin123',
+    },
+    {
+      label: 'Admin 2',
+      email: 'admin2@demo.com',
+      password: 'admin234',
+    },
+    {
+      label: 'Client 1',
+      email: 'user1@demo.com',
+      password: 'user123',
+    },
+    {
+      label: 'Client 2',
+      email: 'user2@demo.com',
+      password: 'user234',
+    },
+  ];
+
   const validateForm = () => {
     let isValid = true;
     const newErrors = { email: '', password: '' };
@@ -124,29 +152,20 @@ export const LoginScreen = ({ navigation }: any) => {
             </Text>
           </View>
 
-          <TouchableOpacity
-            style={styles.demoRow}
-            onPress={() => {
-              setEmail('admin@demo.com');
-              setPassword('admin123');
-            }}
-          >
-            <Text style={styles.demoCell}>{t('login.admin')}</Text>
-            <Text style={styles.demoCell}>admin@demo.com</Text>
-            <Text style={styles.demoCell}>admin123</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.demoRow}
-            onPress={() => {
-              setEmail('user@demo.com');
-              setPassword('user123');
-            }}
-          >
-            <Text style={styles.demoCell}>{t('login.user')}</Text>
-            <Text style={styles.demoCell}>user@demo.com</Text>
-            <Text style={styles.demoCell}>user123</Text>
-          </TouchableOpacity>
+          {demoAccounts.map(account => (
+            <TouchableOpacity
+              key={account.email}
+              style={styles.demoRow}
+              onPress={() => {
+                setEmail(account.email);
+                setPassword(account.password);
+              }}
+            >
+              <Text style={styles.demoCell}>{account.label}</Text>
+              <Text style={styles.demoCell}>{account.email}</Text>
+              <Text style={styles.demoCell}>{account.password}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
       </View>
 

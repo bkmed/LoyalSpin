@@ -59,7 +59,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({
             <Text className="text-xs leading-relaxed font-semibold text-slate-900 dark:text-slate-100">
               {tc(
                 'web.foot_desc',
-                'Votre expert en plomberie, climatisation et gaz en Tunisie.',
+                'Your LoyalSpin rewards partner in Tunisia.',
               )}
             </Text>
           </View>

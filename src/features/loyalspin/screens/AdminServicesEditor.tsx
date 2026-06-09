@@ -18,11 +18,11 @@ const AdminServicesEditor = () => {
   const { t: translate } = useTranslation();
   const dispatch = useDispatch();
   const services = useSelector(selectServices) as Service[];
-  const [nameKey, setNameKey] = useState('plomberie_generale');
+  const [nameKey, setNameKey] = useState('loyalspin_rewards');
   const [icon, setIcon] = useState('plumbing');
-  const [descKey, setDescKey] = useState('plomberie_desc_long');
+  const [descKey, setDescKey] = useState('loyalspin_desc_long');
   const [ptsKeys, setPtsKeys] = useState(
-    'plomberie_desc_1,plomberie_desc_2,plomberie_desc_3',
+    'loyalspin_desc_1,loyalspin_desc_2,loyalspin_desc_3',
   );
   const [editingId, setEditingId] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
@@ -54,10 +54,10 @@ const AdminServicesEditor = () => {
   };
 
   const reset = ({ clearStatus = true }: { clearStatus?: boolean } = {}) => {
-    setNameKey('plomberie_generale');
+    setNameKey('loyalspin_rewards');
     setIcon('plumbing');
-    setDescKey('plomberie_desc_long');
-    setPtsKeys('plomberie_desc_1,plomberie_desc_2,plomberie_desc_3');
+    setDescKey('loyalspin_desc_long');
+    setPtsKeys('loyalspin_desc_1,loyalspin_desc_2,loyalspin_desc_3');
     setEditingId(null);
     if (clearStatus) {
       setStatusMessage(null);
@@ -411,7 +411,7 @@ const AdminServicesEditor = () => {
                   value={nameKey}
                   onChangeText={setNameKey}
                   placeholder={translate('admin.placeholder.nameKey', {
-                    defaultValue: 'clé nom (ex: plomberie_generale)',
+                    defaultValue: 'clé nom (ex: loyalspin_rewards)',
                   })}
                   className="w-full px-4 py-3 rounded-3xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#F97316]"
                 />
@@ -420,7 +420,7 @@ const AdminServicesEditor = () => {
                   value={icon}
                   onChangeText={setIcon}
                   placeholder={translate('admin.placeholder.icon', {
-                    defaultValue: 'icone (plumbing|ac|gas|heater)',
+                    defaultValue: 'icone (rewards|partners|offers|analytics)',
                   })}
                   className="w-full px-4 py-3 rounded-3xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#F97316]"
                 />
@@ -429,7 +429,7 @@ const AdminServicesEditor = () => {
                   value={descKey}
                   onChangeText={setDescKey}
                   placeholder={translate('admin.placeholder.descKey', {
-                    defaultValue: 'clé description (ex: plomberie_desc_long)',
+                    defaultValue: 'clé description (ex: loyalspin_desc_long)',
                   })}
                   className="w-full px-4 py-3 rounded-3xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#F97316]"
                 />

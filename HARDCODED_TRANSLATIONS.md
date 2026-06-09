@@ -40,7 +40,7 @@ Found **50+ hardcoded translation pairs** across 5 files using the pattern: `cur
 | 349-352 | Forgot password link | `هل نسيت كلمة المرور؟` | `Forgot Password?` | Button to navigate to password reset |
 | 354 | Secure login badge | `تسجيل آمن` | `Secure login` | Security badge text |
 | 364 | Sign in button | `دخول آمن` | `Connexion Sécurisée` | Submit button text |
-| 372-374 | Demo accounts label | `حسابات التجربة الفورية` | `COMPTES DE DÉMO DE PLOMBERIE (ACCÈS DIRECT)` | Section header for demo accounts |
+| 372-374 | Demo accounts label | `حسابات التجربة الفورية` | `COMPTES DE DÉMO LOYALSPIN (ACCÈS DIRECT)` | Section header for demo accounts |
 
 #### Demo Account Messages
 | Line | Context | Arabic | French | Purpose |

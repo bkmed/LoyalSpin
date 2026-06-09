@@ -418,15 +418,15 @@ Private project.
 All rights reserved.
 
 
-**LoyalSpin Tunisie** is a premium business showcase and second-hand plumbing parts marketplace. It allows customers to view plumbing, heating, gas, and AC services in Tunisia (Grand Tunis and Sahel), request emergency interventions via an interactive coverage zone map, browse and save second-hand plumbing parts, and contact sellers directly via phone or WhatsApp. It also features a fully functional administration panel for managing announcements, categories, user roles, and viewing analytics.
+**LoyalSpin Tunisie** is a premium business showcase and loyalty rewards marketplace. It allows customers to browse reward services, partner offers, and loyalty analytics in Tunisia (Grand Tunis and Sahel), request support via an interactive coverage zone map, explore partner offers, and contact sellers directly via phone or WhatsApp. It also features a fully functional administration panel for managing announcements, categories, user roles, and viewing analytics.
 
 ## Key Features
 
 ### Premium Web Client Showcase
 - **Accueil (Home)**: High-impact hero banner, emergency support links, technical expertise quick views, a preview grid of featured second-hand parts, and trust metrics.
-- **Services**: In-depth description of technical services (Plomberie, Climatisation, Gaz de ville, Chauffage central) with reusable SVG `ServiceIcon` visuals, before/after comparison grids, and direct quote requests.
-- **Zone d'intervention (Coverage Zones)**: Interactive Tunisia coverage zone map with an SVG/CSS mockup. Users can check covered regions (Tunis, Sousse, Sfax, Monastir, Ariana, Ben Arous) and submit quick emergency intervention forms.
-- **Pièces d'occasion (Used Parts Marketplace)**: Comprehensive marketplace for refurbished plumbing parts with category/condition filters, maximum price sliders, sorting, and direct action triggers ("📞 Appeler" / "💬 WhatsApp").
+- **Services**: In-depth description of loyalty services (LoyalSpin Rewards, Coupons, Partner Offers, Analytics) with reusable SVG `ServiceIcon` visuals, comparison grids, and direct engagement actions.
+- **Zone d'intervention (Coverage Zones)**: Interactive Tunisia coverage zone map with an SVG/CSS mockup. Users can check covered regions (Tunis, Sousse, Sfax, Monastir, Ariana, Ben Arous) and submit quick support requests.
+- **Rewards Marketplace**: Comprehensive marketplace for partner offers and loyalty rewards with category/condition filters, value sliders, sorting, and direct action triggers ("📞 Appeler" / "💬 WhatsApp").
 - **Profil (Profile Settings)**: Form to view/update profile settings, password management, and a dedicated favorite items manager. Invites guests to sign up or sign in.
 - **Paiement (Online Payment - Coming Soon)**: Visual checkout mockup highlighting upcoming integrations with local secure payment methods (ClicToPay / Sobflous).
 

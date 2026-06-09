@@ -1,37 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, ActivityIndicator, StyleSheet, Text } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 import { Theme } from '../theme';
+import { store } from '../store';
+import { LogoSVG } from '../features/loyalspin/components/LogoSVG';
 
 export const LoadingScreen = () => {
   const { theme } = useTheme();
   const styles = createStyles(theme);
+  
+  const [businessName, setBusinessName] = useState(() => {
+    return store.getState()?.appSettings?.businessName || 'LoyalSpin';
+  });
+
+  useEffect(() => {
+    const unsubscribe = store.subscribe(() => {
+      const state = store.getState();
+      const currentBusinessName = state?.appSettings?.businessName || 'LoyalSpin';
+      if (currentBusinessName !== businessName) {
+        setBusinessName(currentBusinessName);
+      }
+    });
+    return unsubscribe;
+  }, [businessName]);
 
   return (
     <View style={styles.container}>
-      <View
-        style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}
-      >
-        <Text
-          style={{
-            fontSize: 42,
-            fontWeight: '900',
-            color: '#A80000',
-            letterSpacing: -1,
-          }}
-        >
-          ST★UCHI
-        </Text>
-        <Text
-          style={{
-            fontSize: 32,
-            fontWeight: 'bold',
-            color: '#005994',
-            marginTop: -16,
-            marginLeft: 2,
-          }}
-        >
-          *
+      <View style={styles.logoContainer}>
+        <LogoSVG size={120} />
+        <Text style={styles.businessName}>
+          {businessName}
         </Text>
       </View>
       <ActivityIndicator size="large" color="#005994" style={styles.spinner} />
@@ -47,10 +45,17 @@ const createStyles = (theme: Theme) =>
       alignItems: 'center',
       backgroundColor: theme.colors.background,
     },
-    logo: {
-      width: 120,
-      height: 120,
-      marginBottom: theme.spacing.l,
+    logoContainer: {
+      alignItems: 'center',
+      marginBottom: theme.spacing.xl,
+    },
+
+    businessName: {
+      ...theme.textVariants.header,
+      fontSize: 28,
+      fontWeight: 'bold',
+      color: theme.colors.primary,
+      textAlign: 'center',
     },
     spinner: {
       marginTop: theme.spacing.m,

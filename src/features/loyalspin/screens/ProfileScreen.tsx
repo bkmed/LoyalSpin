@@ -216,7 +216,7 @@ export const ProfileScreenWeb: React.FC<ProfileScreenWebProps> = ({
                 <View className="border-t border-slate-100 dark:border-slate-700 pt-5 space-y-3.5 text-left font-semibold text-xs text-slate-500 dark:text-slate-500">
                   <View className="space-y-1">
                     <Text className="text-[8.5px] font-black text-slate-400 uppercase tracking-widest dark:text-slate-300">
-                      Email
+                      {tCommon('web.email_label', 'Email')}
                     </Text>
                     <Text className="font-black text-slate-800 dark:text-slate-200">
                       {profileEmail}

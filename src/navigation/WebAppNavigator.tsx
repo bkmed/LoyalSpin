@@ -333,7 +333,7 @@ export const AppNavigator = () => {
         setActiveTab('SuperAdminAccueil');
       else
         setActiveTab(
-          restoredUser.role === 'admin' ? 'AdminAccueil' : 'Accueil',
+          restoredUser.role === 'admin' ? 'AdminAccueil' : restoredUser.role === 'user' ? 'UserDashboard' : 'Accueil',
         );
     }
   }, [authUser]);

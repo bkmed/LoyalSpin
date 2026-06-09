@@ -8,7 +8,16 @@ import {
   StyleSheet,
   Modal,
 } from 'react-native';
-import ConfettiCannon from 'react-native-confetti-cannon';
+import { Platform } from 'react-native';
+
+let ConfettiCannon: any = null;
+if (Platform.OS !== 'web') {
+  try {
+    ConfettiCannon = require('react-native-confetti-cannon').default;
+  } catch (e) {
+    console.warn('Could not load react-native-confetti-cannon', e);
+  }
+}
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../../context/ThemeContext';
 
@@ -99,7 +108,7 @@ const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
         </Text>
       </TouchableOpacity>
 
-      {showConfetti && (
+      {showConfetti && ConfettiCannon && (
         <ConfettiCannon
           key={`confetti-${confettiKey}`}
           count={120}

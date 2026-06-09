@@ -5,27 +5,33 @@ interface PurchaseHistoryProps {
   t: any;
 }
 
-const orders = [
+const getOrders = (tCommon: any) => [
   {
     id: 'order-1172',
     date: '05/06/2026',
     total: 42,
-    status: 'Livré',
-    items: ['Remplacement de joint', 'Visite technique'],
+    status: tCommon('web.history.status.livre', 'Livré'),
+    items: [
+      tCommon('web.history.items.1.1', 'Remplacement de joint'),
+      tCommon('web.history.items.1.2', 'Visite technique'),
+    ],
   },
   {
     id: 'order-1159',
     date: '24/05/2026',
     total: 85,
-    status: 'En cours',
-    items: ['Dépannage chauffe-eau', 'Contrôle pression'],
+    status: tCommon('web.history.status.encours', 'En cours'),
+    items: [
+      tCommon('web.history.items.2.1', 'Dépannage chauffe-eau'),
+      tCommon('web.history.items.2.2', 'Contrôle pression'),
+    ],
   },
   {
     id: 'order-1080',
     date: '12/04/2026',
     total: 26,
-    status: 'Réglé',
-    items: ['Remplacement robinet'],
+    status: tCommon('web.history.status.regle', 'Réglé'),
+    items: [tCommon('web.history.items.3.1', 'Remplacement robinet')],
   },
 ];
 
@@ -40,17 +46,17 @@ const PurchaseHistory: React.FC<PurchaseHistoryProps> = ({ t }) => {
 
   const filteredOrders = useMemo(
     () =>
-      orders.filter(order => {
+      getOrders(tCommon).filter(order => {
         const matchesQuery =
           order.id.toLowerCase().includes(query.toLowerCase()) ||
           order.items.some(item =>
             item.toLowerCase().includes(query.toLowerCase()),
           );
         const matchesStatus =
-          statusFilter === 'Tous' ? true : order.status === statusFilter;
+          statusFilter === 'Tous' ? true : order.status === tCommon(`web.history.status.${statusFilter.toLowerCase().replace('é', 'e').replace(' ', '')}`, statusFilter);
         return matchesQuery && matchesStatus;
       }),
-    [query, statusFilter],
+    [query, statusFilter, t],
   );
 
   const totalSpent = useMemo(
@@ -59,8 +65,8 @@ const PurchaseHistory: React.FC<PurchaseHistoryProps> = ({ t }) => {
   );
 
   const deliveredCount = useMemo(
-    () => filteredOrders.filter(order => order.status === 'Livré').length,
-    [filteredOrders],
+    () => filteredOrders.filter(order => order.status === tCommon('web.history.status.livre', 'Livré')).length,
+    [filteredOrders, t],
   );
 
   return (
@@ -136,7 +142,7 @@ const PurchaseHistory: React.FC<PurchaseHistoryProps> = ({ t }) => {
               {tCommon('web.history.monthlySummaryOrders', 'Commandes ce mois')}
             </Text>
             <Text className="mt-3 text-2xl font-black text-slate-900 dark:text-white">
-              {orders.length}
+              {getOrders(tCommon).length}
             </Text>
           </View>
           <View className="rounded-2xl bg-slate-50 dark:bg-slate-900 p-4">
@@ -144,7 +150,7 @@ const PurchaseHistory: React.FC<PurchaseHistoryProps> = ({ t }) => {
               {tCommon('web.history.monthlySummaryRevenue', 'Revenu estimé')}
             </Text>
             <Text className="mt-3 text-2xl font-black text-[#F97316] dark:text-amber-300">
-              {orders.reduce((sum, order) => sum + order.total, 0)} DT
+              {getOrders(tCommon).reduce((sum, order) => sum + order.total, 0)} DT
             </Text>
           </View>
           <View className="rounded-2xl bg-slate-50 dark:bg-slate-900 p-4">
@@ -152,7 +158,7 @@ const PurchaseHistory: React.FC<PurchaseHistoryProps> = ({ t }) => {
               {tCommon('web.history.monthlySummaryPending', 'En attente')}
             </Text>
             <Text className="mt-3 text-2xl font-black text-slate-900 dark:text-white">
-              {orders.filter(order => order.status === 'En cours').length}
+              {getOrders(tCommon).filter(order => order.status === tCommon('web.history.status.encours', 'En cours')).length}
             </Text>
           </View>
         </View>

@@ -18,7 +18,6 @@ interface WebNavbarProps {
   activeTab: string;
   isRTL: boolean;
   galleryManageLabel: string;
-  galleryTitle: string;
   t: any;
   setActiveTab: (tab: string) => void;
   setCurrentLang: (lang: any) => void;
@@ -36,7 +35,6 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
   sessionUser,
   activeTab,
   isRTL,
-  galleryTitle,
   t,
   setActiveTab,
   setCurrentLang,
@@ -118,32 +116,32 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
     },
     {
       id: 'LoyalSpin',
-      label: t('web.roulette', { defaultValue: 'Roulette' }),
+      label: t('web.userDashboard.spin', { defaultValue: 'Roulette' }),
       icon: '🎯',
     },
     {
       id: 'CarteFidelite',
-      label: t('web.loyaltyCard', { defaultValue: 'Carte Fidélité' }),
+      label: t('web.userDashboard.loyaltyCardTitle', { defaultValue: 'Carte Fidélité' }),
       icon: '💳',
     },
     {
       id: 'UserCoupons',
-      label: t('web.coupons', { defaultValue: 'Coupons' }),
+      label: t('web.userDashboard.coupons', { defaultValue: 'Coupons' }),
       icon: '🎟️',
     },
     {
       id: 'UserPurchaseHistory',
-      label: t('web.history', { defaultValue: 'Historique' }),
+      label: t('web.userDashboard.history', { defaultValue: 'Historique' }),
       icon: '📜',
     },
     {
       id: 'UserNotifications',
-      label: t('web.notifications', { defaultValue: 'Notifications' }),
+      label: t('web.userDashboard.notifications', { defaultValue: 'Notifications' }),
       icon: '🔔',
     },
     {
       id: 'Profile',
-      label: t('web.profil', { defaultValue: 'Profil' }),
+      label: t('web.userDashboard.profile', { defaultValue: 'Profil' }),
       icon: '👤',
     },
   ];
@@ -253,7 +251,15 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
           {/* Logo */}
           <TouchableOpacity
             onPress={() =>
-              setActiveTab(currentRole === 'admin' ? 'AdminAccueil' : 'Accueil')
+              setActiveTab(
+                currentRole === 'super-admin'
+                  ? 'SuperAdminAccueil'
+                  : currentRole === 'admin'
+                  ? 'AdminAccueil'
+                  : currentRole === 'user'
+                  ? 'UserDashboard'
+                  : 'Accueil'
+              )
             }
             className="flex flex-row items-center gap-3"
           >

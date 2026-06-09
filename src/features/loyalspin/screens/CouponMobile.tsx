@@ -12,32 +12,30 @@ interface CouponMobileProps {
   t: any;
 }
 
-const coupons = [
+const getCoupons = (tCommon: any) => [
   {
     id: 'coupon-1',
-    title: '15% de réduction',
+    title: tCommon('web.coupons.items.1.title', '15% de réduction'),
     code: 'LOYAL15',
     expiry: '31/12/2026',
-    description:
-      'Réduction utilisable sur votre prochaine récompense LoyalSpin.',
-    status: 'Actif',
+    description: tCommon('web.coupons.items.1.description', 'Réduction utilisable sur votre prochaine récompense LoyalSpin.'),
+    status: tCommon('web.coupons.items.1.status', 'Actif'),
   },
   {
     id: 'coupon-2',
-    title: 'Livraison offerte',
+    title: tCommon('web.coupons.items.2.title', 'Livraison offerte'),
     code: 'FREEDEL',
     expiry: '30/09/2026',
-    description: 'Livraison gratuite sur toute commande dans le catalogue.',
-    status: 'Actif',
+    description: tCommon('web.coupons.items.2.description', 'Livraison gratuite sur toute commande dans le catalogue.'),
+    status: tCommon('web.coupons.items.2.status', 'Actif'),
   },
   {
     id: 'coupon-3',
-    title: '10 DT offerts',
+    title: tCommon('web.coupons.items.3.title', '10 DT offerts'),
     code: 'BONUS10',
     expiry: '15/07/2026',
-    description:
-      'Offre spéciale fidélité pour les 10 premiers clients du mois.',
-    status: 'Expiré',
+    description: tCommon('web.coupons.items.3.description', 'Offre spéciale fidélité pour les 10 premiers clients du mois.'),
+    status: tCommon('web.coupons.items.3.status', 'Expiré'),
   },
 ];
 
@@ -51,15 +49,15 @@ const CouponMobile: React.FC<CouponMobileProps> = ({ t }) => {
 
   const filteredCoupons = useMemo(
     () =>
-      coupons.filter(coupon => {
+      getCoupons(tCommon).filter(coupon => {
         const matchesFilter =
-          filter === 'Tous' ? true : coupon.status === filter;
+          filter === 'Tous' ? true : coupon.status === tCommon(`web.coupons.items.status.${filter}`, filter);
         const matchesSearch =
           coupon.title.toLowerCase().includes(search.toLowerCase()) ||
           coupon.code.toLowerCase().includes(search.toLowerCase());
         return matchesFilter && matchesSearch;
       }),
-    [filter, search],
+    [filter, search, t],
   );
 
   const onCopyCode = (code: string) => {

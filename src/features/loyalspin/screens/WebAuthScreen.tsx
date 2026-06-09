@@ -111,7 +111,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
-      startWebSession(userSession, 'Accueil');
+      startWebSession(userSession, 'UserDashboard');
       showToast(
         tCommon('web.welcomeUser', 'Ravi de vous revoir, Ahmed Ben Ali !'),
         'success',
@@ -147,7 +147,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    startWebSession(newUser, 'Accueil');
+    startWebSession(newUser, 'UserDashboard');
     showToast(
       tCommon('web.signupSuccess', 'Compte créé avec succès !'),
       'success',
@@ -424,7 +424,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                           createdAt: new Date().toISOString(),
                           updatedAt: new Date().toISOString(),
                         };
-                        startWebSession(superSession, 'AdminAccueil');
+                        startWebSession(superSession, 'SuperAdminAccueil');
                         showToast(
                           tCommon(
                             'web.welcomeAdmin',
@@ -538,7 +538,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                           createdAt: new Date().toISOString(),
                           updatedAt: new Date().toISOString(),
                         };
-                        startWebSession(client1Session, 'Accueil');
+                        startWebSession(client1Session, 'UserDashboard');
                         showToast(
                           tCommon(
                             'web.welcomeUser',
@@ -576,7 +576,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                           createdAt: new Date().toISOString(),
                           updatedAt: new Date().toISOString(),
                         };
-                        startWebSession(client2Session, 'Accueil');
+                        startWebSession(client2Session, 'UserDashboard');
                         showToast(
                           tCommon(
                             'web.welcomeUser',

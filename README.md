@@ -9,7 +9,414 @@ Ben Khedher Mohamed - LoyalSpin React React native
 [![GitHub](https://img.shields.io/badge/GitHub-Profile-black?style=flat-square&logo=github)](https://github.com/bkmed)
 [![Portfolio](https://img.shields.io/badge/Live-Portfolio-success?style=flat-square)](https://bkmed.github.io/Portfolio/)
 
-# LoyalSpin Tunisie
+# LoyaltySpin
+
+## Overview
+
+LoyaltySpin is a cross-platform loyalty and rewards platform built with React Native and React Native Web.
+
+The platform allows businesses to engage customers through promotional campaigns, reward systems, coupons, and a configurable lucky wheel experience.
+
+The application supports:
+
+* iOS
+* Android
+* Web
+
+using a shared codebase.
+
+---
+
+# Features
+
+## Customer Features
+
+* User registration
+* User authentication
+* Profile management
+* Lucky wheel participation
+* Coupon management
+* Purchase history
+* Notifications
+* Marketplace access
+* Services directory
+* Gallery access
+* Multi-language support
+
+## Administrator Features
+
+* User management
+* Coupon management
+* Lucky wheel management
+* Analytics dashboard
+* Announcements management
+* Categories management
+* Services management
+* Gallery management
+* Zone management
+* Settings management
+
+## Super Administrator Features
+
+* Full platform access
+* Admin management
+* Global configuration
+* Global analytics
+* Role and permission management
+
+---
+
+# Technology Stack
+
+## Frontend
+
+* React Native
+* React Native Web
+* TypeScript
+
+## State Management
+
+* Redux Toolkit
+
+## Backend Services
+
+* Firebase
+
+## Internationalization
+
+* i18next
+
+## Analytics
+
+* Firebase Analytics
+
+---
+
+# Project Structure
+
+```text
+src/
+├── components/
+├── config/
+├── context/
+├── database/
+├── features/
+│   └── loyalspin/
+│       ├── components/
+│       ├── screens/
+│       └── utils/
+├── i18n/
+├── navigation/
+├── screens/
+├── services/
+├── store/
+├── theme/
+├── types/
+└── utils/
+```
+
+---
+
+# LoyaltySpin Feature Structure
+
+All LoyaltySpin developments must follow the existing project architecture.
+
+```text
+src/features/loyalspin/
+├── components/
+├── screens/
+└── utils/
+```
+
+## Components
+
+Reusable UI components.
+
+```text
+src/features/loyalspin/components/
+```
+
+Examples:
+
+* FooterLinks
+* WebNavbar
+* ProductDetailModal
+* LogoSVG
+
+## Screens
+
+Feature screens.
+
+```text
+src/features/loyalspin/screens/
+```
+
+Examples:
+
+* HomeScreen
+* MarketplaceScreen
+* ServicesScreen
+* GalleryScreen
+* ProfileScreen
+* AdminDashboard
+* AdminRoulette
+* AdminUsers
+* AdminAnalyticsScreen
+
+## Utilities
+
+Feature-specific helper functions.
+
+```text
+src/features/loyalspin/utils/
+```
+
+---
+
+# User Roles
+
+## Super Admin
+
+Permissions:
+
+* Manage administrators
+* Manage users
+* Manage zones
+* Manage categories
+* Manage services
+* Manage announcements
+* Manage rewards
+* Manage galleries
+* Manage lucky wheel campaigns
+* Manage platform settings
+* Access global analytics
+
+---
+
+## Admin
+
+Permissions:
+
+* Dashboard access
+* User management
+* Announcement management
+* Category management
+* Service management
+* Gallery management
+* Lucky wheel management
+* Coupon management
+* Analytics access
+* Profile management
+
+Restrictions:
+
+* No access to super admin features
+* No access to global platform settings
+
+---
+
+## Customer
+
+Permissions:
+
+* Registration
+* Login
+* Profile management
+* Lucky wheel participation
+* Coupon access
+* Marketplace access
+* Services access
+* Gallery access
+* Notifications
+* Purchase history
+
+Restrictions:
+
+* No administrative access
+
+---
+
+# Development Rules
+
+## Mandatory
+
+* TypeScript
+* React Native
+* React Native Web
+* Redux Toolkit
+* Existing Firebase configuration
+* Existing i18n configuration
+
+---
+
+## Architecture Rules
+
+Always respect the existing project structure.
+
+Do not create a new architecture.
+
+Do not move existing files unless explicitly required.
+
+---
+
+## Cross Platform Rules
+
+Every feature must work on:
+
+* iOS
+* Android
+* Web
+
+using a single implementation.
+
+---
+
+## Forbidden
+
+Do not create:
+
+```text
+*.web.tsx
+*.web.ts
+*.native.tsx
+*.native.ts
+```
+
+for new LoyaltySpin developments.
+
+Do not duplicate code between mobile and web.
+
+Do not create separate implementations for each platform.
+
+---
+
+## UI Rules
+
+Use only React Native components:
+
+* View
+* Text
+* Image
+* Pressable
+* TouchableOpacity
+* ScrollView
+* FlatList
+* Modal
+* SafeAreaView
+* TextInput
+
+Avoid HTML elements.
+
+---
+
+# Internationalization
+
+All user-facing strings must be translated using the existing i18n system.
+
+Supported languages:
+
+* English
+* French
+* Arabic
+* Spanish
+* German
+* Italian
+* Turkish
+* Hindi
+* Chinese
+
+Translation files are located in:
+
+```text
+src/i18n/locales/
+```
+
+---
+
+# State Management
+
+Redux store location:
+
+```text
+src/store/
+```
+
+Redux slices:
+
+```text
+src/store/slices/
+```
+
+Create a new slice only when necessary.
+
+Example:
+
+```text
+src/store/slices/loyalSpinSlice.ts
+```
+
+---
+
+# Services
+
+Shared services are located in:
+
+```text
+src/services/
+```
+
+Examples:
+
+* authService
+* analyticsService
+* notificationService
+* emailService
+
+Create additional services only when required.
+
+---
+
+# Navigation
+
+Navigation files:
+
+```text
+src/navigation/
+```
+
+Any new route must integrate with the existing navigation architecture.
+
+---
+
+# Quality Standards
+
+* TypeScript strict typing
+* Reusable components
+* Responsive design
+* ESLint compliant
+* Prettier compliant
+* Production-ready code
+* No duplicated business logic
+
+---
+
+# Build Targets
+
+Supported platforms:
+
+* Web
+* Android
+* iOS
+
+Single codebase strategy.
+
+---
+
+# License
+
+Private project.
+All rights reserved.
+
 
 **LoyalSpin Tunisie** is a premium business showcase and second-hand plumbing parts marketplace. It allows customers to view plumbing, heating, gas, and AC services in Tunisia (Grand Tunis and Sahel), request emergency interventions via an interactive coverage zone map, browse and save second-hand plumbing parts, and contact sellers directly via phone or WhatsApp. It also features a fully functional administration panel for managing announcements, categories, user roles, and viewing analytics.
 

@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useSubscriptionGuard } from '../context/SubscriptionGuardContext';
-import { subscriptionService } from '../services/subscriptionService';
 
 /**
  * Hook to track and increment trial usage when dashboard is accessed
@@ -47,7 +46,8 @@ export const useTrialExpirationCheck = () => {
   const { isTrialExpired, subscription } = useSubscriptionGuard();
 
   return {
-    shouldShowExpiredScreen: isTrialExpired && subscription?.status === 'expired',
+    shouldShowExpiredScreen:
+      isTrialExpired && subscription?.status === 'expired',
     subscription,
   };
 };

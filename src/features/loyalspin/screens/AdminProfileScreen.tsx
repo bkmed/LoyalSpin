@@ -5,11 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import { useToast } from '../../../context/ToastContext';
 import {
-  updatePlombierSettings,
+  updateAppSettings,
   addInterventionZone,
   updateInterventionZone,
   removeInterventionZone,
-} from '../../../store/slices/plombierSettingsSlice';
+} from '../../../store/slices/appSettingsSlice';
 
 type Lang = 'FR' | 'AR' | 'EN';
 interface AdminProfileScreenProps {
@@ -58,9 +58,7 @@ const AdminProfileScreen = ({ t }: AdminProfileScreenProps) => {
   const { user, updateProfile } = useAuth();
   const dispatch = useDispatch();
   const { showToast } = useToast();
-  const plombierSettings = useSelector(
-    (state: RootState) => state.plombierSettings,
-  );
+  const appSettings = useSelector((state: RootState) => state.appSettings);
 
   const [businessNameInput, setBusinessNameInput] = useState('');
   const [businessNameArInput, setBusinessNameArInput] = useState('');
@@ -76,7 +74,7 @@ const AdminProfileScreen = ({ t }: AdminProfileScreenProps) => {
   const [zoneToDelete, setZoneToDelete] = useState<number | null>(null);
   const [showZoneDeleteConfirm, setShowZoneDeleteConfirm] = useState(false);
   const zones = useSelector(
-    (state: RootState) => state.plombierSettings?.interventionZones ?? [],
+    (state: RootState) => state.appSettings?.interventionZones ?? [],
   );
 
   const availableZones = [
@@ -121,14 +119,14 @@ const AdminProfileScreen = ({ t }: AdminProfileScreenProps) => {
       setProfileEmail(user.email || '');
       setProfilePhone(user.phone || '');
     }
-    setBusinessNameInput(plombierSettings?.businessName ?? 'Plombier Tunisie');
-    setBusinessNameArInput(plombierSettings?.businessNameAr ?? 'سباك تونس');
-    setExperienceYearsInput(String(plombierSettings?.experienceYears ?? 15));
-    setSupportEmailInput(plombierSettings?.supportEmail || user?.email || '');
-    setSupportPhoneInput(plombierSettings?.supportPhone || user?.phone || '');
-    setDispoValInput(plombierSettings?.dispoVal || '24/7');
-    setGovValInput(plombierSettings?.govVal || '24');
-  }, [user, plombierSettings]);
+    setBusinessNameInput(appSettings?.businessName ?? 'LoyalSpin');
+    setBusinessNameArInput(appSettings?.businessNameAr ?? 'لويال سبين');
+    setExperienceYearsInput(String(appSettings?.experienceYears ?? 15));
+    setSupportEmailInput(appSettings?.supportEmail || user?.email || '');
+    setSupportPhoneInput(appSettings?.supportPhone || user?.phone || '');
+    setDispoValInput(appSettings?.dispoVal || '24/7');
+    setGovValInput(appSettings?.govVal || '24');
+  }, [user, appSettings]);
 
   const handleAdminProfileUpdate = async (e: React.FormEvent) => {
     if (e?.preventDefault) e.preventDefault();
@@ -176,7 +174,7 @@ const AdminProfileScreen = ({ t }: AdminProfileScreenProps) => {
     }
 
     dispatch(
-      updatePlombierSettings({
+      updateAppSettings({
         businessName: trimmedBusinessName,
         businessNameAr: businessNameArInput.trim(),
         experienceYears: Math.round(years),
@@ -282,7 +280,7 @@ const AdminProfileScreen = ({ t }: AdminProfileScreenProps) => {
                 {tr('support.whatsapp')}:{' '}
               </Text>
               <Text className="font-black text-slate-700 dark:text-slate-200 ml-1">
-                {plombierSettings?.supportPhone || profilePhone}
+                {appSettings?.supportPhone || profilePhone}
               </Text>
             </View>
             <View className="flex-row flex-wrap items-center">
@@ -290,7 +288,7 @@ const AdminProfileScreen = ({ t }: AdminProfileScreenProps) => {
                 {tr('support.email_label')}:{' '}
               </Text>
               <Text className="font-black text-slate-700 dark:text-slate-200 ml-1">
-                {plombierSettings?.supportEmail || profileEmail}
+                {appSettings?.supportEmail || profileEmail}
               </Text>
             </View>
             <View className="flex-row flex-wrap items-center">
@@ -317,7 +315,7 @@ const AdminProfileScreen = ({ t }: AdminProfileScreenProps) => {
               <TextInput
                 value={businessNameInput}
                 onChangeText={setBusinessNameInput}
-                placeholder="Ex: Plombier Tunisie"
+                placeholder="Ex: LoyalSpin"
                 className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-xs font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:border-[#F97316]"
               />
             </View>
@@ -328,7 +326,7 @@ const AdminProfileScreen = ({ t }: AdminProfileScreenProps) => {
               <TextInput
                 value={businessNameArInput}
                 onChangeText={setBusinessNameArInput}
-                placeholder="مثال: سباك تونس"
+                placeholder="مثال: لويال سبين"
                 textAlign="right"
                 className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-xs font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:border-[#F97316]"
               />
@@ -495,7 +493,7 @@ const AdminProfileScreen = ({ t }: AdminProfileScreenProps) => {
                 keyboardType="email-address"
                 value={supportEmailInput}
                 onChangeText={setSupportEmailInput}
-                placeholder="support@plombier-tunisie.tn"
+                placeholder="support@loyalspin.com"
                 className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-xs font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:border-[#F97316]"
               />
             </View>

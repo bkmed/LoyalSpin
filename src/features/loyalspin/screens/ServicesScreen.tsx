@@ -32,8 +32,7 @@ const ServicesScreen = ({
     dispatch(trackShare({ platform, item: serviceName }));
     const pageUrl =
       Platform.OS === 'web' && typeof window !== 'undefined'
-        ? (window as any).location?.href ||
-          'https://www.loyalspin.com/services'
+        ? (window as any).location?.href || 'https://www.loyalspin.com/services'
         : 'https://www.loyalspin.com/services';
     const url = encodeURIComponent(pageUrl);
     const text = encodeURIComponent(`Découvrez nos services : ${serviceName}`);

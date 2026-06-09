@@ -8,10 +8,9 @@ interface SubscriptionExpiredScreenProps {
   onContactSupport?: () => void;
 }
 
-export const SubscriptionExpiredScreen: React.FC<SubscriptionExpiredScreenProps> = ({
-  onChoosePlan,
-  onContactSupport,
-}) => {
+export const SubscriptionExpiredScreen: React.FC<
+  SubscriptionExpiredScreenProps
+> = ({ onChoosePlan, onContactSupport }) => {
   const { t } = useTranslation();
   const { subscription } = useSubscriptionGuard();
 
@@ -34,7 +33,7 @@ export const SubscriptionExpiredScreen: React.FC<SubscriptionExpiredScreenProps>
             <Text className="text-3xl font-black text-center text-slate-900 dark:text-white">
               {tCommon(
                 'subscription.trialExpired.title',
-                'Votre période d\'essai est terminée',
+                "Votre période d'essai est terminée",
               )}
             </Text>
             <Text className="text-base text-center text-slate-600 dark:text-slate-300">
@@ -53,14 +52,19 @@ export const SubscriptionExpiredScreen: React.FC<SubscriptionExpiredScreenProps>
                   {tCommon('subscription.trialUsed', 'Essais utilisés:')}
                 </Text>
                 <Text className="text-base font-bold text-slate-900 dark:text-white">
-                  {subscription.trialUsed || 0} / {subscription.trialLimit || 15}
+                  {subscription.trialUsed || 0} /{' '}
+                  {subscription.trialLimit || 15}
                 </Text>
               </View>
               <View className="bg-slate-100 dark:bg-slate-700 rounded-lg h-2 overflow-hidden">
                 <View
                   className="bg-gradient-to-r from-orange-400 to-orange-500 h-full"
                   style={{
-                    width: `${((subscription.trialUsed || 0) / (subscription.trialLimit || 15)) * 100}%`,
+                    width: `${
+                      ((subscription.trialUsed || 0) /
+                        (subscription.trialLimit || 15)) *
+                      100
+                    }%`,
                   }}
                 />
               </View>
@@ -70,7 +74,10 @@ export const SubscriptionExpiredScreen: React.FC<SubscriptionExpiredScreenProps>
           {/* Plans Section */}
           <View className="space-y-4">
             <Text className="text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider">
-              {tCommon('subscription.choosePlan', 'Choisissez votre abonnement')}
+              {tCommon(
+                'subscription.choosePlan',
+                'Choisissez votre abonnement',
+              )}
             </Text>
 
             {/* Starter Plan */}
@@ -92,12 +99,18 @@ export const SubscriptionExpiredScreen: React.FC<SubscriptionExpiredScreenProps>
                   </Text>
                 </View>
                 <Text className="text-2xl font-black text-orange-500">
-                  9,99€<Text className="text-xs text-slate-600 dark:text-slate-400">/mois</Text>
+                  9,99€
+                  <Text className="text-xs text-slate-600 dark:text-slate-400">
+                    /mois
+                  </Text>
                 </Text>
               </View>
               <View className="space-y-2">
                 <PlanFeature
-                  text={tCommon('subscription.plans.starter.f1', '1 établissement')}
+                  text={tCommon(
+                    'subscription.plans.starter.f1',
+                    '1 établissement',
+                  )}
                 />
                 <PlanFeature
                   text={tCommon('subscription.plans.starter.f2', '500 clients')}
@@ -148,7 +161,10 @@ export const SubscriptionExpiredScreen: React.FC<SubscriptionExpiredScreenProps>
               </View>
               <View className="space-y-2">
                 <PlanFeatureLight
-                  text={tCommon('subscription.plans.business.f1', '3 établissements')}
+                  text={tCommon(
+                    'subscription.plans.business.f1',
+                    '3 établissements',
+                  )}
                 />
                 <PlanFeatureLight
                   text={tCommon(
@@ -185,7 +201,10 @@ export const SubscriptionExpiredScreen: React.FC<SubscriptionExpiredScreenProps>
               <View className="flex-row justify-between items-start mb-2">
                 <View>
                   <Text className="text-lg font-black text-slate-900 dark:text-white">
-                    {tCommon('subscription.plans.enterprise.name', 'Enterprise')}
+                    {tCommon(
+                      'subscription.plans.enterprise.name',
+                      'Enterprise',
+                    )}
                   </Text>
                   <Text className="text-sm text-slate-600 dark:text-slate-400 mt-1">
                     {tCommon(
@@ -195,7 +214,10 @@ export const SubscriptionExpiredScreen: React.FC<SubscriptionExpiredScreenProps>
                   </Text>
                 </View>
                 <Text className="text-2xl font-black text-slate-900 dark:text-white">
-                  299€<Text className="text-xs text-slate-600 dark:text-slate-400">/an</Text>
+                  299€
+                  <Text className="text-xs text-slate-600 dark:text-slate-400">
+                    /an
+                  </Text>
                 </Text>
               </View>
               <View className="space-y-2">
@@ -256,7 +278,9 @@ const PlanFeature: React.FC<PlanFeatureProps> = ({ text }) => (
     <View className="w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
       <Text className="text-xs">✓</Text>
     </View>
-    <Text className="text-sm text-slate-700 dark:text-slate-300 flex-1">{text}</Text>
+    <Text className="text-sm text-slate-700 dark:text-slate-300 flex-1">
+      {text}
+    </Text>
   </View>
 );
 

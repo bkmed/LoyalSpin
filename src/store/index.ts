@@ -47,7 +47,7 @@ import goalsReducer from './slices/goalsSlice';
 import categoriesReducer from './slices/categoriesSlice';
 import servicesReducer from './slices/servicesSlice';
 import partsReducer from './slices/partsSlice';
-import plombierSettingsReducer from './slices/plombierSettingsSlice';
+import appSettingsReducer from './slices/appSettingsSlice';
 import galleryReducer from './slices/gallerySlice';
 import uiReducer from './slices/uiSlice';
 import webSessionReducer from './slices/webSessionSlice';
@@ -70,7 +70,7 @@ const rootReducer = combineReducers({
   gallery: galleryReducer,
   loyal: loyalReducer,
   subscription: subscriptionReducer,
-  plombierSettings: plombierSettingsReducer,
+  appSettings: appSettingsReducer,
   ui: uiReducer,
   webSession: webSessionReducer,
 });
@@ -94,7 +94,7 @@ const persistConfig = {
     'loyal',
     'subscription',
     'gallery',
-    'plombierSettings',
+    'appSettings',
     'ui',
     'webSession',
   ], // add slices here to persist

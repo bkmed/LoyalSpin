@@ -14,8 +14,8 @@ if (!newName) {
   process.exit(1);
 }
 
-const oldName = 'Plombier';
-const oldNameLower = 'plombier';
+const oldName = 'LoyalSpin';
+const oldNameLower = 'loyalspin';
 const newNameLower = newName.toLowerCase();
 
 const rootDir = path.resolve(__dirname, '..');

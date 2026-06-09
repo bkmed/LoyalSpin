@@ -120,10 +120,13 @@ const subscriptionSlice = createSlice({
       };
     },
     incrementTrialUsed(state) {
-      if (state.currentSubscription && state.currentSubscription.status === 'trial') {
+      if (
+        state.currentSubscription &&
+        state.currentSubscription.status === 'trial'
+      ) {
         const current = state.currentSubscription.trialUsed || 0;
         const limit = state.currentSubscription.trialLimit || 15;
-        
+
         if (current < limit) {
           state.currentSubscription.trialUsed = current + 1;
           state.currentSubscription.updatedAt = new Date().toISOString();
@@ -136,10 +139,7 @@ const subscriptionSlice = createSlice({
         }
       }
     },
-    setSubscription(
-      state,
-      action: PayloadAction<Subscription>,
-    ) {
+    setSubscription(state, action: PayloadAction<Subscription>) {
       state.currentSubscription = action.payload;
     },
     clearSubscription(state) {

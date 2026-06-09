@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface PlombierSettingsState {
+interface AppSettingsState {
   businessName: string;
   businessNameAr: string;
   experienceYears: number;
@@ -11,9 +11,9 @@ interface PlombierSettingsState {
   govVal?: string;
 }
 
-const initialState: PlombierSettingsState = {
-  businessName: 'Plombier Tunisie',
-  businessNameAr: 'سباك تونس',
+const initialState: AppSettingsState = {
+  businessName: 'LoyalSpin',
+  businessNameAr: 'لويال سبين',
   experienceYears: 15,
   interventionZones: ['Grand Tunis', 'Sahel', 'Sfax'],
   supportEmail: '',
@@ -22,19 +22,19 @@ const initialState: PlombierSettingsState = {
   govVal: '24',
 };
 
-const ensureInterventionZones = (state: PlombierSettingsState) => {
+const ensureInterventionZones = (state: AppSettingsState) => {
   if (!Array.isArray(state.interventionZones)) {
     state.interventionZones = [];
   }
 };
 
-const plombierSettingsSlice = createSlice({
-  name: 'plombierSettings',
+const appSettingsSlice = createSlice({
+  name: 'appSettings',
   initialState,
   reducers: {
-    updatePlombierSettings: (
+    updateAppSettings: (
       state,
-      action: PayloadAction<Partial<PlombierSettingsState>>,
+      action: PayloadAction<Partial<AppSettingsState>>,
     ) => {
       if (action.payload.businessName !== undefined) {
         state.businessName = action.payload.businessName;
@@ -100,10 +100,10 @@ const plombierSettingsSlice = createSlice({
 });
 
 export const {
-  updatePlombierSettings,
+  updateAppSettings,
   addInterventionZone,
   updateInterventionZone,
   removeInterventionZone,
-} = plombierSettingsSlice.actions;
+} = appSettingsSlice.actions;
 
-export default plombierSettingsSlice.reducer;
+export default appSettingsSlice.reducer;

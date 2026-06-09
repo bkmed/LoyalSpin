@@ -18,7 +18,7 @@ const initialState: NotificationsState = {
   items: [
     {
       id: '1',
-      title: 'Welcome to Plombier!',
+      title: 'Welcome to LoyalSpin!',
       message: 'Explore the new features like Search and Chat.',
       type: 'info',
       isRead: false,

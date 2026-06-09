@@ -1,5 +1,5 @@
 import { storageService } from './storage';
-import { Subscription, Plan, SubscriptionStatus } from '../models/subscription';
+import { Subscription, SubscriptionStatus } from '../models/subscription';
 
 const SUBSCRIPTION_KEY = 'subscription_data';
 
@@ -7,9 +7,12 @@ export const subscriptionService = {
   /**
    * Create or get existing subscription for user
    */
-  initializeSubscription: async (userId: string, establishmentId?: string): Promise<Subscription> => {
+  initializeSubscription: async (
+    userId: string,
+    establishmentId?: string,
+  ): Promise<Subscription> => {
     const existing = await subscriptionService.getSubscription();
-    
+
     if (existing) {
       return existing;
     }
@@ -38,7 +41,7 @@ export const subscriptionService = {
   getSubscription: async (): Promise<Subscription | null> => {
     const json = storageService.getString(SUBSCRIPTION_KEY);
     if (!json) return null;
-    
+
     try {
       return JSON.parse(json);
     } catch {
@@ -77,7 +80,9 @@ export const subscriptionService = {
   /**
    * Update subscription status
    */
-  updateSubscriptionStatus: async (status: SubscriptionStatus): Promise<Subscription | null> => {
+  updateSubscriptionStatus: async (
+    status: SubscriptionStatus,
+  ): Promise<Subscription | null> => {
     const subscription = await subscriptionService.getSubscription();
     if (!subscription) return null;
 
@@ -85,11 +90,16 @@ export const subscriptionService = {
     subscription.updatedAt = new Date().toISOString();
 
     if (status === 'active' || status === 'pending') {
-      subscription.startDate = subscription.startDate || new Date().toISOString();
+      subscription.startDate =
+        subscription.startDate || new Date().toISOString();
       subscription.endDate = undefined; // Remove trial end date
     }
 
-    if (status === 'expired' || status === 'suspended' || status === 'cancelled') {
+    if (
+      status === 'expired' ||
+      status === 'suspended' ||
+      status === 'cancelled'
+    ) {
       subscription.endDate = new Date().toISOString();
     }
 

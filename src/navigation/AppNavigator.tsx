@@ -81,8 +81,8 @@ export const AppNavigator = () => {
   const galleryItems = useSelector(
     (state: RootState) => state.gallery?.items || [],
   );
-  const plombierSettings =
-    useSelector((state: RootState) => state.plombierSettings) || ({} as any);
+  const appSettings =
+    useSelector((state: RootState) => state.appSettings) || ({} as any);
   const uiState = useSelector((state: RootState) => state.ui) || ({} as any);
   const {
     currentLang = 'FR',
@@ -115,15 +115,15 @@ export const AppNavigator = () => {
   });
   const isRTL = i18n.language === 'ar';
   const businessName =
-    isRTL && plombierSettings.businessNameAr
-      ? plombierSettings.businessNameAr
-      : plombierSettings.businessName || 'Plombier Tunisie';
-  const experienceYears = plombierSettings.experienceYears || 15;
+    isRTL && appSettings.businessNameAr
+      ? appSettings.businessNameAr
+      : appSettings.businessName || 'LoyalSpin';
+  const experienceYears = appSettings.experienceYears || 15;
   const dispoVal =
-    plombierSettings.dispoVal ||
+    appSettings.dispoVal ||
     translate('web.dispo_val', { defaultValue: '24/7' });
   const govVal =
-    plombierSettings.govVal || translate('web.gov_val', { defaultValue: '24' });
+    appSettings.govVal || translate('web.gov_val', { defaultValue: '24' });
   const languageOrder: Array<'FR' | 'AR' | 'EN'> = ['FR', 'AR', 'EN'];
   const nextLanguage =
     languageOrder[
@@ -136,9 +136,9 @@ export const AppNavigator = () => {
   const profileCity = sessionUser?.city || '';
 
   const supportEmail =
-    plombierSettings.supportEmail || profileEmail || sessionUser?.email || '';
+    appSettings.supportEmail || profileEmail || sessionUser?.email || '';
   const supportWhatsAppNumber =
-    plombierSettings.supportPhone || profilePhone || sessionUser?.phone || '';
+    appSettings.supportPhone || profilePhone || sessionUser?.phone || '';
   const supportWhatsAppDigits = supportWhatsAppNumber.replace(/\D/g, '');
   const tCommon = (key: string, defaultValue: string) =>
     translate(key, { defaultValue });
@@ -435,7 +435,9 @@ export const AppNavigator = () => {
 
   useEffect(() => {
     if (Platform.OS === 'web') {
-      document.title = businessName ? `${businessName} | Plombier` : 'Plombier';
+      document.title = businessName
+        ? `${businessName} | LoyalSpin`
+        : 'LoyalSpin';
     }
   }, [businessName]);
 
@@ -530,13 +532,15 @@ export const AppNavigator = () => {
         />
       )}
 
-      {(bypassAuth || sessionUser) ? (
+      {bypassAuth || sessionUser ? (
         isTrialExpired ? (
           <SubscriptionExpiredScreen
             onChoosePlan={() => setActiveTab('AdminAccueil')}
             onContactSupport={() => {
               if (typeof window !== 'undefined') {
-                window.open(`mailto:${supportEmail || 'support@loyalspin.com'}`);
+                window.open(
+                  `mailto:${supportEmail || 'support@loyalspin.com'}`,
+                );
               }
             }}
           />
@@ -568,7 +572,7 @@ export const AppNavigator = () => {
                 t={translate}
                 supportWhatsAppDigits={supportWhatsAppDigits}
                 supportWhatsAppNumber={supportWhatsAppNumber}
-                interventionZones={plombierSettings.interventionZones}
+                interventionZones={appSettings.interventionZones}
               />
             )}
 
@@ -626,7 +630,9 @@ export const AppNavigator = () => {
               <NotificationsScreen t={translate} />
             )}
 
-            {activeTab === 'UserSocialGate' && <SocialGateScreen t={translate} />}
+            {activeTab === 'UserSocialGate' && (
+              <SocialGateScreen t={translate} />
+            )}
 
             {['Informations', 'Politique', 'Conditions', 'PlanSite'].includes(
               activeTab,
@@ -682,7 +688,9 @@ export const AppNavigator = () => {
               />
             )}
 
-            {activeTab === 'Analytics' && <AdminAnalyticsScreen t={translate} />}
+            {activeTab === 'Analytics' && (
+              <AdminAnalyticsScreen t={translate} />
+            )}
           </View>
         )
       ) : null}

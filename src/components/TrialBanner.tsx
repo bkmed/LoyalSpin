@@ -23,7 +23,10 @@ export const TrialBanner: React.FC<TrialBannerProps> = ({ onChoosePlan }) => {
       <View className="flex-row items-center justify-between">
         <View className="flex-1">
           <Text className="text-white font-black text-base mb-1">
-            {tCommon('subscription.trialBanner.title', '🎯 Essai gratuit actif')}
+            {tCommon(
+              'subscription.trialBanner.title',
+              '🎯 Essai gratuit actif',
+            )}
           </Text>
           <Text className="text-orange-50 text-sm font-semibold">
             {tCommon(

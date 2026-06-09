@@ -9,8 +9,7 @@
 
 import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 
 // Trial System Imports
@@ -39,7 +38,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     options?: Record<string, any>,
   ) => t(key, { defaultValue, ...options });
 
-  const dispatch = useDispatch();
   const categories = useSelector((state: RootState) =>
     (state as any).categories?.items || [],
   );
@@ -67,12 +65,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     if (navigation) {
       navigation.navigate('Subscription.PlanSelection');
     }
-  };
-
-  // Handle contact support
-  const handleContactSupport = () => {
-    // Implement your support contact logic here
-    console.log('Contacting support...');
   };
 
   // If trial expired, don't show dashboard (will redirect above)

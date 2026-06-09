@@ -80,13 +80,19 @@ const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
             </View>
           ))}
         </Animated.View>
-        <View style={[styles.indicator, { borderBottomColor: theme.colors.accent }]} />
+        <View
+          style={[styles.indicator, { borderBottomColor: theme.colors.accent }]}
+        />
       </View>
 
       <TouchableOpacity
         onPress={spin}
         disabled={spinning}
-        style={[styles.spinButton, spinning && styles.disabledButton, { backgroundColor: theme.colors.primary }]}
+        style={[
+          styles.spinButton,
+          spinning && styles.disabledButton,
+          { backgroundColor: theme.colors.primary },
+        ]}
       >
         <Text style={styles.spinButtonText}>
           {t('loyalspin.spinButton', { defaultValue: 'Spin' })}
@@ -100,21 +106,32 @@ const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
           origin={{ x: 120, y: 0 }}
           fadeOut
           fallSpeed={3000}
-          colors={[theme.colors.primary, theme.colors.accent, theme.colors.secondary || '#F97316']}
+          colors={[
+            theme.colors.primary,
+            theme.colors.accent,
+            theme.colors.secondary || '#F97316',
+          ]}
           onAnimationEnd={() => setShowConfetti(false)}
         />
       )}
       <Modal visible={!!result} transparent animationType="fade">
         <View style={styles.modalBg}>
-          <View style={[styles.modalCard, { backgroundColor: theme.colors.card }]}> 
-            <Text style={[styles.modalTitle, { color: theme.colors.text }] }>
+          <View
+            style={[styles.modalCard, { backgroundColor: theme.colors.card }]}
+          >
+            <Text style={[styles.modalTitle, { color: theme.colors.text }]}>
               {t('loyalspin.congrats', { defaultValue: 'Félicitations !' })}
             </Text>
-            <Text style={[styles.modalPrize, { color: theme.colors.text }]}>{result}</Text>
+            <Text style={[styles.modalPrize, { color: theme.colors.text }]}>
+              {result}
+            </Text>
             <Text style={{ fontSize: 36, marginVertical: 8 }}>🎉</Text>
             <TouchableOpacity
               onPress={() => setResult(null)}
-              style={[styles.closeBtn, { backgroundColor: theme.colors.primary }]}
+              style={[
+                styles.closeBtn,
+                { backgroundColor: theme.colors.primary },
+              ]}
             >
               <Text style={styles.closeBtnText}>
                 {t('loyalspin.close', { defaultValue: 'Fermer' })}

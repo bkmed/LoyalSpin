@@ -1,5 +1,13 @@
 import React from 'react';
-import { Alert, Platform, Share, TextInput, TouchableOpacity, View, Text } from 'react-native';
+import {
+  Alert,
+  Platform,
+  Share,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Text,
+} from 'react-native';
 import { ProductVisual } from '../components/ProductSVGs';
 import { Role } from '../utils/webTranslations';
 
@@ -70,6 +78,7 @@ export const ProfileScreenWeb: React.FC<ProfileScreenWebProps> = ({
         await Share.share({ message });
       }
     } catch (error) {
+      console.error('Error sharing loyalty card:', error);
       Alert.alert(
         tCommon('web.profile.shareError', 'Erreur de partage'),
         tCommon(
@@ -138,14 +147,19 @@ export const ProfileScreenWeb: React.FC<ProfileScreenWebProps> = ({
               {tCommon('web.profile.loyaltyTitle', 'Carte LoyalSpin numérique')}
             </Text>
             <Text className="mt-3 text-3xl font-black tracking-tight">
-              {tCommon('web.profile.loyaltySub', 'Votre statut prestige et vos avantages')}
+              {tCommon(
+                'web.profile.loyaltySub',
+                'Votre statut prestige et vos avantages',
+              )}
             </Text>
             <View className="mt-6 grid gap-4 sm:grid-cols-3">
               <View>
                 <Text className="text-xs uppercase tracking-[0.24em] text-amber-100/80">
                   {tCommon('web.profile.points', 'Points')}
                 </Text>
-                <Text className="mt-2 text-3xl font-black">{loyaltyPoints}</Text>
+                <Text className="mt-2 text-3xl font-black">
+                  {loyaltyPoints}
+                </Text>
               </View>
               <View>
                 <Text className="text-xs uppercase tracking-[0.24em] text-amber-100/80">

@@ -111,20 +111,13 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
   const userLinks = [
     {
       id: 'UserDashboard',
-      label: t('web.dashboard', { defaultValue: 'Dashboard' }),
+      label: t('web.accueil', { defaultValue: 'Dashboard' }),
       icon: '🏠',
     },
     {
       id: 'LoyalSpin',
       label: t('web.userDashboard.spin', { defaultValue: 'Roulette' }),
       icon: '🎯',
-    },
-    {
-      id: 'CarteFidelite',
-      label: t('web.userDashboard.loyaltyCardTitle', {
-        defaultValue: 'Carte Fidélité',
-      }),
-      icon: '💳',
     },
     {
       id: 'UserCoupons',

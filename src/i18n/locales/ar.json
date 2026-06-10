@@ -1810,6 +1810,60 @@
     "viewAnalytics": "عرض التحليلات",
     "title": "عجلة الولاء",
     "spinButton": "دوران",
+    "header": {
+      "welcome": "مرحباً، {{name}}",
+      "guest": "ضيف",
+      "title": "عجلة الولاء",
+      "level": "المستوى",
+      "points": "النقاط المتاحة"
+    },
+    "wheel": {
+      "title": "عجلتك ثلاثية الأبعاد",
+      "description": "دورة فاخرة للفوز بمكافآت القهوة.",
+      "details": "اضغط على الإطلاق للحصول على حركة سلسة ونتيجة فورية."
+    },
+    "coupon": {
+      "title": "قسيمة مُنشأة",
+      "expires": "صالحة حتى",
+      "details": "اعرض هذه القسيمة عند الدفع لاسترداد مكافأتك.",
+      "empty": "لم يتم إنشاء أي قسيمة بعد. قم بتدوير العجلة!"
+    },
+    "history": {
+      "title": "سجل الفوز",
+      "empty": "لا يوجد فوز بعد، حاول حظك."
+    },
+    "spinResult": {
+      "title": "🎉 تهانينا",
+      "message": "لقد ربحت {{reward}}",
+      "tryAgain": "حاول مرة أخرى"
+    },
+    "status": {
+      "loading": "جاري التحميل...",
+      "error": "حدث خطأ ما.",
+      "tryAgain": "حاول مرة أخرى"
+    },
+    "segment": {
+      "coffee": "قهوة مجانية",
+      "coffeeDesc": "إسبريسو مجاني",
+      "croissant": "كرواسون مجاني",
+      "croissantDesc": "معجنات مجانية",
+      "discount10": "-10%",
+      "discount10Desc": "خصم فوري",
+      "discount20": "-20%",
+      "discount20Desc": "وفر الآن",
+      "mysteryGift": "هدية مفاجئة",
+      "mysteryGiftDesc": "مكافأة مفاجئة",
+      "doublePoints": "نقاط مضاعفة",
+      "doublePointsDesc": "مضاعفة المكافآت",
+      "noWin": "لا شيء هذه المرة",
+      "noWinDesc": "حاول مرة أخرى قريباً"
+    },
+    "level": {
+      "bronze": "برونزي",
+      "silver": "فضي",
+      "gold": "ذهبي",
+      "platinum": "بلاتيني"
+    },
     "congrats": "تهانينا!",
     "close": "إغلاق",
     "prize": {

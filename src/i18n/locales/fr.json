@@ -1843,7 +1843,6 @@
     "hello": "Bonjour, {{name}}",
     "dashboardSubtitle": "Voici votre tableau de bord",
     "spin": "Spin",
-    "history": "Historique",
     "points": "Points",
     "coupons": "Coupons",
     "nextRewardLabel": "Prochaine récompense",
@@ -1854,6 +1853,60 @@
     "viewAnalytics": "Voir les analytics",
     "title": "Roulette de fidélité",
     "spinButton": "Lancer",
+    "header": {
+      "welcome": "Bienvenue, {{name}}",
+      "guest": "Invité",
+      "title": "Roulette de fidélité",
+      "level": "Niveau",
+      "points": "Points disponibles"
+    },
+    "wheel": {
+      "title": "Votre Roulette 3D",
+      "description": "Un spin premium pour gagner des récompenses café.",
+      "details": "Faites tourner la roulette pour une expérience fluide et un effet 3D réaliste."
+    },
+    "coupon": {
+      "title": "Coupon Généré",
+      "expires": "Valide jusqu’au",
+      "details": "Présentez ce coupon à la caisse pour utiliser votre récompense.",
+      "empty": "Aucun coupon généré. Lancez la roulette !"
+    },
+    "history": {
+      "title": "Historique des gains",
+      "empty": "Aucun gain encore, tentez votre chance."
+    },
+    "spinResult": {
+      "title": "🎉 Félicitations",
+      "message": "Vous avez gagné {{reward}}",
+      "tryAgain": "Réessayer"
+    },
+    "status": {
+      "loading": "Chargement...",
+      "error": "Une erreur s’est produite.",
+      "tryAgain": "Réessayer"
+    },
+    "segment": {
+      "coffee": "Café offert",
+      "coffeeDesc": "Un expresso gratuit",
+      "croissant": "Croissant offert",
+      "croissantDesc": "Une viennoiserie gratuite",
+      "discount10": "-10%",
+      "discount10Desc": "Réduction immédiate",
+      "discount20": "-20%",
+      "discount20Desc": "Économisez maintenant",
+      "mysteryGift": "Cadeau mystère",
+      "mysteryGiftDesc": "Récompense surprise",
+      "doublePoints": "Double points",
+      "doublePointsDesc": "Points doublés",
+      "noWin": "Rien cette fois",
+      "noWinDesc": "Retentez votre chance"
+    },
+    "level": {
+      "bronze": "Bronze",
+      "silver": "Silver",
+      "gold": "Gold",
+      "platinum": "Platinum"
+    },
     "congrats": "Félicitations !",
     "close": "Fermer",
     "yourLevel": "Votre niveau de fidélité",

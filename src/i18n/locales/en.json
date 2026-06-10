@@ -1808,6 +1808,60 @@
     "viewAnalytics": "View analytics",
     "title": "Loyalty Wheel",
     "spinButton": "Spin",
+    "header": {
+      "welcome": "Welcome, {{name}}",
+      "guest": "Guest",
+      "title": "Loyalty Wheel",
+      "level": "Level",
+      "points": "Available points"
+    },
+    "wheel": {
+      "title": "Your 3D Wheel",
+      "description": "A premium spin to win cafe rewards.",
+      "details": "Tap launch for a smooth animation and instant reward effect."
+    },
+    "coupon": {
+      "title": "Generated Coupon",
+      "expires": "Valid until",
+      "details": "Show this coupon at checkout to redeem your reward.",
+      "empty": "No coupon generated yet. Spin the wheel!"
+    },
+    "history": {
+      "title": "Win History",
+      "empty": "No wins yet, try your luck."
+    },
+    "spinResult": {
+      "title": "🎉 Congratulations",
+      "message": "You won {{reward}}",
+      "tryAgain": "Try Again"
+    },
+    "status": {
+      "loading": "Loading...",
+      "error": "Something went wrong.",
+      "tryAgain": "Try Again"
+    },
+    "segment": {
+      "coffee": "Free coffee",
+      "coffeeDesc": "A free espresso",
+      "croissant": "Free croissant",
+      "croissantDesc": "A free pastry",
+      "discount10": "-10%",
+      "discount10Desc": "Instant discount",
+      "discount20": "-20%",
+      "discount20Desc": "Save now",
+      "mysteryGift": "Mystery gift",
+      "mysteryGiftDesc": "Surprise reward",
+      "doublePoints": "Double points",
+      "doublePointsDesc": "Double rewards",
+      "noWin": "Nothing this time",
+      "noWinDesc": "Try again soon"
+    },
+    "level": {
+      "bronze": "Bronze",
+      "silver": "Silver",
+      "gold": "Gold",
+      "platinum": "Platinum"
+    },
     "congrats": "Congratulations!",
     "close": "Close",
     "yourLevel": "Your loyalty level",

@@ -478,7 +478,7 @@ export const AppNavigator = () => {
       )}
 
       {(bypassAuth || sessionUser) && (
-        <main className="min-h-[calc(100vh-280px)] bg-slate-50 text-slate-800 dark:bg-[#0B0F19] dark:text-slate-100 transition-colors duration-300">
+        <main className="min-h-[calc(100vh_-_280px)] bg-slate-50 text-slate-800 dark:bg-[#0B0F19] dark:text-slate-100 transition-colors duration-300">
           {activeTab === 'Accueil' && (
             <HomeScreenWeb
               nextLanguage={nextLanguage}

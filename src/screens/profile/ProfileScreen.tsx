@@ -107,7 +107,6 @@ export const ProfileScreen = () => {
               i18n.language.toUpperCase(),
               'language',
             ],
-            [t('profile.currency', 'Currency'), settings.currency, 'payments'],
           ].map(([label, value, icon]) => (
             <TouchableOpacity
               key={label}

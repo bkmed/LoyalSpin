@@ -107,9 +107,6 @@ export const AppNavigator = () => {
 
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
 
-  const galleryTitle = translate('web.gallery.title', {
-    defaultValue: 'Galerie',
-  });
   const galleryManageLabel = translate('web.gallery.manageGallery', {
     defaultValue: 'Gérer la galerie',
   });
@@ -525,7 +522,6 @@ export const AppNavigator = () => {
           activeTab={activeTab}
           isRTL={isRTL}
           galleryManageLabel={galleryManageLabel}
-          galleryTitle={galleryTitle}
           t={translate}
           setActiveTab={setActiveTab}
           setCurrentLang={setCurrentLang}
@@ -549,7 +545,7 @@ export const AppNavigator = () => {
             }}
           />
         ) : (
-          <View className="min-h-[calc(100vh-280px)] bg-slate-50 text-slate-800 dark:bg-[#0B0F19] dark:text-slate-100 transition-colors duration-300">
+          <View className="min-h-[calc(100vh_-_280px)] bg-slate-50 text-slate-800 dark:bg-[#0B0F19] dark:text-slate-100 transition-colors duration-300">
             {activeTab === 'Accueil' && (
               <HomeScreenWeb
                 nextLanguage={nextLanguage}
@@ -607,16 +603,11 @@ export const AppNavigator = () => {
                 profileEmail={profileEmail}
                 profilePhone={profilePhone}
                 profileCity={profileCity}
-                favorites={favorites}
-                products={products}
                 t={translate}
                 showToast={showToast}
                 setBypassAuth={setBypassAuth}
                 setSigninEmail={() => {}}
                 setSigninPassword={() => {}}
-                setActiveTab={setActiveTab}
-                toggleFavorite={toggleFavorite}
-                setSelectedProduct={setSelectedProduct}
               />
             )}
 

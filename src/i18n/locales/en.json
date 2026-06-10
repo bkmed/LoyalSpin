@@ -1797,7 +1797,6 @@
     "hello": "Hello, {{name}}",
     "dashboardSubtitle": "Here is your dashboard",
     "spin": "Spin",
-    "history": "History",
     "points": "Points",
     "coupons": "Coupons",
     "nextRewardLabel": "Next reward",

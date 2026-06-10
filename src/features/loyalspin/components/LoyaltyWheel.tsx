@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -34,6 +34,7 @@ interface LoyaltyWheelProps {
 }
 
 const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
+  const isWeb = Platform.OS === 'web';
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { width } = useWindowDimensions();
@@ -41,6 +42,8 @@ const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
   const [result, setResult] = useState<WheelSegment | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
   const [confettiKey, setConfettiKey] = useState(0);
+  const [rotation, setRotation] = useState(0);
+  const spinTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const segmentCount = Math.max(2, segments.length);
   const segmentAngle = 360 / segmentCount;
@@ -48,7 +51,22 @@ const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
   const borderRadius = wheelSize / 2;
   const spinValue = useSharedValue(0);
 
-  const animatedWheelStyle = useAnimatedStyle(() => ({
+  const animatedWheelStyleWeb = useMemo(
+    () => ({
+      width: wheelSize,
+      height: wheelSize,
+      borderRadius,
+      transform: [
+        { perspective: 700 },
+        { rotateX: '10deg' },
+        { rotateZ: `${rotation % 360}deg` },
+        { scale: spinning ? 1.02 : 1 },
+      ],
+    }),
+    [wheelSize, borderRadius, rotation, spinning],
+  );
+
+  const animatedWheelStyleNative = useAnimatedStyle(() => ({
     width: wheelSize,
     height: wheelSize,
     borderRadius,
@@ -59,6 +77,16 @@ const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
       { scale: spinning ? 1.02 : 1 },
     ],
   }));
+
+  const animatedWheelStyle = isWeb ? animatedWheelStyleWeb : animatedWheelStyleNative;
+
+  useEffect(() => {
+    return () => {
+      if (spinTimeout.current) {
+        clearTimeout(spinTimeout.current);
+      }
+    };
+  }, []);
 
   const finishSpin = useCallback(
     (targetIndex: number) => {
@@ -79,6 +107,17 @@ const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
     const targetAngle = targetIndex * segmentAngle + segmentAngle / 2;
     const totalRotation = 360 * 5 + 360 - targetAngle;
 
+    if (isWeb) {
+      setRotation(totalRotation % 360);
+      if (spinTimeout.current) {
+        clearTimeout(spinTimeout.current);
+      }
+      spinTimeout.current = setTimeout(() => {
+        finishSpin(targetIndex);
+      }, 1200);
+      return;
+    }
+
     spinValue.value = withTiming(
       totalRotation,
       {
@@ -92,7 +131,7 @@ const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
         }
       },
     );
-  }, [segmentAngle, segmentCount, segments.length, spinning, spinValue, finishSpin]);
+  }, [finishSpin, isWeb, segmentAngle, segmentCount, segments.length, spinning, spinValue]);
 
   const containerWidth = wheelSize;
   const segmentWidth = wheelSize / 2;

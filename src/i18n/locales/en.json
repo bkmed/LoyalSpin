@@ -1807,6 +1807,7 @@
     "viewAnalytics": "View analytics",
     "title": "Loyalty Wheel",
     "spinButton": "Spin",
+    "spinButton.loading": "Launching...",
     "header": {
       "welcome": "Welcome, {{name}}",
       "guest": "Guest",
@@ -1817,7 +1818,8 @@
     "wheel": {
       "title": "Your 3D Wheel",
       "description": "A premium spin to win cafe rewards.",
-      "details": "Tap launch for a smooth animation and instant reward effect."
+      "details": "Tap launch for a smooth animation and instant reward effect.",
+      "centerLabel": "SPIN"
     },
     "coupon": {
       "title": "Generated Coupon",
@@ -1845,6 +1847,7 @@
       "croissant": "Free croissant",
       "croissantDesc": "A free pastry",
       "discount10": "-10%",
+      "placeholder": "Chance",
       "discount10Desc": "Instant discount",
       "discount20": "-20%",
       "discount20Desc": "Save now",

@@ -35,6 +35,7 @@ import ServicesScreen from '../features/loyalspin/screens/ServicesScreen';
 import ZonesScreen from '../features/loyalspin/screens/ZonesScreen';
 import MarketplaceScreen from '../features/loyalspin/screens/MarketplaceScreen';
 import GalleryScreen from '../features/loyalspin/screens/GalleryScreen';
+import LoyaltySpinScreen from '../features/loyalspin/screens/LoyaltySpinScreen';
 import ProfileScreenWeb from '../features/loyalspin/screens/ProfileScreen';
 import UserDashboardMobile from '../features/loyalspin/screens/UserDashboardMobile';
 import CouponMobile from '../features/loyalspin/screens/CouponMobile';
@@ -107,9 +108,6 @@ export const AppNavigator = () => {
 
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
 
-  const galleryTitle = translate('web.gallery.title', {
-    defaultValue: 'Galerie',
-  });
   const galleryManageLabel = translate('web.gallery.manageGallery', {
     defaultValue: 'Gérer la galerie',
   });
@@ -466,7 +464,6 @@ export const AppNavigator = () => {
           activeTab={activeTab}
           isRTL={isRTL}
           galleryManageLabel={galleryManageLabel}
-          galleryTitle={galleryTitle}
           t={translate}
           setActiveTab={setActiveTab}
           setCurrentLang={setCurrentLang}
@@ -522,6 +519,12 @@ export const AppNavigator = () => {
             </View>
           )}
 
+          {activeTab === 'LoyalSpin' && (
+            <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in text-left">
+              <LoyaltySpinScreen />
+            </View>
+          )}
+
           {(activeTab === 'Profile' || activeTab === 'CarteFidelite') && (
             <ProfileScreenWeb
               currentRole={currentRole}
@@ -530,16 +533,11 @@ export const AppNavigator = () => {
               profileEmail={profileEmail}
               profilePhone={profilePhone}
               profileCity={profileCity}
-              favorites={favorites}
-              products={products}
               t={translate}
               showToast={showToast}
               setBypassAuth={setBypassAuth}
               setSigninEmail={() => {}}
               setSigninPassword={() => {}}
-              setActiveTab={setActiveTab}
-              toggleFavorite={toggleFavorite}
-              setSelectedProduct={setSelectedProduct}
             />
           )}
 

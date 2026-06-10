@@ -23,7 +23,7 @@ module.exports = {
       {
         test: /\.(js|ts)x?$/,
         exclude:
-          /node_modules[/\\](?!(react-native-chart-kit|@react-native-community[\\/]datetimepicker|react-native-image-picker|react-native-vector-icons|react-native-css-interop|nativewind)[/\\])/,
+          /node_modules[/\\](?!(react-native-chart-kit|@react-native-community[\\/]datetimepicker|react-native-image-picker|react-native-vector-icons|react-native-css-interop|nativewind|react-native-confetti-cannon)[/\\])/,
 
         use: {
           loader: 'babel-loader',
@@ -79,6 +79,9 @@ module.exports = {
         process.env.NODE_ENV || 'development',
       ),
     }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+    }),
     new NodePolyfillPlugin(),
     new MiniCssExtractPlugin(),
     new HtmlWebpackPlugin({
@@ -102,6 +105,9 @@ module.exports = {
     ),
   ],
   resolve: {
+    fallback: {
+      process: require.resolve('process/browser'),
+    },
     alias: {
       'react-native$': 'react-native-web',
       'react-native-vector-icons/MaterialIcons$': path.resolve(

@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 
-export default function ClientDashboard() {
+export default function ClientDashboard({ navigation }: any) {
   const user = useSelector((state: RootState) => state.auth.user);
   const spinHistory = useSelector((state: RootState) => state.spinHistory?.items || []);
 
@@ -22,7 +22,7 @@ export default function ClientDashboard() {
         </View>
 
         <View className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <TouchableOpacity className="bg-emerald-600 p-8 rounded-3xl shadow-lg items-center justify-center">
+          <TouchableOpacity onPress={() => navigation.navigate('QRScanner')} className="bg-emerald-600 p-8 rounded-3xl shadow-lg items-center justify-center">
             <Text className="text-white font-black text-2xl mb-2">Scanner un QR Code</Text>
             <Text className="text-emerald-100 text-center">Scannez en magasin pour tourner la roue et gagner des cadeaux !</Text>
           </TouchableOpacity>

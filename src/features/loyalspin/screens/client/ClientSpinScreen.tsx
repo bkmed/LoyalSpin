@@ -1,76 +1,171 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Animated } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../../store';
-import WheelWeb from '../../components/WheelWeb.web';
+import LoyaltyWheel from '../../components/LoyaltyWheel';
+import SocialShareGate from '../../components/SocialShareGate';
+import { fetchRouletteConfig } from '../../../../store/slices/rouletteConfigSlice';
 import { recordSpin } from '../../../../store/slices/spinHistorySlice';
+import { selectProjectById } from '../../../../store/slices/projectsSlice';
+import type { WheelSegment } from '../../types';
+import type { RouletteSegment } from '../../../../database/schema';
+
+// ─── Mapper ───────────────────────────────────────────────────────────────────
+
+const toWheelSegment = (seg: RouletteSegment): WheelSegment => ({
+  id: seg.id,
+  title: seg.label,
+  description: seg.description ?? '',
+  color: seg.color,
+});
+
+const DEFAULT_SEGMENTS: WheelSegment[] = [
+  { id: 'd1', title: '🎁 Cadeau', description: '', color: '#10b981' },
+  { id: 'd2', title: '⭐ Bonus', description: '', color: '#3b82f6' },
+  { id: 'd3', title: '🏆 -10%', description: '', color: '#f59e0b' },
+  { id: 'd4', title: '🎉 Offert', description: '', color: '#8b5cf6' },
+  { id: 'd5', title: '💎 VIP', description: '', color: '#ec4899' },
+  { id: 'd6', title: '🍀 Chance', description: '', color: '#14b8a6' },
+];
+
+// ─── Screen ───────────────────────────────────────────────────────────────────
 
 export default function ClientSpinScreen({ route, navigation }: any) {
   const dispatch = useDispatch();
-  const projectId = route?.params?.projectId || 'default';
-  const config = useSelector((state: RootState) => state.rouletteConfig.configs[projectId]);
+  const projectId: string = route?.params?.projectId || 'default';
+
+  // Redux state
+  const config = useSelector(
+    (state: RootState) => state.rouletteConfig.configs[projectId],
+  );
+  const loadingConfig = useSelector((state: RootState) => state.rouletteConfig.loading);
   const user = useSelector((state: RootState) => state.auth.user);
-  const [spinning, setSpinning] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const project = useSelector(selectProjectById(projectId));
 
-  const segments = config?.segments || Array(8).fill({ label: 'Cadeau', probability: 12.5, isGift: true });
+  // Local state
+  const [hasShared, setHasShared] = useState(false);
+  const [result, setResult] = useState<WheelSegment | null>(null);
 
-  const handleSpinComplete = (segmentIdx: number) => {
-    setSpinning(false);
-    const winSegment = segments[segmentIdx];
-    setResult(winSegment);
+  // Fetch config if not in store
+  useEffect(() => {
+    if (!config) {
+      (dispatch as any)(fetchRouletteConfig(projectId));
+    }
+  }, [projectId, config, dispatch]);
 
-    (dispatch as any)(recordSpin({
-      projectId,
-      userId: user?.id || 'anonymous',
-      segmentId: winSegment.id || 'seg',
-      segmentLabel: winSegment.label,
-      outcome: winSegment.isGift ? 'win' : 'lose',
-      spinDate: new Date().toISOString(),
-    }));
+  // Wheel segments: use store config or defaults
+  const wheelSegments: WheelSegment[] =
+    config?.segments?.length
+      ? config.segments.map(toWheelSegment)
+      : DEFAULT_SEGMENTS;
+
+  // Social links from project (may be undefined if project not in store)
+  const socialLinks = {
+    googleMapsUrl: project?.googleMapsUrl,
+    facebookUrl: project?.facebookUrl,
+    instagramUrl: project?.instagramUrl,
+    tiktokUrl: project?.tiktokUrl,
   };
 
-  const handleSpinClick = () => {
-    if (spinning || result) return;
-    setSpinning(true);
-    // Real logic inside WheelWeb will call onComplete
+  const handleFinish = (segment: WheelSegment) => {
+    setResult(segment);
+    const originalSeg = config?.segments?.find(s => s.id === segment.id);
+    const isGift = originalSeg?.isGift ?? true;
+
+    (dispatch as any)(
+      recordSpin({
+        projectId,
+        userId: user?.id || 'anonymous',
+        segmentId: segment.id,
+        segmentLabel: segment.title,
+        outcome: isGift ? 'win' : 'lose',
+        spinDate: new Date().toISOString(),
+      }),
+    );
   };
 
-  return (
-    <View className="flex-1 bg-slate-900 items-center justify-center p-4">
-      <Text className="text-3xl font-black text-white mb-2 text-center">Tournez la roue !</Text>
-      <Text className="text-slate-400 mb-8 text-center">Tentez votre chance pour gagner une récompense.</Text>
-
-      <View className="items-center justify-center bg-white/5 p-8 rounded-full">
-        {/* Placeholder for the wheel component */}
-        <View className="w-80 h-80 rounded-full border-4 border-slate-700 bg-slate-800 items-center justify-center overflow-hidden relative">
-          <Text className="text-white opacity-50">Animation de la roue ici</Text>
-          <TouchableOpacity 
-            onPress={handleSpinClick}
-            disabled={spinning || result}
-            className="absolute z-10 w-20 h-20 rounded-full bg-emerald-500 items-center justify-center shadow-lg border-4 border-slate-900"
-          >
-            <Text className="text-white font-black text-xl">GO</Text>
-          </TouchableOpacity>
-        </View>
+  // ── Loading ────────────────────────────────────────────────────────────────
+  if (loadingConfig && !config) {
+    return (
+      <View className="flex-1 bg-slate-900 items-center justify-center">
+        <Text className="text-white text-lg">Chargement…</Text>
       </View>
+    );
+  }
 
+  // ── Render ─────────────────────────────────────────────────────────────────
+  return (
+    <ScrollView
+      className="flex-1 bg-slate-900"
+      contentContainerStyle={{ paddingTop: 52, paddingBottom: 40, paddingHorizontal: 20 }}
+      showsVerticalScrollIndicator={false}
+    >
+      {/* ── STEP 1 : Social Share Gate ──────────────────────────────────── */}
+      {!hasShared && (
+        <SocialShareGate
+          links={socialLinks}
+          businessName={project?.name}
+          onShared={() => setHasShared(true)}
+        />
+      )}
+
+      {/* ── STEP 2 : Spin Wheel ─────────────────────────────────────────── */}
+      {hasShared && !result && (
+        <>
+          <View className="items-center mb-8">
+            {/* Success badge */}
+            <View className="bg-emerald-500/20 border border-emerald-500/40 px-5 py-2 rounded-full mb-6">
+              <Text className="text-emerald-400 font-bold text-sm">
+                ✅ Partage confirmé — Bonne chance !
+              </Text>
+            </View>
+
+            <Text className="text-3xl font-black text-white mb-2 text-center">
+              Tournez la roue !
+            </Text>
+            <Text className="text-slate-400 text-center">
+              Tentez votre chance pour gagner une récompense.
+            </Text>
+          </View>
+
+          <LoyaltyWheel segments={wheelSegments} onFinish={handleFinish} />
+        </>
+      )}
+
+      {/* ── STEP 3 : Result ─────────────────────────────────────────────── */}
       {result && (
-        <View className="mt-12 bg-white p-6 rounded-2xl items-center shadow-xl w-full max-w-sm">
-          <Text className="text-2xl font-black text-slate-900 mb-2">
-            {result.isGift ? 'Félicitations ! 🎉' : 'Dommage ! 😢'}
-          </Text>
-          <Text className="text-lg text-slate-600 text-center mb-6">
-            Vous avez obtenu : {result.label}
-          </Text>
-          <TouchableOpacity 
-            onPress={() => navigation.navigate('ClientDashboard')}
-            className="bg-[#1E3A5F] w-full py-3 rounded-xl items-center"
-          >
-            <Text className="text-white font-bold text-lg">Retour au Dashboard</Text>
-          </TouchableOpacity>
+        <View className="items-center pt-8">
+          <View className="bg-white p-8 rounded-3xl items-center shadow-xl w-full max-w-sm">
+            <Text className="text-5xl mb-4">
+              {(() => {
+                const originalSeg = config?.segments?.find(s => s.id === result.id);
+                return (originalSeg?.isGift ?? true) ? '🎉' : '😢';
+              })()}
+            </Text>
+            <Text className="text-2xl font-black text-slate-900 mb-2 text-center">
+              {(() => {
+                const originalSeg = config?.segments?.find(s => s.id === result.id);
+                return (originalSeg?.isGift ?? true)
+                  ? 'Félicitations !'
+                  : 'Dommage !';
+              })()}
+            </Text>
+            <Text className="text-lg text-slate-500 text-center mb-8">
+              Vous avez obtenu :{' '}
+              <Text className="font-bold text-slate-800">{result.title}</Text>
+            </Text>
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate('ClientDashboard')}
+              className="bg-[#1E3A5F] w-full py-4 rounded-2xl items-center"
+            >
+              <Text className="text-white font-bold text-base">
+                Retour au Dashboard
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       )}
-    </View>
+    </ScrollView>
   );
 }

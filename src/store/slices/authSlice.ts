@@ -11,7 +11,7 @@ interface AuthState {
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
-  isLoading: true,
+  isLoading: false, // Changed from true to false so AppNavigator proceeds to Auth
   error: null,
 };
 

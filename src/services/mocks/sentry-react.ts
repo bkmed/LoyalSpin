@@ -8,3 +8,14 @@ export const captureException = (error: any) => {
 
 export const browserTracingIntegration = () => ({});
 export const replayIntegration = () => ({});
+
+// Default export matching @sentry/react shape
+const Sentry = {
+  init,
+  captureException,
+  browserTracingIntegration,
+  replayIntegration,
+};
+
+export default Sentry;
+

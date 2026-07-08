@@ -8,10 +8,12 @@ export const reduxStorage: Storage = {
   },
   getItem: key => {
     const value = storageService.getString(key);
-    return Promise.resolve(value);
+    // redux-persist expects null (not undefined) when key is missing
+    return Promise.resolve(value ?? null);
   },
   removeItem: key => {
     storageService.delete(key);
     return Promise.resolve();
   },
 };
+

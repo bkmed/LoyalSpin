@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './src/store';
+import { setLoading as setReduxLoading } from './src/store/slices/authSlice';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Platform } from 'react-native';
 import { AppNavigator } from './src/navigation/AppNavigator';
@@ -14,6 +15,41 @@ import { WebThemeHandler } from './src/components/WebThemeHandler';
 import './src/i18n';
 
 import { LoadingScreen } from './src/components/LoadingScreen';
+
+// ── Error Boundary ─────────────────────────────────────────────────────────
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean; error: Error | null }
+> {
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    console.error('[ErrorBoundary] Caught error:', error, info);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          padding: 24, fontFamily: 'monospace', background: '#1a1a2e',
+          color: '#e94560', minHeight: '100vh', boxSizing: 'border-box' as any,
+        }}>
+          <h2 style={{ color: '#e94560' }}>⚠️ App Crash — ErrorBoundary</h2>
+          <pre style={{ whiteSpace: 'pre-wrap', color: '#fff', fontSize: 13 }}>
+            {this.state.error?.toString()}
+            {'\n\n'}
+            {this.state.error?.stack}
+          </pre>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 const App = () => {
   const [loading, setLoading] = React.useState(true);
@@ -50,6 +86,7 @@ const App = () => {
         console.error('Error initializing app:', error);
       } finally {
         setLoading(false);
+        store.dispatch(setReduxLoading(false));
       }
     };
 
@@ -58,16 +95,18 @@ const App = () => {
 
   if (loading) {
     return (
-      <ThemeProvider>
-        <LoadingScreen />
-      </ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider>
+          <LoadingScreen />
+        </ThemeProvider>
+      </Provider>
     );
   }
 
   return (
     <Provider store={store}>
-      <PersistGate loading={<LoadingScreen />} persistor={persistor}>
-        <ThemeProvider>
+      <ThemeProvider>
+        <PersistGate loading={<LoadingScreen />} persistor={persistor}>
           <AuthProvider>
             <ToastProvider>
               <ModalProvider>
@@ -79,10 +118,16 @@ const App = () => {
               </ModalProvider>
             </ToastProvider>
           </AuthProvider>
-        </ThemeProvider>
-      </PersistGate>
+        </PersistGate>
+      </ThemeProvider>
     </Provider>
   );
 };
 
-export default App;
+const AppWithBoundary = () => (
+  <ErrorBoundary>
+    <App />
+  </ErrorBoundary>
+);
+
+export default AppWithBoundary;

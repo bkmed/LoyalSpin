@@ -17,8 +17,15 @@ export const WebThemeHandler = () => {
       if (appRoot) {
         appRoot.style.backgroundColor = theme.colors.background;
       }
+      
+      // Toggle Tailwind dark mode class on HTML tag
+      if (theme.dark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
     }
-  }, [theme.colors.background]);
+  }, [theme.dark, theme.colors.background]);
 
   return null;
 };

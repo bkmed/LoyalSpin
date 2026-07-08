@@ -189,7 +189,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
   };
 
   return (
-    <View className="min-h-screen grid grid-cols-1 lg:grid-cols-12 bg-slate-50 dark:bg-[#0B0F19] text-slate-800 dark:text-slate-100 transition-colors duration-300">
+    <View style={{ flex: 1, minHeight: '100vh' }} className="min-h-screen grid grid-cols-1 lg:grid-cols-12 bg-slate-50 dark:bg-[#0B0F19] text-slate-800 dark:text-slate-100 transition-colors duration-300">
       {/* Left panel branding visual presentation (desktop only) */}
       <View className="hidden lg:flex lg:col-span-5 relative bg-gradient-to-br from-[#0F2942] to-[#0A1724] p-12 flex-col justify-between overflow-hidden border-r border-slate-200 dark:border-slate-800">
         <View className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_20%_20%,#F97316_0%,transparent_50%)] pointer-events-none" />
@@ -267,9 +267,9 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
               className="h-11 px-3.5 rounded-lg border flex-row items-center justify-center transition shadow-sm bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700"
             >
               <Text className="text-[10px] font-black tracking-wider uppercase text-slate-700 dark:text-slate-200">
-                {nextLanguage === 'AR'
+                {nextLanguage === 'ar'
                   ? 'العربية'
-                  : nextLanguage === 'EN'
+                  : nextLanguage === 'en'
                   ? 'English'
                   : 'Français'}
               </Text>

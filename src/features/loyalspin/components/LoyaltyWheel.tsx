@@ -1,9 +1,9 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
+  Pressable,
   TouchableOpacity,
-  Modal,
   StyleSheet,
   useWindowDimensions,
   Platform,
@@ -11,6 +11,7 @@ import {
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
+  withRepeat,
   withTiming,
   runOnJS,
   Easing,
@@ -18,6 +19,7 @@ import Animated, {
 import Svg, {
   Circle,
   Defs,
+  G,
   LinearGradient,
   Stop,
   Text as SvgText,
@@ -88,6 +90,8 @@ const isDarkHex = (hex: string) => {
   return (r * 0.299 + g * 0.587 + b * 0.114) < 150;
 };
 
+const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
+
 const splitTitle = (title: string, maxChars = 12) => {
   const words = title.split(' ');
   const lines: string[] = [];
@@ -115,11 +119,13 @@ const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
   const { theme } = useTheme();
   const { width } = useWindowDimensions();
   const [spinning, setSpinning] = useState(false);
-  const [result, setResult] = useState<WheelSegment | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
   const [confettiKey, setConfettiKey] = useState(0);
+  const [hovered, setHovered] = useState(false);
   const spinValue = useSharedValue(0);
   const scaleValue = useSharedValue(1);
+  const indicatorRotation = useSharedValue(0);
+  const indicatorScale = useSharedValue(1);
 
   const safeSegments = useMemo(() => {
     if (segments.length >= MIN_SEGMENTS) {
@@ -151,7 +157,8 @@ const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
   const segmentAngle = 360 / segmentCount;
   const wheelSize = useMemo(() => Math.min(Math.max(width * 0.84, 300), 360), [width]);
   const radius = wheelSize / 2;
-  const labelRadius = radius * 0.62;
+
+  const segmentLabelMaxChars = Math.max(6, Math.min(12, 14 - segmentCount));
 
   const segmentShapes = useMemo(
     () =>
@@ -160,19 +167,31 @@ const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
         const end = start + segmentAngle;
         const mid = start + segmentAngle / 2;
         const path = describeArc(radius, radius, radius, start - 90, end - 90);
-        const labelPosition = polarToCartesian(radius, radius, labelRadius, mid);
-        const textRotation = mid > 90 && mid < 270 ? mid + 180 : mid;
+        const textLines = splitTitle(segment.title, segmentLabelMaxChars);
+        const textLength = textLines.join(' ').length;
+        const countAdjustment = (segmentCount - 2) * 0.01;
+        const textAdjustment = Math.min(0.05, Math.max(0, textLength - 7) * 0.007);
+        const labelRadiusRatio = clamp(0.58 - countAdjustment - textAdjustment, 0.50, 0.60);
+        const labelPosition = polarToCartesian(radius, radius, radius * labelRadiusRatio, mid);
+        const fontSize = Math.round(clamp(radius * 0.032, 10, 12));
+        const lineHeight = Math.round(fontSize * 1.3);
+        let textRotation = mid + 90;
+        if (textRotation > 90 && textRotation < 270) {
+          textRotation += 180;
+        }
         return {
           ...segment,
           path,
           mid,
           labelPosition,
+          textLines,
+          fontSize,
+          lineHeight,
           textRotation,
-          textLines: splitTitle(segment.title, 12),
           textColor: isDarkHex(segment.color) ? '#FFFFFF' : '#111111',
         };
       }),
-    [safeSegments, segmentAngle, radius, labelRadius],
+    [safeSegments, segmentAngle, radius, segmentCount, segmentLabelMaxChars],
   );
 
   const animatedWheelStyle = useAnimatedStyle(() => ({
@@ -182,10 +201,30 @@ const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
     ],
   }));
 
+  const animatedIndicatorStyle = useAnimatedStyle(() => ({
+    transform: [
+      { rotate: `${indicatorRotation.value}deg` },
+      { scale: indicatorScale.value },
+    ],
+  }));
+
+  useEffect(() => {
+    indicatorRotation.value = withRepeat(
+      withTiming(8, { duration: 1200, easing: Easing.inOut(Easing.ease) }),
+      -1,
+      true,
+    );
+
+    indicatorScale.value = withRepeat(
+      withTiming(1.06, { duration: 1100, easing: Easing.inOut(Easing.ease) }),
+      -1,
+      true,
+    );
+  }, [indicatorRotation, indicatorScale]);
+
   const finishSpin = useCallback(
     (targetIndex: number) => {
       const prize = safeSegments[targetIndex];
-      setResult(prize);
       setShowConfetti(Boolean(ConfettiCannon));
       setConfettiKey(prev => prev + 1);
       setSpinning(false);
@@ -276,58 +315,86 @@ const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
               strokeWidth={2}
             />
             {segmentShapes.map(segment => (
-              <SvgText
-                key={`${segment.id}-label`}
-                x={segment.labelPosition.x}
-                y={segment.labelPosition.y}
-                fill={segment.textColor}
-                fontSize={12}
-                fontWeight="700"
-                textAnchor="middle"
-                alignmentBaseline="middle"
-                transform={`rotate(${segment.textRotation} ${segment.labelPosition.x} ${segment.labelPosition.y})`}
+              <G
+                key={`${segment.id}-label-group`}
+                transform={`translate(${segment.labelPosition.x} ${segment.labelPosition.y}) rotate(${segment.textRotation})`}
               >
-                {segment.textLines.map((line, index) => (
-                  <TSpan
-                    key={`${segment.id}-line-${index}`}
-                    x={segment.labelPosition.x}
-                    dy={index === 0 ? 0 : 14}
-                  >
-                    {line}
-                  </TSpan>
-                ))}
-              </SvgText>
+                <SvgText
+                  fill={segment.textColor}
+                  fontSize={segment.fontSize}
+                  fontWeight="700"
+                  textAnchor="middle"
+                  alignmentBaseline="middle"
+                  y={-((segment.textLines.length - 1) * segment.lineHeight) / 2}
+                >
+                  {segment.textLines.map((line, index) => (
+                    <TSpan
+                      key={`${segment.id}-line-${index}`}
+                      x={0}
+                      dy={index === 0 ? 0 : segment.lineHeight}
+                    >
+                      {line}
+                    </TSpan>
+                  ))}
+                </SvgText>
+              </G>
             ))}
           </Svg>
         </Animated.View>
 
-        <View
+        <TouchableOpacity
+          activeOpacity={0.82}
+          onPress={spin}
+          disabled={spinning || safeSegments.length === 0}
           style={[
             styles.wheelCenter,
             {
               width: radius * 0.44,
               height: radius * 0.44,
               borderRadius: radius * 0.22,
-              backgroundColor: theme.colors.card,
+              backgroundColor: theme.colors.primary,
+              borderColor: theme.colors.surface,
             },
+            spinning && styles.disabledButton,
           ]}
-        > 
-          <Text style={[styles.centerText, { color: theme.colors.text }]}>
+        >
+          <Text style={[styles.centerText, { color: theme.colors.card }]}> 
             {centerLabel}
           </Text>
-        </View>
+        </TouchableOpacity>
 
-        <View style={[styles.indicator, { borderBottomColor: theme.colors.accent }]} />
+        <Animated.View
+          style={[
+            styles.indicator,
+            animatedIndicatorStyle,
+            {
+              borderBottomColor: theme.colors.accent,
+              shadowColor: theme.colors.accent,
+              shadowOffset: { width: 0, height: 10 },
+              shadowOpacity: 0.22,
+              shadowRadius: 12,
+              elevation: 10,
+            },
+          ]}
+        />
       </View>
 
-      <TouchableOpacity
-        activeOpacity={0.86}
+      <Pressable
         onPress={spin}
         disabled={spinning || safeSegments.length === 0}
-        style={[
+        onHoverIn={() => setHovered(true)}
+        onHoverOut={() => setHovered(false)}
+        style={({ pressed }) => [
           styles.spinButton,
-          { backgroundColor: theme.colors.primary },
-          spinning && styles.disabledButton,
+          {
+            backgroundColor: theme.colors.primary,
+            transform: [
+              { scale: pressed ? 0.96 : hovered ? 1.02 : 1 },
+              { perspective: 1000 },
+            ],
+            shadowOpacity: pressed ? 0.32 : hovered ? 0.28 : 0.18,
+          },
+          (spinning || safeSegments.length === 0) && styles.disabledButton,
         ]}
       >
         <Text style={styles.spinButtonText}>
@@ -335,7 +402,7 @@ const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
             ? t('loyalspin.spinButton.loading', { defaultValue: 'Lancement...' })
             : t('loyalspin.spinButton', { defaultValue: 'Lancer' })}
         </Text>
-      </TouchableOpacity>
+      </Pressable>
 
       {showConfetti && ConfettiCannon && (
         <ConfettiCannon
@@ -348,28 +415,6 @@ const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
           onAnimationEnd={() => setShowConfetti(false)}
         />
       )}
-
-      <Modal visible={!!result} transparent animationType="fade">
-        <View style={styles.modalBg}>
-          <View style={[styles.modalCard, { backgroundColor: theme.colors.card }]}> 
-            <Text style={[styles.modalTitle, { color: theme.colors.text }]}> 
-              {t('loyalspin.spinResult.title', { defaultValue: '🎉 Félicitations' })}
-            </Text>
-            <Text style={[styles.modalPrize, { color: theme.colors.text }]}>{result?.title}</Text>
-            <Text style={[styles.modalDescription, { color: theme.colors.subText }]}> 
-              {result?.description}
-            </Text>
-            <TouchableOpacity
-              onPress={() => setResult(null)}
-              style={[styles.closeBtn, { backgroundColor: theme.colors.primary }]}
-            >
-              <Text style={styles.closeBtnText}>
-                {t('loyalspin.spinResult.tryAgain', { defaultValue: 'Réessayer' })}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 };
@@ -407,32 +452,43 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   centerText: {
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: '900',
-    letterSpacing: 1.2,
+    letterSpacing: 1.6,
+    textTransform: 'uppercase',
+    textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.14)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   indicator: {
     position: 'absolute',
     top: 6,
     width: 0,
     height: 0,
-    borderLeftWidth: 12,
-    borderRightWidth: 12,
-    borderBottomWidth: 22,
+    borderLeftWidth: 16,
+    borderRightWidth: 16,
+    borderBottomWidth: 28,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
   },
   spinButton: {
-    marginTop: 24,
-    minWidth: 160,
-    paddingHorizontal: 28,
-    paddingVertical: 14,
-    borderRadius: 22,
+    marginTop: 28,
+    minWidth: 180,
+    paddingHorizontal: 30,
+    paddingVertical: 16,
+    borderRadius: 28,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.18,
-    shadowRadius: 18,
-    elevation: 8,
+    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.24,
+    shadowRadius: 20,
+    elevation: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.18)',
   },
   spinButtonText: {
     color: '#fff',
@@ -443,53 +499,6 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     opacity: 0.6,
-  },
-  modalBg: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.56)',
-  },
-  modalCard: {
-    width: '90%',
-    maxWidth: 360,
-    borderRadius: 24,
-    padding: 24,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.18,
-    shadowRadius: 24,
-    elevation: 12,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: '800',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  modalPrize: {
-    fontSize: 18,
-    fontWeight: '800',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  modalDescription: {
-    fontSize: 14,
-    lineHeight: 20,
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  closeBtn: {
-    width: '100%',
-    paddingVertical: 14,
-    alignItems: 'center',
-    borderRadius: 16,
-  },
-  closeBtnText: {
-    color: '#fff',
-    fontWeight: '700',
-    fontSize: 15,
   },
 });
 

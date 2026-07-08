@@ -145,7 +145,7 @@ const WheelNative: React.FC = () => {
             <Circle cx={radius} cy={radius} r={radius} fill={theme.colors.card} />
             {segmentShapes.map((s, idx) => (
               <G key={idx}>
-                <Path d={s.path} fill={s.color || theme.colors.primary} stroke={theme.colors.background} strokeWidth={1} />
+                <Path d={s.path} fill={(s as any).color || theme.colors.primary} stroke={theme.colors.background} strokeWidth={1} />
                 <G transform={`translate(${s.labelPos.x} ${s.labelPos.y}) rotate(${s.textRot})`}>
                   <SvgText fill={isFinite(0) ? '#fff' : '#000'} fontSize={12} fontWeight="700" textAnchor="middle" alignmentBaseline="middle" y={-8}>
                     {s.lines.map((line: string, i: number) => (

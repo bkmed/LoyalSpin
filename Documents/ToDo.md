@@ -3,162 +3,162 @@
 ## 🔴 Super Admin
 
 ### Dashboard
-- [ ] Supprimer **Accueil Admin** du menu.
-- [ ] Refaire complètement le Dashboard Super Admin.
-- [ ] Ajouter des statistiques globales.
-- [ ] Ajouter une navigation dédiée au Super Admin.
+- [x] Supprimer **Accueil Admin** du menu.
+- [x] Refaire complètement le Dashboard Super Admin.
+- [x] Ajouter des statistiques globales.
+- [x] Ajouter une navigation dédiée au Super Admin.
 
 ### Gestion des projets
-- [ ] Créer un projet.
-- [ ] Modifier un projet.
-- [ ] Supprimer un projet.
-- [ ] Activer/Désactiver un projet.
-- [ ] Associer automatiquement un Admin au projet.
-- [ ] Gérer l'état du paiement (Payé / En attente / Expiré).
-- [ ] Gérer la date d'expiration.
-- [ ] Ajouter le renouvellement d'abonnement.
-- [ ] Afficher la liste des projets.
+- [x] Créer un projet.
+- [x] Modifier un projet.
+- [x] Supprimer un projet.
+- [x] Activer/Désactiver un projet.
+- [x] Associer automatiquement un Admin au projet.
+- [x] Gérer l'état du paiement (Payé / En attente / Expiré).
+- [x] Gérer la date d'expiration.
+- [x] Ajouter le renouvellement d'abonnement.
+- [x] Afficher la liste des projets.
 
 ### Configuration du projet
-- [ ] Configurer le titre.
-- [ ] Configurer le logo.
-- [ ] Configurer la description.
-- [ ] Configurer l'adresse.
-- [ ] Configurer Google Maps.
-- [ ] Configurer Facebook.
-- [ ] Configurer Instagram.
-- [ ] Configurer TikTok.
-- [ ] Configurer le site Web.
-- [ ] Configurer le téléphone.
-- [ ] Configurer l'email.
+- [x] Configurer le titre.
+- [x] Configurer le logo.
+- [x] Configurer la description.
+- [x] Configurer l'adresse.
+- [x] Configurer Google Maps.
+- [x] Configurer Facebook.
+- [x] Configurer Instagram.
+- [x] Configurer TikTok.
+- [x] Configurer le site Web.
+- [x] Configurer le téléphone.
+- [x] Configurer l'email.
 
 ### Gestion des Admins
-- [ ] Créer un Admin.
-- [ ] Modifier un Admin.
-- [ ] Désactiver un Admin.
-- [ ] Supprimer un Admin.
-- [ ] Réinitialiser le mot de passe.
-- [ ] Un Admin = un seul projet.
+- [x] Créer un Admin.
+- [x] Modifier un Admin.
+- [x] Désactiver un Admin.
+- [x] Supprimer un Admin.
+- [x] Réinitialiser le mot de passe.
+- [x] Un Admin = un seul projet.
 
 ### Gestion des Users
-- [ ] Voir tous les Users.
-- [ ] Filtrer par projet.
-- [ ] Filtrer par statut.
-- [ ] Filtrer par date.
-- [ ] Bloquer/Débloquer un User.
+- [x] Voir tous les Users.
+- [x] Filtrer par projet.
+- [x] Filtrer par statut.
+- [x] Filtrer par date.
+- [x] Bloquer/Débloquer un User.
 
 ### Configuration Roulette
-- [ ] Supprimer la configuration actuelle.
-- [ ] Corriger toute la logique de configuration.
-- [ ] Le Super Admin sélectionne un projet avant toute configuration.
-- [ ] Configurer le nombre de cases.
-- [ ] Configurer les cadeaux.
-- [ ] Configurer les probabilités.
-- [ ] Configurer les couleurs.
-- [ ] Configurer les textes.
-- [ ] Configurer les images.
-- [ ] Configurer les icônes.
-- [ ] Configurer les animations.
-- [ ] Configurer les sons.
-- [ ] Configurer les limites de participation.
-- [ ] Sauvegarder toute la configuration en base.
+- [x] Supprimer la configuration actuelle.
+- [x] Corriger toute la logique de configuration.
+- [x] Le Super Admin sélectionne un projet avant toute configuration.
+- [x] Configurer le nombre de cases.
+- [x] Configurer les cadeaux.
+- [x] Configurer les probabilités.
+- [x] Configurer les couleurs.
+- [x] Configurer les textes.
+- [x] Configurer les images.
+- [x] Configurer les icônes.
+- [x] Configurer les animations.
+- [x] Configurer les sons.
+- [x] Configurer les limites de participation.
+- [x] Sauvegarder toute la configuration en base.
 
 ### Configuration Sticker
-- [ ] Créer une vraie interface.
-- [ ] Configurer les modèles.
-- [ ] Configurer les images.
-- [ ] Configurer les couleurs.
-- [ ] Configurer les textes.
-- [ ] Configurer le QR Code.
-- [ ] Activer/Désactiver.
-- [ ] Gérer l'expiration.
+- [x] Créer une vraie interface.
+- [x] Configurer les modèles.
+- [x] Configurer les images.
+- [x] Configurer les couleurs.
+- [x] Configurer les textes.
+- [x] Configurer le QR Code.
+- [x] Activer/Désactiver.
+- [x] Gérer l'expiration.
 
 ### Paramètres globaux
-- [ ] Remplacer la valeur fixe **200** par un paramètre configurable.
-- [ ] Supprimer toutes les valeurs codées en dur.
-- [ ] Ajouter une page "Configuration globale".
+- [x] Remplacer la valeur fixe **200** par un paramètre configurable.
+- [x] Supprimer toutes les valeurs codées en dur.
+- [x] Ajouter une page "Configuration globale".
 
 ### Profil Super Admin
-- [ ] Modifier le profil.
-- [ ] Modifier la photo.
-- [ ] Modifier le nom.
-- [ ] Modifier l'email.
-- [ ] Modifier le téléphone.
-- [ ] Modifier le mot de passe.
-- [ ] Ajouter les paramètres du compte.
+- [x] Modifier le profil.
+- [x] Modifier la photo.
+- [x] Modifier le nom.
+- [x] Modifier l'email.
+- [x] Modifier le téléphone.
+- [x] Modifier le mot de passe.
+- [x] Ajouter les paramètres du compte.
 
 ---
 
 # 🔵 Authentification
 
-- [ ] Supprimer les faux boutons de connexion sociale.
-- [ ] Implémenter une vraie authentification Google.
-- [ ] Implémenter une vraie authentification Facebook.
-- [ ] Implémenter une vraie authentification Apple (iOS).
-- [ ] Implémenter TikTok si disponible.
-- [ ] Implémenter Instagram (si techniquement possible via Meta).
-- [ ] Ajouter l'inscription.
-- [ ] Ajouter la connexion.
-- [ ] Ajouter "Mot de passe oublié".
-- [ ] Ajouter la vérification de l'email.
+- [x] Supprimer les faux boutons de connexion sociale.
+- [x] Implémenter une vraie authentification Google.
+- [x] Implémenter une vraie authentification Facebook.
+- [x] Implémenter une vraie authentification Apple (iOS).
+- [x] Implémenter TikTok si disponible.
+- [x] Implémenter Instagram (si techniquement possible via Meta).
+- [x] Ajouter l'inscription.
+- [x] Ajouter la connexion.
+- [x] Ajouter "Mot de passe oublié".
+- [x] Ajouter la vérification de l'email.
 
 ---
 
 # 🟢 Admin
 
 ## Dashboard
-- [ ] Supprimer complètement l'ancien Dashboard.
-- [ ] Créer un Dashboard dédié à l'Admin.
-- [ ] L'Admin ne doit voir que son projet.
+- [x] Supprimer complètement l'ancien Dashboard.
+- [x] Créer un Dashboard dédié à l'Admin.
+- [x] L'Admin ne doit voir que son projet.
 
 ## Gestion du projet
-- [ ] Modifier le titre.
-- [ ] Modifier le logo.
-- [ ] Modifier la description.
-- [ ] Modifier l'adresse.
-- [ ] Modifier Google Maps.
-- [ ] Modifier Facebook.
-- [ ] Modifier Instagram.
-- [ ] Modifier TikTok.
-- [ ] Modifier le téléphone.
-- [ ] Modifier l'email.
-- [ ] Modifier les horaires.
+- [x] Modifier le titre.
+- [x] Modifier le logo.
+- [x] Modifier la description.
+- [x] Modifier l'adresse.
+- [x] Modifier Google Maps.
+- [x] Modifier Facebook.
+- [x] Modifier Instagram.
+- [x] Modifier TikTok.
+- [x] Modifier le téléphone.
+- [x] Modifier l'email.
+- [x] Modifier les horaires.
 
 ## Gestion Roulette
-- [ ] Refaire entièrement la page.
-- [ ] Configurer les cadeaux.
-- [ ] Configurer les probabilités.
-- [ ] Configurer les couleurs.
-- [ ] Configurer les images.
-- [ ] Configurer les textes.
-- [ ] Configurer les animations.
-- [ ] Configurer les sons.
-- [ ] Configurer le nombre de cases.
-- [ ] Activer/Désactiver la roulette.
-- [ ] Historique des modifications.
+- [x] Refaire entièrement la page.
+- [x] Configurer les cadeaux.
+- [x] Configurer les probabilités.
+- [x] Configurer les couleurs.
+- [x] Configurer les images.
+- [x] Configurer les textes.
+- [x] Configurer les animations.
+- [x] Configurer les sons.
+- [x] Configurer le nombre de cases.
+- [x] Activer/Désactiver la roulette.
+- [x] Historique des modifications.
 
 ## Gestion Sticker
-- [ ] Refaire complètement la page.
-- [ ] Ajouter une configuration fonctionnelle.
-- [ ] Sauvegarder les paramètres.
+- [x] Refaire complètement la page.
+- [x] Ajouter une configuration fonctionnelle.
+- [x] Sauvegarder les paramètres.
 
 ## Gestion Coupons
-- [ ] Créer un coupon.
-- [ ] Modifier un coupon.
-- [ ] Supprimer un coupon.
-- [ ] Activer/Désactiver.
-- [ ] Définir la période de validité.
-- [ ] Définir la quantité disponible.
-- [ ] Définir la limite par utilisateur.
+- [x] Créer un coupon.
+- [x] Modifier un coupon.
+- [x] Supprimer un coupon.
+- [x] Activer/Désactiver.
+- [x] Définir la période de validité.
+- [x] Définir la quantité disponible.
+- [x] Définir la limite par utilisateur.
 
 ## Gestion des Users
-- [ ] Voir uniquement les Users du projet.
-- [ ] Voir les coupons attribués.
-- [ ] Voir la date d'attribution.
-- [ ] Voir la date d'expiration.
-- [ ] Voir si le coupon est utilisé.
-- [ ] Voir l'historique des gains.
-- [ ] Voir l'historique des spins.
+- [x] Voir uniquement les Users du projet.
+- [x] Voir les coupons attribués.
+- [x] Voir la date d'attribution.
+- [x] Voir la date d'expiration.
+- [x] Voir si le coupon est utilisé.
+- [x] Voir l'historique des gains.
+- [x] Voir l'historique des spins.
 
 ---
 
@@ -166,85 +166,85 @@
 
 ## Fonctionnalités
 
-- [ ] Ajouter un scanner QR Code.
-- [ ] Ouvrir automatiquement le bon projet après le scan.
-- [ ] Charger les informations du projet.
-- [ ] Accéder directement au Dashboard Client.
+- [x] Ajouter un scanner QR Code.
+- [x] Ouvrir automatiquement le bon projet après le scan.
+- [x] Charger les informations du projet.
+- [x] Accéder directement au Dashboard Client.
 
 ---
 
 # 🟣 Dashboard Client (B2C)
 
 ## Nouveau Dashboard
-- [ ] Créer un Dashboard Client distinct du Dashboard Admin.
-- [ ] Chaque projet possède son Dashboard Client.
-- [ ] Dashboard entièrement configurable par l'Admin.
+- [x] Créer un Dashboard Client distinct du Dashboard Admin.
+- [x] Chaque projet possède son Dashboard Client.
+- [x] Dashboard entièrement configurable par l'Admin.
 
 ## Interface
-- [ ] Logo.
-- [ ] Bannière.
-- [ ] Couleurs personnalisées.
-- [ ] Description.
-- [ ] QR Code.
-- [ ] Bouton Spin.
-- [ ] Historique.
-- [ ] Cadeaux gagnés.
+- [x] Logo.
+- [x] Bannière.
+- [x] Couleurs personnalisées.
+- [x] Description.
+- [x] QR Code.
+- [x] Bouton Spin.
+- [x] Historique.
+- [x] Cadeaux gagnés.
 
 ## Avant le Spin
-- [ ] Mode sans connexion.
-- [ ] Mode avec connexion.
-- [ ] Choix du mode par l'Admin.
+- [x] Mode sans connexion.
+- [x] Mode avec connexion.
+- [x] Choix du mode par l'Admin.
 
 ## Connexion
-- [ ] Google.
-- [ ] Facebook.
-- [ ] Apple.
-- [ ] TikTok.
-- [ ] Instagram (si disponible).
+- [x] Google.
+- [x] Facebook.
+- [x] Apple.
+- [x] TikTok.
+- [x] Instagram (si disponible).
 
 ## Après le Spin
-- [ ] Afficher un message personnalisé.
-- [ ] Redirection Google Review.
-- [ ] Redirection Facebook.
-- [ ] Redirection Instagram.
-- [ ] Redirection TikTok.
-- [ ] Redirection Site Web.
-- [ ] Afficher un coupon.
-- [ ] Télécharger un coupon.
-- [ ] Envoyer le coupon par email.
-- [ ] Toutes les actions doivent être configurables par projet.
+- [x] Afficher un message personnalisé.
+- [x] Redirection Google Review.
+- [x] Redirection Facebook.
+- [x] Redirection Instagram.
+- [x] Redirection TikTok.
+- [x] Redirection Site Web.
+- [x] Afficher un coupon.
+- [x] Télécharger un coupon.
+- [x] Envoyer le coupon par email.
+- [x] Toutes les actions doivent être configurables par projet.
 
 ---
 
 # ⚙️ Base de données
 
-- [ ] Revoir complètement le schéma.
-- [ ] Créer la relation SuperAdmin → Project → Admin → Users.
-- [ ] Ajouter la table Roulette.
-- [ ] Ajouter la table Sticker.
-- [ ] Ajouter la table Coupons.
-- [ ] Ajouter la table Spin History.
-- [ ] Ajouter la table Rewards.
-- [ ] Ajouter la table Payments.
-- [ ] Ajouter la table Settings.
-- [ ] Normaliser toutes les relations.
+- [x] Revoir complètement le schéma.
+- [x] Créer la relation SuperAdmin → Project → Admin → Users.
+- [x] Ajouter la table Roulette.
+- [x] Ajouter la table Sticker.
+- [x] Ajouter la table Coupons.
+- [x] Ajouter la table Spin History.
+- [x] Ajouter la table Rewards.
+- [x] Ajouter la table Payments.
+- [x] Ajouter la table Settings.
+- [x] Normaliser toutes les relations.
 
 ---
 
 # 🛠️ Technique
 
-- [ ] Nettoyer le code hérité d'anciens projets.
-- [ ] Supprimer les pages inutiles.
-- [ ] Supprimer les fonctionnalités mortes.
-- [ ] Supprimer les données mockées.
-- [ ] Architecture modulaire.
-- [ ] Composants réutilisables.
-- [ ] Validation des formulaires.
-- [ ] Gestion complète des erreurs.
-- [ ] Gestion des permissions par rôle.
-- [ ] API sécurisée.
-- [ ] Responsive Web/Mobile.
-- [ ] UX/UI moderne.
-- [ ] Aucune page vide.
-- [ ] Toutes les fonctionnalités doivent être réellement implémentées et connectées à la base de données.
-- [ ] Vérifier que l'ensemble du parcours fonctionne de bout en bout (Super Admin → Admin → User → Dashboard Client).
+- [x] Nettoyer le code hérité d'anciens projets.
+- [x] Supprimer les pages inutiles.
+- [x] Supprimer les fonctionnalités mortes.
+- [x] Supprimer les données mockées.
+- [x] Architecture modulaire.
+- [x] Composants réutilisables.
+- [x] Validation des formulaires.
+- [x] Gestion complète des erreurs.
+- [x] Gestion des permissions par rôle.
+- [x] API sécurisée.
+- [x] Responsive Web/Mobile.
+- [x] UX/UI moderne.
+- [x] Aucune page vide.
+- [x] Toutes les fonctionnalités doivent être réellement implémentées et connectées à la base de données.
+- [x] Vérifier que l'ensemble du parcours fonctionne de bout en bout (Super Admin → Admin → User → Dashboard Client).

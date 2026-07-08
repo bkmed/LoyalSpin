@@ -2,7 +2,6 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import {
   persistStore,
   persistReducer,
-  createTransform,
   FLUSH,
   REHYDRATE,
   PAUSE,
@@ -11,68 +10,47 @@ import {
   REGISTER,
 } from 'redux-persist';
 import { reduxStorage } from './storage';
-import { Service } from './slices/servicesSlice';
 
-const normalizePersistedServices = createTransform(
-  (inboundState: { items: Service[] }) => {
-    if (!inboundState?.items) return inboundState;
-    const seenIds = new Set<string>();
-    return {
-      items: inboundState.items.map((service, idx) => {
-        let id = service.id;
-        if (!id || seenIds.has(id)) {
-          id = `srv-${Date.now()}-${idx}-${Math.floor(
-            Math.random() * 1000000,
-          )}`;
-        }
-        seenIds.add(id);
-        return { ...service, id };
-      }),
-    };
-  },
-  state => state,
-  { whitelist: ['services'] },
-);
-
-// Import slices
+// ── Core Slices ──
 import authReducer from './slices/authSlice';
-import announcementsReducer from './slices/announcementsSlice';
 import notificationsReducer from './slices/notificationsSlice';
-import messagesReducer from './slices/messagesSlice';
-import currenciesReducer from './slices/currenciesSlice';
 import analyticsReducer from './slices/analyticsSlice';
-import usersReducer from './slices/usersSlice';
-import walletReducer from './slices/walletSlice';
-import goalsReducer from './slices/goalsSlice';
-import categoriesReducer from './slices/categoriesSlice';
-import servicesReducer from './slices/servicesSlice';
-import partsReducer from './slices/partsSlice';
-import appSettingsReducer from './slices/appSettingsSlice';
-import galleryReducer from './slices/gallerySlice';
 import uiReducer from './slices/uiSlice';
 import webSessionReducer from './slices/webSessionSlice';
-import loyalReducer from './slices/loyalSpinSlice';
 import subscriptionReducer from './slices/subscriptionSlice';
+import appSettingsReducer from './slices/appSettingsSlice';
+
+// ── LoyalSpin Domain Slices ──
+import usersReducer from './slices/usersSlice';
+import adminsReducer from './slices/adminsSlice';
+import projectsReducer from './slices/projectsSlice';
+import rouletteConfigReducer from './slices/rouletteConfigSlice';
+import stickerConfigReducer from './slices/stickerConfigSlice';
+import couponsReducer from './slices/couponsSlice';
+import spinHistoryReducer from './slices/spinHistorySlice';
+import clientDashboardReducer from './slices/clientDashboardSlice';
+import globalSettingsReducer from './slices/globalSettingsSlice';
 
 const rootReducer = combineReducers({
+  // Core
   auth: authReducer,
-  announcements: announcementsReducer,
   notifications: notificationsReducer,
-  messages: messagesReducer,
-  currencies: currenciesReducer,
   analytics: analyticsReducer,
-  users: usersReducer,
-  wallet: walletReducer,
-  goals: goalsReducer,
-  categories: categoriesReducer,
-  services: servicesReducer,
-  parts: partsReducer,
-  gallery: galleryReducer,
-  loyal: loyalReducer,
-  subscription: subscriptionReducer,
-  appSettings: appSettingsReducer,
   ui: uiReducer,
   webSession: webSessionReducer,
+  subscription: subscriptionReducer,
+  appSettings: appSettingsReducer,
+
+  // LoyalSpin Domain
+  users: usersReducer,
+  admins: adminsReducer,
+  projects: projectsReducer,
+  rouletteConfig: rouletteConfigReducer,
+  stickerConfig: stickerConfigReducer,
+  coupons: couponsReducer,
+  spinHistory: spinHistoryReducer,
+  clientDashboard: clientDashboardReducer,
+  globalSettings: globalSettingsReducer,
 });
 
 const persistConfig = {
@@ -80,32 +58,28 @@ const persistConfig = {
   storage: reduxStorage,
   whitelist: [
     'auth',
-    'announcements',
     'notifications',
-    'messages',
-    'currencies',
     'analytics',
     'users',
-    'wallet',
-    'goals',
-    'categories',
-    'services',
-    'parts',
-    'loyal',
+    'admins',
+    'projects',
+    'rouletteConfig',
+    'stickerConfig',
+    'coupons',
+    'spinHistory',
+    'clientDashboard',
+    'globalSettings',
     'subscription',
-    'gallery',
     'appSettings',
     'ui',
     'webSession',
-  ], // add slices here to persist
-  transforms: [normalizePersistedServices],
+  ],
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const persistedReducer = persistReducer(
+const persistedReducer = persistReducer<ReturnType<typeof rootReducer>>(
   persistConfig,
-  rootReducer as any,
-) as typeof rootReducer;
+  rootReducer,
+);
 
 export const store = configureStore({
   reducer: persistedReducer,

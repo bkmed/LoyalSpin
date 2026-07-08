@@ -1,4 +1,5 @@
-import { User } from './authService';
+import { UserAccount as User } from '../database/schema';
+import { ROLES, UserRole } from './authService';
 
 export type WalletRole = 'user' | 'premium' | 'admin' | 'guest';
 

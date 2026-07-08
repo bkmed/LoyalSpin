@@ -1,5 +1,37 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { UserAccount } from '../../database/schema';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { UserAccount, Role } from '../../database/schema';
+import { RootState } from '../index';
+
+export const fetchUsersByProject = createAsyncThunk(
+  'users/fetchByProject',
+  async (projectId: string) => {
+    const { collection, query, where, getDocs } = await import('firebase/firestore');
+    const { db } = await import('../../services/firebaseConfig');
+    
+    const q = query(
+      collection(db, 'users'), 
+      where('projectId', '==', projectId),
+      where('role', '==', 'user')
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as UserAccount));
+  }
+);
+
+export const fetchAllUsers = createAsyncThunk(
+  'users/fetchAll',
+  async () => {
+    const { collection, getDocs, query, where } = await import('firebase/firestore');
+    const { db } = await import('../../services/firebaseConfig');
+    
+    const q = query(
+      collection(db, 'users'), 
+      where('role', '==', 'user')
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as UserAccount));
+  }
+);
 
 interface UsersState {
   items: UserAccount[];
@@ -8,55 +40,7 @@ interface UsersState {
 }
 
 const initialState: UsersState = {
-  items: [
-    {
-      id: 'super-1',
-      name: 'Super Admin',
-      email: 'super@demo.com',
-      role: 'super-admin',
-      status: 'active',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-    {
-      id: 'admin-1',
-      name: 'Admin Demo 1',
-      email: 'admin1@demo.com',
-      role: 'admin',
-      status: 'active',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-    {
-      id: 'user-1',
-      name: 'Client Demo 1',
-      email: 'user1@demo.com',
-      role: 'user',
-      status: 'active',
-      managerId: 'admin-1',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-    {
-      id: 'admin-2',
-      name: 'Admin Demo 2',
-      email: 'admin2@demo.com',
-      role: 'admin',
-      status: 'active',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-    {
-      id: 'user-2',
-      name: 'Client Demo 2',
-      email: 'user2@demo.com',
-      role: 'user',
-      status: 'active',
-      managerId: 'admin-2',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-  ],
+  items: [],
   loading: false,
   error: null,
 };
@@ -82,7 +66,7 @@ const usersSlice = createSlice({
     },
     updateUserRole: (
       state,
-      action: PayloadAction<{ userId: string; role: string }>,
+      action: PayloadAction<{ userId: string; role: Role }>,
     ) => {
       const user = state.items.find(u => u.id === action.payload.userId);
       if (user) {
@@ -91,14 +75,37 @@ const usersSlice = createSlice({
       }
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUsersByProject.pending, (state) => { state.loading = true; state.error = null; })
+      .addCase(fetchUsersByProject.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload;
+      })
+      .addCase(fetchUsersByProject.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to fetch users';
+      })
+      .addCase(fetchAllUsers.pending, (state) => { state.loading = true; state.error = null; })
+      .addCase(fetchAllUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload;
+      })
+      .addCase(fetchAllUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to fetch users';
+      });
+  }
 });
 
 export const { setUsers, addUser, updateUser, deleteUser, updateUserRole } =
   usersSlice.actions;
 
-export const selectAllUsers = (state: { users: UsersState }) =>
-  state.users.items;
-export const selectUserById = (id: string) => (state: { users: UsersState }) =>
+export const selectAllUsers = (state: RootState) => state.users.items;
+export const selectUserById = (id: string) => (state: RootState) =>
   state.users.items.find(u => u.id === id);
+export const selectUsersByProject = (projectId: string) => (state: RootState) =>
+  state.users.items.filter(u => u.projectId === projectId);
+export const selectUsersLoading = (state: RootState) => state.users.loading;
 
 export default usersSlice.reducer;

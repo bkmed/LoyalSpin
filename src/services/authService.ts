@@ -1,215 +1,120 @@
-import { storageService } from './storage';
-import { subscriptionService } from './subscriptionService';
-import { UserAccount } from '../database/schema';
+import { 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  signOut, 
+  sendPasswordResetEmail,
+  sendEmailVerification,
+  signInWithPopup,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  OAuthProvider,
+  User as FirebaseUser
+} from 'firebase/auth';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { auth, db } from './firebaseConfig';
+import type { UserAccount, Role } from '../database/schema';
 
-const AUTH_KEY = 'auth_session';
-const USERS_KEY = 'auth_users';
-const SEED_KEY = 'demo_data_seeded_wallet_v1';
-
-export type UserRole = 'admin' | 'user' | 'anonyme' | 'super-admin';
-export const ROLES: UserRole[] = ['admin', 'user', 'anonyme', 'super-admin'];
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: UserRole;
-  avatarUri?: string;
-  phone?: string;
-  addresses?: string[];
-  preferredCurrency?: string;
-  status?: 'active' | 'pending' | 'rejected';
-  notificationPreferences?: {
-    push: boolean;
-    email: boolean;
-  };
-}
-
-const seedDemoData = async () => {
-  const users: Array<UserAccount & { password: string }> = [
-    {
-      id: 'super-1',
-      name: 'Super Admin',
-      email: 'super@demo.com',
-      password: 'super123',
-      role: 'super-admin',
-      status: 'active',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    } as UserAccount & { password: string },
-    {
-      id: 'admin-1',
-      name: 'Admin Demo 1',
-      email: 'admin1@demo.com',
-      password: 'admin123',
-      role: 'admin',
-      status: 'active',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    } as UserAccount & { password: string },
-    {
-      id: 'user-1',
-      name: 'Client Demo 1',
-      email: 'user1@demo.com',
-      password: 'user123',
-      role: 'user',
-      managerId: 'admin-1',
-      status: 'active',
-      preferredCurrency: 'DT',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    } as UserAccount & { password: string },
-    {
-      id: 'admin-2',
-      name: 'Admin Demo 2',
-      email: 'admin2@demo.com',
-      password: 'admin234',
-      role: 'admin',
-      status: 'active',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    } as UserAccount & { password: string },
-    {
-      id: 'user-2',
-      name: 'Client Demo 2',
-      email: 'user2@demo.com',
-      password: 'user234',
-      role: 'user',
-      managerId: 'admin-2',
-      status: 'active',
-      preferredCurrency: 'DT',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    } as UserAccount & { password: string },
-  ];
-
-  storageService.setString(USERS_KEY, JSON.stringify(users));
-  storageService.setBoolean(SEED_KEY, true);
-};
-
-const toSessionUser = (user: UserAccount & { password?: string }): User => ({
-  id: user.id,
-  name: user.name,
-  email: user.email,
-  role: user.role as UserRole,
-  avatarUri: user.avatarUri,
-  addresses: user.addresses,
-  preferredCurrency: user.preferredCurrency,
-  status: user.status,
-  notificationPreferences: {
-    push: true,
-    email: true,
-  },
-});
+export const ROLES: Role[] = ['admin', 'user', 'anonyme', 'super-admin'];
+export type UserRole = Role;
 
 export const authService = {
-  login: async (emailInput: string, password: string): Promise<User> => {
-    const email = emailInput.trim().toLowerCase();
-    await new Promise(resolve => setTimeout(resolve, 400));
-
-    if (!storageService.getBoolean(SEED_KEY)) {
-      await seedDemoData();
-    }
-
-    const usersJson = storageService.getString(USERS_KEY);
-    const users = usersJson ? JSON.parse(usersJson) : [];
-    const user = users.find(
-      (item: UserAccount & { password?: string }) =>
-        item.email === email && item.password === password,
-    );
-
-    if (!user) throw new Error('Invalid credentials');
-
-    const sessionUser = toSessionUser(user);
-    storageService.setString(AUTH_KEY, JSON.stringify(sessionUser));
-
-    // Initialize trial subscription if user doesn't have one
-    const existingSubscription = await subscriptionService.getSubscription();
-    if (!existingSubscription) {
-      await subscriptionService.initializeSubscription(sessionUser.id);
-    }
-
-    return sessionUser;
+  async login(email: string, password: string): Promise<UserAccount> {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return this.getUserData(userCredential.user.uid);
   },
 
-  register: async (
-    name: string,
-    emailInput: string,
-    password: string,
-    role: UserRole = 'user',
-  ): Promise<User> => {
-    const email = emailInput.trim().toLowerCase();
-    await new Promise(resolve => setTimeout(resolve, 400));
+  async register(name: string, email: string, password: string, role: Role = 'user', projectId?: string): Promise<UserAccount> {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    await sendEmailVerification(user);
 
-    const usersJson = storageService.getString(USERS_KEY);
-    const users = usersJson ? JSON.parse(usersJson) : [];
-    if (
-      users.find(
-        (item: UserAccount & { password?: string }) => item.email === email,
-      )
-    ) {
-      throw new Error('Email already exists');
-    }
-
-    const newUser = {
-      id: Date.now().toString(),
+    const newUser: UserAccount = {
+      id: user.uid,
       name,
       email,
-      password,
       role,
+      projectId,
       status: 'active',
-      preferredCurrency: 'DT',
+      authProvider: 'email',
+      emailVerified: false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
 
-    users.push(newUser);
-    storageService.setString(USERS_KEY, JSON.stringify(users));
-
-    const sessionUser = toSessionUser(
-      newUser as UserAccount & { password?: string },
-    );
-    storageService.setString(AUTH_KEY, JSON.stringify(sessionUser));
-
-    // Initialize trial subscription for new user
-    await subscriptionService.initializeSubscription(sessionUser.id);
-
-    return sessionUser;
-  },
-
-  updateUser: async (updatedData: Partial<User>): Promise<User> => {
-    const currentJson = storageService.getString(AUTH_KEY);
-    if (!currentJson) throw new Error('Not logged in');
-
-    const currentUser = JSON.parse(currentJson);
-    const newUser = { ...currentUser, ...updatedData };
-    storageService.setString(AUTH_KEY, JSON.stringify(newUser));
-
-    const usersJson = storageService.getString(USERS_KEY);
-    if (usersJson) {
-      const users = JSON.parse(usersJson);
-      const index = users.findIndex(
-        (item: UserAccount & { password?: string }) => item.id === newUser.id,
-      );
-      if (index !== -1) {
-        users[index] = {
-          ...users[index],
-          ...updatedData,
-          updatedAt: new Date().toISOString(),
-        };
-        storageService.setString(USERS_KEY, JSON.stringify(users));
-      }
-    }
-
+    await setDoc(doc(db, 'users', user.uid), newUser);
     return newUser;
   },
 
-  logout: async (): Promise<void> => {
-    storageService.delete(AUTH_KEY);
+  async loginWithGoogle(): Promise<UserAccount> {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    return this.handleSocialLogin(result.user, 'google');
   },
 
-  getCurrentUser: async (): Promise<User | null> => {
-    const json = storageService.getString(AUTH_KEY);
-    return json ? JSON.parse(json) : null;
+  async loginWithFacebook(): Promise<UserAccount> {
+    const provider = new FacebookAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    return this.handleSocialLogin(result.user, 'facebook');
   },
+
+  async loginWithApple(): Promise<UserAccount> {
+    const provider = new OAuthProvider('apple.com');
+    const result = await signInWithPopup(auth, provider);
+    return this.handleSocialLogin(result.user, 'apple');
+  },
+
+  async handleSocialLogin(user: FirebaseUser, provider: 'google' | 'facebook' | 'apple' | 'tiktok'): Promise<UserAccount> {
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    
+    if (userDoc.exists()) {
+      return userDoc.data() as UserAccount;
+    } else {
+      const newUser: UserAccount = {
+        id: user.uid,
+        name: user.displayName || 'User',
+        email: user.email || '',
+        role: 'user',
+        status: 'active',
+        authProvider: provider,
+        emailVerified: user.emailVerified,
+        avatarUri: user.photoURL || undefined,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      await setDoc(doc(db, 'users', user.uid), newUser);
+      return newUser;
+    }
+  },
+
+  async logout(): Promise<void> {
+    await signOut(auth);
+  },
+
+  async resetPassword(email: string): Promise<void> {
+    await sendPasswordResetEmail(auth, email);
+  },
+
+  async getCurrentUser(): Promise<UserAccount | null> {
+    const user = auth.currentUser;
+    if (user) {
+      return this.getUserData(user.uid);
+    }
+    return null;
+  },
+
+  async getUserData(uid: string): Promise<UserAccount> {
+    const docRef = doc(db, 'users', uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data() as UserAccount;
+    }
+    throw new Error('User not found in database');
+  },
+
+  async updateUser(data: Partial<UserAccount>): Promise<UserAccount> {
+    if (!data.id) throw new Error('User ID required for update');
+    const docRef = doc(db, 'users', data.id);
+    await updateDoc(docRef, { ...data, updatedAt: new Date().toISOString() });
+    return this.getUserData(data.id);
+  }
 };

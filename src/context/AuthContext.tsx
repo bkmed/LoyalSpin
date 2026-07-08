@@ -8,19 +8,20 @@ import React, {
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { setUser, logout } from '../store/slices/authSlice';
-import { authService, User } from '../services/authService';
+import { authService } from '../services/authService';
+import { UserAccount } from '../database/schema';
 import { subscriptionService } from '../services/subscriptionService';
 import { sessionService } from '../services/sessionService';
 
-export type { User };
+export type { UserAccount as User };
 
 interface AuthContextType {
-  user: User | null;
+  user: UserAccount | null;
   isLoading: boolean;
-  signIn: (user: User) => Promise<void>;
-  signUp: (user: User) => Promise<void>;
+  signIn: (user: UserAccount) => Promise<void>;
+  signUp: (user: UserAccount) => Promise<void>;
   signOut: (navigation?: any) => Promise<void>;
-  updateProfile: (updatedData: Partial<User>) => Promise<void>;
+  updateProfile: (updatedData: Partial<UserAccount>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -62,13 +63,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   }, [user]);
 
-  const signIn = async (loggedInUser: User) => {
+  const signIn = async (loggedInUser: UserAccount) => {
     dispatch(setUser(loggedInUser));
     await subscriptionService.initializeSubscription(loggedInUser.id);
     await sessionService.initSession(loggedInUser);
   };
 
-  const signUp = async (registeredUser: User) => {
+  const signUp = async (registeredUser: UserAccount) => {
     dispatch(setUser(registeredUser));
     await subscriptionService.initializeSubscription(registeredUser.id);
     await sessionService.initSession(registeredUser);
@@ -91,7 +92,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const updateProfile = async (updatedData: Partial<User>) => {
+  const updateProfile = async (updatedData: Partial<UserAccount>) => {
     try {
       const updatedUser = await authService.updateUser(updatedData);
       dispatch(setUser(updatedUser));

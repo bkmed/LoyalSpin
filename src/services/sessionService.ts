@@ -1,10 +1,10 @@
 import { storageService } from './storage';
-import { User } from './authService';
+import { UserAccount as User } from '../database/schema';
 
 declare const navigator: any;
 
-const SESSION_KEY = 'session_data';
-const LAST_ACTIVITY_KEY = 'last_activity';
+const SESSION_KEY = 'current_session';
+const LAST_ACTIVITY_KEY = 'last_active_time';
 const DEVICE_INFO_KEY = 'device_info';
 const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes in milliseconds
 

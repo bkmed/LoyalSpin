@@ -1,14 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '../../services/authService';
+import { UserAccount as User } from '../../database/schema';
 
 interface AuthState {
   user: User | null;
+  isAuthenticated: boolean;
   isLoading: boolean;
+  error: string | null;
 }
 
 const initialState: AuthState = {
   user: null,
-  isLoading: false, // In redux-persist, rehydration handles loading state usually via PersistGate
+  isAuthenticated: false,
+  isLoading: true,
+  error: null,
 };
 
 const authSlice = createSlice({

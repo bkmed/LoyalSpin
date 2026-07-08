@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-// @ts-expect-error - importing CSS for web build
 import './WheelWeb.css';
 
 type Choice = { label: string; probability: number };

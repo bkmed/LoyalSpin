@@ -1,9 +1,7 @@
-import { Category, UserAccount as User } from '../../../database/schema';
+import { UserAccount } from '../../../database/schema';
 
 export type Role = 'anonyme' | 'user' | 'admin' | 'super-admin';
 
-export type WebSessionUser = User & {
+export type WebSessionUser = UserAccount & {
   city?: string;
 };
-
-export type LocalCategory = Category;

@@ -78,7 +78,7 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>We need access to your camera to take photos of prescriptions.</string>
+	<string>LoyalSpin a besoin de la caméra pour scanner les QR codes en magasin.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need access to your photo library to select photos of prescriptions.</string>
 	<key>RCTNewArchEnabled</key>

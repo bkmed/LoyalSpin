@@ -3,9 +3,10 @@ import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 
 interface AdminStickerProps {
   t: any;
+  projectId?: string | null;
 }
 
-const AdminSticker: React.FC<AdminStickerProps> = ({ t }) => {
+const AdminSticker: React.FC<AdminStickerProps> = ({ t, projectId }) => {
   const tCommon = (key: string, defaultValue: string) =>
     t(key, { defaultValue });
 

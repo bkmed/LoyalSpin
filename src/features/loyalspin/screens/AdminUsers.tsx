@@ -3,15 +3,18 @@ import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
-import { updateUser, deleteUser } from '../../../store/slices/usersSlice';
+import { updateUser, deleteUser, addUser } from '../../../store/slices/usersSlice';
 import { setActiveTab } from '../../../store/slices/uiSlice';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '../../../services/firebaseConfig';
 
 interface AdminUsersProps {
   showToast: any;
   t: any;
+  projectId?: string | null;
 }
 
-export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
+export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId }) => {
   const tCommon = (key: string, defaultValue: string) =>
     t(key, { defaultValue });
   const dispatch = useDispatch();
@@ -35,6 +38,15 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
   const [selectedUserId, setSelectedUserId] = React.useState<string | null>(
     null,
   );
+
+  // Create user form state
+  const [showCreateUser, setShowCreateUser] = React.useState(false);
+  const [newUserName, setNewUserName] = React.useState('');
+  const [newUserEmail, setNewUserEmail] = React.useState('');
+  const [newUserPhone, setNewUserPhone] = React.useState('');
+  const [newUserRole, setNewUserRole] = React.useState<'admin' | 'user'>('user');
+  const [newUserStatus, setNewUserStatus] = React.useState<'active' | 'blocked' | 'pending'>('active');
+  const [createUserErrors, setCreateUserErrors] = React.useState<Record<string, string>>({});
 
   const enrichedUsers = React.useMemo((): any[] => {
     return usersList.map((user: any) => ({
@@ -63,13 +75,17 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
   }, [usersList]);
 
   const visibleEnrichedUsers = React.useMemo(() => {
+    let baseUsers = enrichedUsers;
+    if (projectId) {
+      baseUsers = enrichedUsers.filter(u => u.projectId === projectId);
+    }
     // super-admin sees all users; normal admin sees only their managed users
-    if (currentRole === 'super-admin') return enrichedUsers;
+    if (currentRole === 'super-admin') return baseUsers;
     if (!sessionUser) return [];
-    return enrichedUsers.filter(
+    return baseUsers.filter(
       u => u.managerId === sessionUser.id || u.id === sessionUser.id,
     );
-  }, [enrichedUsers, currentRole, sessionUser]);
+  }, [enrichedUsers, currentRole, sessionUser, projectId]);
 
   const filteredUsers = React.useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
@@ -103,7 +119,6 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
 
   const handleToggleAccountAccess = () => {
     if (!selectedUser) return;
-    // prevent admins from toggling accounts they don't manage
     if (currentRole !== 'super-admin' && sessionUser) {
       if (
         selectedUser.managerId !== sessionUser.id &&
@@ -116,7 +131,6 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
         return;
       }
     }
-
     if (
       sessionUser &&
       selectedUser.email.toLowerCase() === sessionUser.email.toLowerCase()
@@ -167,7 +181,6 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
   const handleSaveUserEdit = (e: React.FormEvent) => {
     if (e?.preventDefault) e.preventDefault();
     if (!editingUser) return;
-
     const updatedUser = {
       ...editingUser,
       name: editUserName.trim(),
@@ -176,7 +189,6 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
       role: editUserRole,
       updatedAt: new Date().toISOString(),
     };
-
     dispatch(updateUser(updatedUser));
     showToast(
       tCommon('adminUsers.userUpdated', 'Utilisateur mis à jour avec succès !'),
@@ -204,6 +216,45 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
     setUserToDelete(null);
   };
 
+  const handleCreateUser = () => {
+    const errors: Record<string, string> = {};
+    if (!newUserName.trim() || newUserName.trim().length < 2)
+      errors.name = 'Le nom est requis (minimum 2 caractères).';
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!newUserEmail.trim() || !emailRegex.test(newUserEmail.trim()))
+      errors.email = 'Un email valide est requis.';
+    setCreateUserErrors(errors);
+    if (Object.keys(errors).length > 0) return;
+
+    const newUser: any = {
+      id: `user_${Date.now()}`,
+      name: newUserName.trim(),
+      email: newUserEmail.trim().toLowerCase(),
+      phone: newUserPhone.trim() || undefined,
+      role: newUserRole,
+      status: newUserStatus,
+      projectId: projectId || undefined,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    dispatch(addUser(newUser));
+    setDoc(doc(db, 'users', newUser.id), newUser).catch((err: any) =>
+      console.error('Firebase error createUser:', err)
+    );
+    showToast(
+      tCommon('adminUsers.userCreated', 'Utilisateur créé avec succès !'),
+      'success',
+    );
+    setShowCreateUser(false);
+    setNewUserName('');
+    setNewUserEmail('');
+    setNewUserPhone('');
+    setNewUserRole('user');
+    setNewUserStatus('active');
+    setCreateUserErrors({});
+  };
+
   return (
     <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in text-left">
       <TouchableOpacity
@@ -229,18 +280,99 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t }) => {
           </Text>
         </View>
 
-        <View className="w-full sm:w-auto">
+        <View className="flex flex-row items-center gap-3 w-full sm:w-auto">
           <TextInput
             value={searchQuery}
             onChangeText={setSearchQuery}
             placeholder={tCommon(
               'adminUsers.searchPlaceholder',
-              'Rechercher un client par nom, email ou téléphone...',
+              'Rechercher un client...',
             )}
-            className="w-full px-4 py-3 rounded-3xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#F97316]"
+            className="flex-1 px-4 py-3 rounded-3xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#F97316]"
           />
+          <TouchableOpacity
+            onPress={() => { setShowCreateUser((v: boolean) => !v); setCreateUserErrors({}); }}
+            className="bg-[#F97316] px-4 py-3 rounded-3xl"
+            style={{ flexShrink: 0 }}
+          >
+            <Text className="text-white font-black text-sm">{showCreateUser ? 'X Annuler' : '+ Nouvel Utilisateur'}</Text>
+          </TouchableOpacity>
         </View>
       </View>
+
+      {showCreateUser && (
+        <View className="mt-6 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 shadow-sm">
+          <Text className="text-xl font-black text-slate-900 dark:text-slate-100 mb-4">
+            {tCommon('adminUsers.createUserTitle', 'Creer un utilisateur')}
+          </Text>
+          <View className="grid gap-4 md:grid-cols-2">
+            <View>
+              <TextInput
+                value={newUserName}
+                onChangeText={(v: string) => { setNewUserName(v); setCreateUserErrors((e: Record<string,string>) => ({...e, name: ''})); }}
+                placeholder={tCommon('adminUsers.fullNamePlaceholder', 'Nom complet *')}
+                className="w-full px-4 py-3 rounded-3xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100"
+              />
+              {!!createUserErrors.name && <Text className="text-rose-500 text-xs mt-1 ml-2">{createUserErrors.name}</Text>}
+            </View>
+            <View>
+              <TextInput
+                value={newUserEmail}
+                onChangeText={(v: string) => { setNewUserEmail(v); setCreateUserErrors((e: Record<string,string>) => ({...e, email: ''})); }}
+                placeholder="Email *"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                className="w-full px-4 py-3 rounded-3xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100"
+              />
+              {!!createUserErrors.email && <Text className="text-rose-500 text-xs mt-1 ml-2">{createUserErrors.email}</Text>}
+            </View>
+            <View>
+              <TextInput
+                value={newUserPhone}
+                onChangeText={setNewUserPhone}
+                placeholder={tCommon('adminUsers.phonePlaceholder', 'Telephone (optionnel)')}
+                keyboardType="phone-pad"
+                className="w-full px-4 py-3 rounded-3xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100"
+              />
+            </View>
+            <View className="w-full border border-slate-300 dark:border-slate-700 rounded-3xl overflow-hidden bg-white dark:bg-slate-950">
+              <Picker
+                selectedValue={newUserRole}
+                onValueChange={(val: any) => setNewUserRole(val)}
+                style={{ height: 50 }}
+              >
+                <Picker.Item label={tCommon('adminUsers.roleUser', 'Utilisateur')} value="user" />
+                <Picker.Item label={tCommon('adminUsers.roleAdmin', 'Administrateur')} value="admin" />
+              </Picker>
+            </View>
+            <View className="w-full border border-slate-300 dark:border-slate-700 rounded-3xl overflow-hidden bg-white dark:bg-slate-950">
+              <Picker
+                selectedValue={newUserStatus}
+                onValueChange={(val: any) => setNewUserStatus(val)}
+                style={{ height: 50 }}
+              >
+                <Picker.Item label="Actif" value="active" />
+                <Picker.Item label="Bloque" value="blocked" />
+                <Picker.Item label="En attente" value="pending" />
+              </Picker>
+            </View>
+            <View className="md:col-span-2 flex flex-row justify-end gap-3 mt-2">
+              <TouchableOpacity
+                onPress={() => { setShowCreateUser(false); setCreateUserErrors({}); }}
+                className="bg-slate-200 dark:bg-slate-700 px-6 py-3 rounded-3xl"
+              >
+                <Text className="font-black text-slate-700 dark:text-slate-200">{tCommon('adminUsers.cancel', 'Annuler')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleCreateUser}
+                className="bg-[#F97316] px-6 py-3 rounded-3xl"
+              >
+                <Text className="font-black text-white">{tCommon('adminUsers.createUser', 'Creer l utilisateur')}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      )}
 
       <View className="grid gap-8 xl:grid-cols-[1.8fr_1fr] mt-8">
         <View className="space-y-6">

@@ -11,8 +11,7 @@ export const projectsService = {
       return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Project));
     } catch (error) {
       console.error('Error fetching projects:', error);
-      // Return empty array for now as fallback while Firestore is unconfigured
-      return [];
+      throw error;
     }
   },
 

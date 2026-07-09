@@ -721,9 +721,11 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
             </View>
             <TouchableOpacity
               onPress={handleCancelEditUser}
-              className="text-slate-655 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-2xl font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+              className="bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-2xl hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center justify-center"
             >
-              {tCommon('adminUsers.cancel', 'Annuler')}
+              <Text className="text-slate-600 dark:text-slate-300 font-semibold">
+                {tCommon('adminUsers.cancel', 'Annuler')}
+              </Text>
             </TouchableOpacity>
           </View>
 
@@ -773,9 +775,11 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
             <View className="md:col-span-2 flex justify-end gap-3">
               <TouchableOpacity
                 onPress={() => handleSaveUserEdit({} as any)}
-                className="bg-[#F97316] text-white px-6 py-3 rounded-3xl font-black hover:bg-[#e0630b] transition"
+                className="bg-[#F97316] px-6 py-3 rounded-3xl hover:bg-[#e0630b] transition flex items-center justify-center"
               >
-                {tCommon('adminUsers.saveChanges', 'Enregistrer')}
+                <Text className="text-white font-black">
+                  {tCommon('adminUsers.saveChanges', 'Enregistrer')}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -799,15 +803,19 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
             <View className="flex gap-3">
               <TouchableOpacity
                 onPress={cancelDeleteUser}
-                className="flex-1 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl px-4 py-3 font-black hover:bg-slate-300 dark:hover:bg-slate-600 transition"
+                className="flex-1 bg-slate-200 dark:bg-slate-700 rounded-xl px-4 py-3 hover:bg-slate-300 dark:hover:bg-slate-600 transition flex items-center justify-center"
               >
-                {tCommon('admin.cancelButton', 'Annuler')}
+                <Text className="text-slate-700 dark:text-slate-200 font-black">
+                  {tCommon('admin.cancelButton', 'Annuler')}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={confirmDeleteUser}
-                className="flex-1 bg-rose-600 text-white rounded-xl px-4 py-3 font-black hover:bg-rose-700 transition"
+                className="flex-1 bg-rose-600 rounded-xl px-4 py-3 hover:bg-rose-700 transition flex items-center justify-center"
               >
-                {tCommon('adminUsers.delete', 'Supprimer')}
+                <Text className="text-white font-black">
+                  {tCommon('adminUsers.delete', 'Supprimer')}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>

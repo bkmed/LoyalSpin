@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, Switch, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, TouchableOpacity, TextInput, ScrollView, Switch, ActivityIndicator, Linking } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../../store';
@@ -12,6 +12,8 @@ import {
   selectAllProjects,
 } from '../../../store/slices/projectsSlice';
 import { fetchAdmins, addAdmin, updateAdmin, deleteAdmin } from '../../../store/slices/adminsSlice';
+import { selectAllUsers } from '../../../store/slices/usersSlice';
+import { selectTotalPageViews, selectTotalShares, selectCallClicks } from '../../../store/slices/analyticsSlice';
 import { fetchAllUsers, saveNewUser } from '../../../store/slices/usersSlice';
 import { createCoupon } from '../../../store/slices/couponsSlice';
 import { saveStickerConfig } from '../../../store/slices/stickerConfigSlice';
@@ -36,10 +38,14 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
   const { showToast } = useToast();
   const projects = useSelector((state: RootState) => state.projects?.items || []);
   const admins = useSelector((state: RootState) => state.admins?.items || []);
+  const allUsers = useSelector(selectAllUsers);
+  const totalPageViews = useSelector(selectTotalPageViews);
+  const totalShares = useSelector(selectTotalShares);
+  const callClicks = useSelector(selectCallClicks);
 
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<'projects' | 'admins' | 'sectors'>('projects');
+  const [activeTab, setActiveTab] = useState<'projects' | 'admins' | 'sectors' | 'analytics'>('projects');
   
   // Project Form State
   const [isEditing, setIsEditing] = useState(false);
@@ -57,7 +63,21 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
 
   // Managing Project State
   const [managingProjectId, setManagingProjectId] = useState<string | null>(null);
-  const [managingTab, setManagingTab] = useState<'details' | 'coupons' | 'roulette' | 'users' | 'stickers'>('details');
+  const [managingTab, setManagingTab] = useState<'details' | 'coupons' | 'roulette' | 'users' | 'stickers' | 'analytics' | 'settings' | 'notes'>('details');
+
+  // Settings tab state (social links editing)
+  const [settingsData, setSettingsData] = useState<Partial<any>>({});
+  const [settingsSaving, setSettingsSaving] = useState(false);
+  const [editingField, setEditingField] = useState<string | null>(null);
+
+  // Notes state
+  interface NetworkNote { id: string; network: string; text: string; rating: number; }
+  const [globalNote, setGlobalNote] = useState({ text: '', rating: 0 });
+  const [networkNotes, setNetworkNotes] = useState<NetworkNote[]>([]);
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [editingNoteData, setEditingNoteData] = useState<NetworkNote | null>(null);
+  const [showAddNote, setShowAddNote] = useState(false);
+  const [newNote, setNewNote] = useState({ network: 'Google Maps', text: '', rating: 5 });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -397,7 +417,448 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
     showToast('Secteur supprimé', 'info');
   };
 
+  // ────────────────────────────────────────────
+  // GLOBAL ANALYTICS TAB
+  // ────────────────────────────────────────────
+  const renderGlobalAnalyticsTab = () => {
+    const paidProjectsCount = projects.filter(p => p.paymentStatus === 'paid').length;
+    const totalUsersConnected = allUsers.length;
+    // Estimation basée sur le plan Business à 29.99€/mois
+    const monthlyRevenue = paidProjectsCount * 29.99;
+    const annualRevenue = monthlyRevenue * 12;
+
+    const statCards = [
+      { label: 'Projets Payants', value: paidProjectsCount, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-900/20' },
+      { label: 'Total Utilisateurs', value: totalUsersConnected, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-900/20' },
+      { label: 'Revenu Mensuel Est. (€)', value: monthlyRevenue.toFixed(2), color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-900/20' },
+      { label: 'Revenu Annuel Est. (€)', value: annualRevenue.toFixed(2), color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-900/20' },
+    ];
+
+    return (
+      <View className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow">
+        <Text className="text-xl font-bold mb-6 dark:text-white">Analytiques Globaux</Text>
+        
+        <View className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {statCards.map((card, i) => (
+            <View key={i} className={`${card.bg} p-5 rounded-2xl border border-slate-100 dark:border-slate-700`}>
+              <Text className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">{card.label}</Text>
+              <Text className={`text-3xl font-black ${card.color}`}>{card.value}</Text>
+            </View>
+          ))}
+        </View>
+      </View>
+    );
+  };
+
   const tCommon = (key: string, defaultValue: string) => t ? t(key, { defaultValue }) : defaultValue;
+
+  // ────────────────────────────────────────────
+  // SETTINGS TAB — Social links save
+  // ────────────────────────────────────────────
+  const handleSaveSettings = async () => {
+    const proj = projects.find(p => p.id === managingProjectId);
+    if (!proj) return;
+    setSettingsSaving(true);
+    try {
+      await dispatch(updateProject({ id: proj.id, data: settingsData })).unwrap();
+      showToast('Paramètres sauvegardés ✅', 'success');
+      setEditingField(null);
+    } catch (e: any) {
+      showToast(`Erreur: ${e?.message || 'Sauvegarde échouée'}`, 'error');
+    } finally {
+      setSettingsSaving(false);
+    }
+  };
+
+  // Called when entering settings tab to pre-fill state
+  const initSettingsData = useCallback((proj: any) => {
+    setSettingsData({
+      googleMapsUrl: proj.googleMapsUrl || '',
+      tiktokUrl: proj.tiktokUrl || '',
+      facebookUrl: proj.facebookUrl || '',
+      instagramUrl: proj.instagramUrl || '',
+      websiteUrl: proj.websiteUrl || '',
+      address: proj.address || '',
+    });
+  }, []);
+
+  // ────────────────────────────────────────────
+  // ANALYTICS TAB
+  // ────────────────────────────────────────────
+  const renderAnalyticsTab = () => {
+    const proj = projects.find(p => p.id === managingProjectId);
+    const projectUsers = allUsers.filter(u => u.projectId === managingProjectId);
+    const activeUsers = projectUsers.filter(u => u.status === 'active');
+    const blockedUsers = projectUsers.filter(u => u.status === 'blocked');
+
+    const statCards = [
+      { label: 'Utilisateurs Total', value: projectUsers.length, color: 'text-[#1E3A5F] dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-900/20' },
+      { label: 'Utilisateurs Actifs', value: activeUsers.length, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-900/20' },
+      { label: 'Utilisateurs Bloqués', value: blockedUsers.length, color: 'text-red-600 dark:text-red-400', bg: 'bg-red-50 dark:bg-red-900/20' },
+      { label: 'Vues Totales', value: totalPageViews, color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-900/20' },
+      { label: 'Partages', value: totalShares, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-900/20' },
+      { label: 'Clics Appel', value: callClicks, color: 'text-rose-600 dark:text-rose-400', bg: 'bg-rose-50 dark:bg-rose-900/20' },
+    ];
+
+    return (
+      <View>
+        <Text className="text-xl font-black dark:text-white mb-6">📊 Analytiques du Projet</Text>
+
+        {/* Stats cards */}
+        <View className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
+          {statCards.map((card, i) => (
+            <View key={i} className={`${card.bg} p-5 rounded-2xl border border-slate-100 dark:border-slate-700`}>
+              <Text className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">{card.label}</Text>
+              <Text className={`text-3xl font-black ${card.color}`}>{card.value}</Text>
+            </View>
+          ))}
+        </View>
+
+        {/* Users list */}
+        <View className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm overflow-hidden">
+          <View className="px-6 py-4 border-b border-slate-100 dark:border-slate-700">
+            <Text className="font-black text-slate-800 dark:text-white">👥 Utilisateurs connectés ({projectUsers.length})</Text>
+          </View>
+          {projectUsers.length === 0 ? (
+            <View className="p-8 items-center">
+              <Text className="text-slate-400 dark:text-slate-500 text-sm">Aucun utilisateur pour ce projet.</Text>
+            </View>
+          ) : (
+            projectUsers.map((user, idx) => (
+              <View key={user.id} className={`px-6 py-4 flex-row justify-between items-center ${idx !== projectUsers.length - 1 ? 'border-b border-slate-100 dark:border-slate-700' : ''}`}>
+                <View className="flex-1">
+                  <Text className="font-bold dark:text-white">{user.name}</Text>
+                  <Text className="text-sm text-slate-500 dark:text-slate-400">{user.email}</Text>
+                  {user.lastLogin && (
+                    <Text className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Dernière connexion: {new Date(user.lastLogin).toLocaleDateString('fr-FR')}</Text>
+                  )}
+                </View>
+                <View className={`px-3 py-1 rounded-full ${
+                  user.status === 'active' ? 'bg-emerald-100 dark:bg-emerald-900/30' :
+                  user.status === 'blocked' ? 'bg-red-100 dark:bg-red-900/30' : 'bg-slate-100 dark:bg-slate-700'
+                }`}>
+                  <Text className={`text-xs font-bold ${
+                    user.status === 'active' ? 'text-emerald-700 dark:text-emerald-400' :
+                    user.status === 'blocked' ? 'text-red-700 dark:text-red-400' : 'text-slate-600 dark:text-slate-300'
+                  }`}>
+                    {user.status === 'active' ? '✅ Actif' : user.status === 'blocked' ? '🚫 Bloqué' : '⏳ En attente'}
+                  </Text>
+                </View>
+              </View>
+            ))
+          )}
+        </View>
+      </View>
+    );
+  };
+
+  // ────────────────────────────────────────────
+  // SETTINGS TAB — Social links + Preview
+  // ────────────────────────────────────────────
+  const renderSettingsTab = () => {
+    const socialLinks = [
+      { key: 'googleMapsUrl', label: '🗺️ Google Maps', placeholder: 'https://maps.google.com/...', icon: '🗺️' },
+      { key: 'tiktokUrl', label: '🎵 TikTok', placeholder: 'https://www.tiktok.com/@...', icon: '🎵' },
+      { key: 'facebookUrl', label: '📘 Facebook', placeholder: 'https://www.facebook.com/...', icon: '📘' },
+      { key: 'instagramUrl', label: '📸 Instagram', placeholder: 'https://www.instagram.com/...', icon: '📸' },
+      { key: 'websiteUrl', label: '🌐 Site Web', placeholder: 'https://www.monsite.com', icon: '🌐' },
+      { key: 'address', label: '📍 Adresse', placeholder: '12 Rue de la Paix, Paris...', icon: '📍' },
+    ];
+
+    const configuredLinks = socialLinks.filter(l => (settingsData as Record<string, string>)[l.key]);
+
+    return (
+      <View>
+        <Text className="text-xl font-black dark:text-white mb-6">⚙️ Paramètres & Liens</Text>
+
+        {/* Social links form */}
+        <View className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm p-6 mb-6">
+          <Text className="font-black text-slate-700 dark:text-slate-300 mb-4 text-sm uppercase tracking-wider">Liens & Réseaux Sociaux</Text>
+          <View className="space-y-4">
+            {socialLinks.map(link => (
+              <View key={link.key}>
+                <Text className="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1">{link.label}</Text>
+                <View className="flex-row items-center space-x-2">
+                  <TextInput
+                    value={(settingsData as any)[link.key] || ''}
+                    onChangeText={(text) => setSettingsData(prev => ({ ...prev, [link.key]: text }))}
+                    placeholder={link.placeholder}
+                    className="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 dark:text-white text-sm"
+                    autoCapitalize="none"
+                    keyboardType="url"
+                  />
+                  {(settingsData as any)[link.key] ? (
+                    <TouchableOpacity
+                      onPress={() => setSettingsData(prev => ({ ...prev, [link.key]: '' }))}
+                      className="bg-red-100 dark:bg-red-900/30 px-3 py-3 rounded-xl"
+                    >
+                      <Text className="text-red-600 dark:text-red-400 font-bold text-sm">✕</Text>
+                    </TouchableOpacity>
+                  ) : null}
+                </View>
+              </View>
+            ))}
+          </View>
+
+          <TouchableOpacity
+            onPress={handleSaveSettings}
+            disabled={settingsSaving}
+            className="mt-6 bg-[#1E3A5F] px-6 py-3 rounded-xl flex-row items-center justify-center"
+          >
+            {settingsSaving && <ActivityIndicator size="small" color="#fff" style={{ marginRight: 8 }} />}
+            <Text className="text-white font-black">{settingsSaving ? 'Sauvegarde...' : '💾 Enregistrer les paramètres'}</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Smart Preview */}
+        <View className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm p-6">
+          <Text className="font-black text-slate-700 dark:text-slate-300 mb-4 text-sm uppercase tracking-wider">🔍 Prévisualisation</Text>
+          <Text className="text-xs text-slate-400 dark:text-slate-500 mb-4">Les réseaux configurés apparaissent ici. Google Maps est toujours affiché par défaut.</Text>
+
+          <View className="space-y-3">
+            {/* Google Maps — always shown */}
+            <View className="flex-row items-center justify-between p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700">
+              <View className="flex-row items-center space-x-3">
+                <Text className="text-2xl">🗺️</Text>
+                <View>
+                  <Text className="font-bold dark:text-white">Google Maps</Text>
+                  <Text className="text-xs text-slate-500" numberOfLines={1}>
+                    {settingsData.googleMapsUrl || 'Non configuré (affiché par défaut)'}
+                  </Text>
+                </View>
+              </View>
+              <View className={`px-2 py-1 rounded-full ${
+                settingsData.googleMapsUrl ? 'bg-emerald-100 dark:bg-emerald-900/30' : 'bg-slate-200 dark:bg-slate-700'
+              }`}>
+                <Text className={`text-xs font-bold ${
+                  settingsData.googleMapsUrl ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-500'
+                }`}>
+                  {settingsData.googleMapsUrl ? '✅ Actif' : '⬜ Défaut'}
+                </Text>
+              </View>
+            </View>
+
+            {/* Other configured networks */}
+            {socialLinks.filter(l => l.key !== 'googleMapsUrl' && (settingsData as any)[l.key]).map(link => (
+              <View key={link.key} className="flex-row items-center justify-between p-4 bg-emerald-50 dark:bg-emerald-900/10 rounded-xl border border-emerald-200 dark:border-emerald-800">
+                <View className="flex-row items-center space-x-3">
+                  <Text className="text-2xl">{link.icon}</Text>
+                  <View>
+                    <Text className="font-bold dark:text-white">{link.label.replace(/^[^ ]+ /, '')}</Text>
+                    <Text className="text-xs text-slate-500" numberOfLines={1}>{(settingsData as any)[link.key]}</Text>
+                  </View>
+                </View>
+                <View className="bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 rounded-full">
+                  <Text className="text-xs font-bold text-emerald-700 dark:text-emerald-400">✅ Configuré</Text>
+                </View>
+              </View>
+            ))}
+
+            {configuredLinks.filter(l => l.key !== 'googleMapsUrl').length === 0 && (
+              <View className="p-4 bg-amber-50 dark:bg-amber-900/10 rounded-xl border border-amber-200 dark:border-amber-800">
+                <Text className="text-xs text-amber-700 dark:text-amber-400 font-semibold">💡 Configurez des liens sociaux pour les voir apparaître ici.</Text>
+              </View>
+            )}
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  // ────────────────────────────────────────────
+  // NOTES TAB — Global + per-network notes
+  // ────────────────────────────────────────────
+  const renderNotesTab = () => {
+    const networks = ['Google Maps', 'Facebook', 'Instagram', 'TikTok', 'Site Web'];
+
+    const StarRating = ({ rating, onRate }: { rating: number; onRate: (r: number) => void }) => (
+      <View className="flex-row space-x-1">
+        {[1, 2, 3, 4, 5].map(star => (
+          <TouchableOpacity key={star} onPress={() => onRate(star)}>
+            <Text className="text-2xl">{star <= rating ? '⭐' : '☆'}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    );
+
+    const handleDeleteNote = (id: string) => {
+      setNetworkNotes(prev => prev.filter(n => n.id !== id));
+      showToast('Note supprimée', 'info');
+    };
+
+    const handleSaveEditNote = () => {
+      if (!editingNoteData) return;
+      setNetworkNotes(prev => prev.map(n => n.id === editingNoteData.id ? editingNoteData : n));
+      setEditingNoteId(null);
+      setEditingNoteData(null);
+      showToast('Note mise à jour ✅', 'success');
+    };
+
+    const handleAddNote = () => {
+      if (!newNote.text.trim()) return;
+      const note: NetworkNote = {
+        id: `note_${Date.now()}`,
+        network: newNote.network,
+        text: newNote.text,
+        rating: newNote.rating,
+      };
+      setNetworkNotes(prev => [...prev, note]);
+      setNewNote({ network: 'Google Maps', text: '', rating: 5 });
+      setShowAddNote(false);
+      showToast('Note ajoutée ✅', 'success');
+    };
+
+    const notesByNetwork = (net: string) => networkNotes.filter(n => n.network === net);
+
+    return (
+      <View>
+        <Text className="text-xl font-black dark:text-white mb-6">📝 Notes du Projet</Text>
+
+        {/* Global Note */}
+        <View className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm p-6 mb-6">
+          <Text className="font-black text-slate-700 dark:text-slate-300 mb-3 text-sm uppercase tracking-wider">⭐ Note Globale du Projet</Text>
+          <StarRating rating={globalNote.rating} onRate={(r) => setGlobalNote(prev => ({ ...prev, rating: r }))} />
+          <TextInput
+            value={globalNote.text}
+            onChangeText={(text) => setGlobalNote(prev => ({ ...prev, text }))}
+            placeholder="Commentaire général sur ce projet..."
+            multiline
+            numberOfLines={3}
+            className="mt-3 w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 dark:text-white text-sm"
+          />
+          <TouchableOpacity
+            onPress={() => showToast('Note globale enregistrée ✅', 'success')}
+            className="mt-3 bg-[#1E3A5F] px-4 py-2 rounded-lg self-end"
+          >
+            <Text className="text-white font-bold text-sm">Enregistrer</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Per-network notes */}
+        <View className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm overflow-hidden mb-6">
+          <View className="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex-row justify-between items-center">
+            <Text className="font-black text-slate-700 dark:text-white">📋 Notes par Réseau</Text>
+            <TouchableOpacity
+              onPress={() => setShowAddNote(true)}
+              className="bg-[#1E3A5F] px-4 py-2 rounded-lg"
+            >
+              <Text className="text-white font-bold text-sm">+ Ajouter</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Add note form */}
+          {showAddNote && (
+            <View className="p-6 bg-blue-50 dark:bg-blue-900/10 border-b border-slate-100 dark:border-slate-700">
+              <Text className="font-bold text-slate-700 dark:text-slate-300 mb-2">Nouvelle note</Text>
+              <View className="mb-3">
+                <Text className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Réseau</Text>
+                <View className="flex-row flex-wrap gap-2">
+                  {networks.map(net => (
+                    <TouchableOpacity
+                      key={net}
+                      onPress={() => setNewNote(prev => ({ ...prev, network: net }))}
+                      className={`px-3 py-1.5 rounded-lg ${newNote.network === net ? 'bg-[#1E3A5F]' : 'bg-slate-200 dark:bg-slate-700'}`}
+                    >
+                      <Text className={`text-xs font-bold ${newNote.network === net ? 'text-white' : 'text-slate-600 dark:text-slate-300'}`}>{net}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+              <View className="mb-3">
+                <Text className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Note</Text>
+                <StarRating rating={newNote.rating} onRate={(r) => setNewNote(prev => ({ ...prev, rating: r }))} />
+              </View>
+              <TextInput
+                value={newNote.text}
+                onChangeText={(text) => setNewNote(prev => ({ ...prev, text }))}
+                placeholder="Votre commentaire..."
+                multiline
+                numberOfLines={2}
+                className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 dark:text-white text-sm mb-3"
+              />
+              <View className="flex-row space-x-3">
+                <TouchableOpacity onPress={handleAddNote} className="flex-1 bg-[#1E3A5F] py-2 rounded-lg items-center">
+                  <Text className="text-white font-bold">Ajouter</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setShowAddNote(false)} className="flex-1 bg-slate-200 dark:bg-slate-700 py-2 rounded-lg items-center">
+                  <Text className="font-bold text-slate-700 dark:text-white">Annuler</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+
+          {/* Notes list grouped by network */}
+          {networks.map(net => {
+            const notes = notesByNetwork(net);
+            if (notes.length === 0) return null;
+            return (
+              <View key={net} className="border-b border-slate-100 dark:border-slate-700 last:border-b-0">
+                <View className="px-6 py-3 bg-slate-50 dark:bg-slate-900/50">
+                  <Text className="font-black text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">{net}</Text>
+                </View>
+                {notes.map(note => (
+                  <View key={note.id} className="px-6 py-4 border-t border-slate-100 dark:border-slate-700">
+                    {editingNoteId === note.id && editingNoteData ? (
+                      <View>
+                        <StarRating
+                          rating={editingNoteData.rating}
+                          onRate={(r) => setEditingNoteData(prev => prev ? { ...prev, rating: r } : null)}
+                        />
+                        <TextInput
+                          value={editingNoteData.text}
+                          onChangeText={(text) => setEditingNoteData(prev => prev ? { ...prev, text } : null)}
+                          multiline
+                          numberOfLines={2}
+                          className="mt-2 w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 dark:text-white text-sm mb-2"
+                        />
+                        <View className="flex-row space-x-2">
+                          <TouchableOpacity onPress={handleSaveEditNote} className="bg-[#1E3A5F] px-4 py-1.5 rounded-lg">
+                            <Text className="text-white font-bold text-sm">OK</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity onPress={() => { setEditingNoteId(null); setEditingNoteData(null); }} className="bg-slate-200 dark:bg-slate-700 px-4 py-1.5 rounded-lg">
+                            <Text className="font-bold text-sm dark:text-white">Annuler</Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    ) : (
+                      <View className="flex-row justify-between items-start">
+                        <View className="flex-1 mr-4">
+                          <View className="flex-row mb-1">
+                            {[1,2,3,4,5].map(s => <Text key={s} className="text-sm">{s <= note.rating ? '⭐' : '☆'}</Text>)}
+                          </View>
+                          <Text className="text-sm dark:text-slate-300 text-slate-700">{note.text}</Text>
+                        </View>
+                        <View className="flex-row space-x-2">
+                          <TouchableOpacity
+                            onPress={() => { setEditingNoteId(note.id); setEditingNoteData({ ...note }); }}
+                            className="bg-blue-100 dark:bg-blue-900/30 px-3 py-1.5 rounded-lg"
+                          >
+                            <Text className="text-blue-700 dark:text-blue-400 font-bold text-xs">Éditer</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => handleDeleteNote(note.id)}
+                            className="bg-red-100 dark:bg-red-900/30 px-3 py-1.5 rounded-lg"
+                          >
+                            <Text className="text-red-600 dark:text-red-400 font-bold text-xs">Suppr.</Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    )}
+                  </View>
+                ))}
+              </View>
+            );
+          })}
+
+          {networkNotes.length === 0 && !showAddNote && (
+            <View className="p-8 items-center">
+              <Text className="text-slate-400 dark:text-slate-500 text-sm">Aucune note pour le moment. Cliquez sur "+ Ajouter" pour commencer.</Text>
+            </View>
+          )}
+        </View>
+      </View>
+    );
+  };
 
   const renderProjectForm = () => (
     <View className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg mt-6">
@@ -617,25 +1078,44 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
               </Text>
             </View>
 
-            <View className="flex-row flex-wrap border-b border-slate-200 dark:border-slate-800 mb-6 gap-2">
-              {[
-                { id: 'details', label: 'Détails' },
-                { id: 'coupons', label: 'Coupons' },
-                { id: 'roulette', label: 'Roulette' },
-                { id: 'users', label: 'Utilisateurs' },
-                { id: 'stickers', label: 'Stickers' },
-              ].map(tab => (
-                <TouchableOpacity 
-                  key={tab.id}
-                  className={`pb-4 px-4 ${managingTab === tab.id ? 'border-b-2 border-[#1E3A5F] dark:border-blue-400' : ''}`}
-                  onPress={() => setManagingTab(tab.id as any)}
-                >
-                  <Text className={`font-bold ${managingTab === tab.id ? 'text-[#1E3A5F] dark:text-blue-400' : 'text-slate-500'}`}>
-                    {tab.label}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} className="border-b border-slate-200 dark:border-slate-800 mb-6">
+              <View className="flex-row gap-1 pb-0">
+                {[
+                  { id: 'details', label: '📋 Détails' },
+                  { id: 'analytics', label: '📊 Analytiques' },
+                  { id: 'settings', label: '⚙️ Paramètres' },
+                  { id: 'notes', label: '📝 Notes' },
+                  { id: 'coupons', label: '🎟️ Coupons' },
+                  { id: 'roulette', label: '🎡 Roulette' },
+                  { id: 'users', label: '👥 Utilisateurs' },
+                  { id: 'stickers', label: '🏷️ Stickers' },
+                ].map(tab => (
+                  <TouchableOpacity
+                    key={tab.id}
+                    className={`pb-3 px-4 border-b-2 ${
+                      managingTab === tab.id
+                        ? 'border-[#1E3A5F] dark:border-blue-400'
+                        : 'border-transparent'
+                    }`}
+                    onPress={() => {
+                      setManagingTab(tab.id as any);
+                      if (tab.id === 'settings') {
+                        const proj = projects.find(p => p.id === managingProjectId);
+                        if (proj) initSettingsData(proj);
+                      }
+                    }}
+                  >
+                    <Text className={`font-bold whitespace-nowrap ${
+                      managingTab === tab.id
+                        ? 'text-[#1E3A5F] dark:text-blue-400'
+                        : 'text-slate-500'
+                    }`}>
+                      {tab.label}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
 
             {managingTab === 'details' && (
               <View>
@@ -648,6 +1128,9 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
                 })()}
               </View>
             )}
+            {managingTab === 'analytics' && renderAnalyticsTab()}
+            {managingTab === 'settings' && renderSettingsTab()}
+            {managingTab === 'notes' && renderNotesTab()}
             {managingTab === 'coupons' && <AdminCoupons projectId={managingProjectId} />}
             {managingTab === 'roulette' && <AdminRoulette t={t} projectId={managingProjectId} />}
             {managingTab === 'users' && <AdminUsers t={t} showToast={showToast} projectId={managingProjectId} isSuperAdmin={true} />}
@@ -695,6 +1178,12 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
             onPress={() => setActiveTab('sectors')}
           >
             <Text className={`font-bold ${activeTab === 'sectors' ? 'text-[#1E3A5F] dark:text-blue-400' : 'text-slate-500'}`}>Gestion des Secteurs</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            className={`pb-4 px-6 ${activeTab === 'analytics' ? 'border-b-2 border-[#1E3A5F] dark:border-blue-400' : ''}`}
+            onPress={() => setActiveTab('analytics')}
+          >
+            <Text className={`font-bold ${activeTab === 'analytics' ? 'text-[#1E3A5F] dark:text-blue-400' : 'text-slate-500'}`}>Analytiques Globaux</Text>
           </TouchableOpacity>
         </View>
 
@@ -861,6 +1350,8 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
             </View>
           </View>
         )}
+
+        {activeTab === 'analytics' && renderGlobalAnalyticsTab()}
       </View>
     )}
     </View>

@@ -13,34 +13,51 @@ import { Role } from '../utils/webTranslations';
 interface ProfileScreenWebProps {
   currentRole: Role;
   businessName: string;
-  profileName: string;
-  profileEmail: string;
-  profilePhone: string;
-  profileCity: string;
+  sessionUser?: any; // To pass firstName, lastName, etc.
+  currentTheme?: string;
+  setCurrentTheme?: (theme: string) => void;
+  setCurrentLang?: (lang: string) => void;
+  nextLanguage?: string;
   t: any;
   showToast: any;
   setBypassAuth: (bypass: boolean) => void;
   setSigninEmail: (email: string) => void;
   setSigninPassword: (password: string) => void;
+  setSessionUser?: (user: any) => void;
 }
 
 export const ProfileScreenWeb: React.FC<ProfileScreenWebProps> = ({
   currentRole,
   businessName,
-  profileName,
-  profileEmail,
-  profilePhone,
-  profileCity,
+  sessionUser,
+  currentTheme,
+  setCurrentTheme,
+  setCurrentLang,
+  nextLanguage,
   t,
   showToast,
   setBypassAuth,
   setSigninEmail,
   setSigninPassword,
+  setSessionUser,
 }) => {
+  const profileName = sessionUser ? `${sessionUser.firstName || ''} ${sessionUser.lastName || sessionUser.name || ''}`.trim() : '';
+  const profileEmail = sessionUser?.email || '';
+  const profilePhone = sessionUser?.phone || '';
+  const profileCity = sessionUser?.city || '';
+
   const tCommon = (key: string, defaultValue: string) =>
     t(key, { defaultValue });
   const [currentMdp, setCurrentMdp] = React.useState('');
   const [newMdp, setNewMdp] = React.useState('');
+  
+  // Reclamations State
+  const [reclamationSubject, setReclamationSubject] = React.useState('');
+  const [reclamationMessage, setReclamationMessage] = React.useState('');
+
+  // Profile Edit State
+  const [editFirstName, setEditFirstName] = React.useState(sessionUser?.firstName || '');
+  const [editLastName, setEditLastName] = React.useState(sessionUser?.lastName || '');
 
   const loyaltyPoints = 4300;
   const loyaltyLevel = 'Silver';
@@ -276,6 +293,112 @@ export const ProfileScreenWeb: React.FC<ProfileScreenWebProps> = ({
                     className="w-full bg-[#1E3A5F] hover:bg-[#152a47] text-white text-[11px] font-black py-3 rounded-xl transition shadow-sm uppercase tracking-wider"
                   >
                     {tCommon('web.mettre_a_jour', 'Mettre à jour')}
+                  </TouchableOpacity>
+                </View>
+              </View>
+              {/* Global Settings */}
+              <View className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 shadow-sm space-y-6">
+                <Text className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-slate-100">
+                  {tCommon('web.globalSettings', 'Paramètres Globaux')}
+                </Text>
+                
+                <View className="grid grid-cols-2 gap-4">
+                  <View className="space-y-2">
+                    <Text className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest dark:text-slate-300">
+                      Prénom
+                    </Text>
+                    <TextInput
+                      value={editFirstName}
+                      onChangeText={setEditFirstName}
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 dark:text-slate-100 focus:outline-none"
+                    />
+                  </View>
+                  <View className="space-y-2">
+                    <Text className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest dark:text-slate-300">
+                      Nom
+                    </Text>
+                    <TextInput
+                      value={editLastName}
+                      onChangeText={setEditLastName}
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 dark:text-slate-100 focus:outline-none"
+                    />
+                  </View>
+                </View>
+
+                <View className="flex-row items-center gap-4 mt-4">
+                  <TouchableOpacity
+                    onPress={() => setCurrentLang && nextLanguage && setCurrentLang(nextLanguage)}
+                    className="flex-1 py-3 rounded-xl border flex-row items-center justify-center transition shadow-sm bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700"
+                  >
+                    <Text className="text-xs font-black tracking-wider uppercase text-slate-700 dark:text-slate-200">
+                      Changer Langue ({nextLanguage || 'FR'})
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    onPress={() => setCurrentTheme && currentTheme && setCurrentTheme(currentTheme === 'light' ? 'dark' : 'light')}
+                    className="flex-1 py-3 rounded-xl border flex-row items-center justify-center transition shadow-sm bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700"
+                  >
+                    <Text className="text-xs font-black tracking-wider uppercase text-slate-700 dark:text-slate-200">
+                      {currentTheme === 'light' ? 'Mode Sombre 🌙' : 'Mode Clair ☀️'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity
+                  onPress={() => {
+                    if (setSessionUser && sessionUser) {
+                      setSessionUser({ ...sessionUser, firstName: editFirstName, lastName: editLastName });
+                      showToast('Profil mis à jour !', 'success');
+                    }
+                  }}
+                  className="w-full mt-4 bg-[#1E3A5F] hover:bg-[#152a47] text-white text-[11px] font-black py-3 rounded-xl transition shadow-sm uppercase tracking-wider"
+                >
+                  <Text className="text-center text-white text-[11px] font-black uppercase">Mettre à jour le profil</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Reclamations */}
+              <View className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 shadow-sm space-y-6">
+                <Text className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-slate-100">
+                  {tCommon('web.reclamations', 'Mes Réclamations')}
+                </Text>
+
+                <View className="space-y-4">
+                  <View className="space-y-2">
+                    <Text className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest dark:text-slate-300">
+                      Sujet
+                    </Text>
+                    <TextInput
+                      value={reclamationSubject}
+                      onChangeText={setReclamationSubject}
+                      placeholder="Ex: Problème technique"
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 dark:text-slate-100 focus:outline-none"
+                    />
+                  </View>
+                  <View className="space-y-2">
+                    <Text className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest dark:text-slate-300">
+                      Message
+                    </Text>
+                    <TextInput
+                      multiline
+                      numberOfLines={4}
+                      value={reclamationMessage}
+                      onChangeText={setReclamationMessage}
+                      placeholder="Décrivez votre problème en détail..."
+                      className="w-full min-h-[100px] bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-xs font-semibold text-slate-800 dark:text-slate-100 focus:outline-none"
+                    />
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (!reclamationSubject || !reclamationMessage) return;
+                      showToast('Réclamation envoyée avec succès', 'success');
+                      setReclamationSubject('');
+                      setReclamationMessage('');
+                    }}
+                    className="w-full bg-[#1E3A5F] hover:bg-[#152a47] text-white text-[11px] font-black py-3 rounded-xl transition shadow-sm uppercase tracking-wider"
+                  >
+                    <Text className="text-center text-white text-[11px] font-black uppercase">Envoyer la réclamation</Text>
                   </TouchableOpacity>
                 </View>
               </View>

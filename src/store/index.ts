@@ -30,6 +30,7 @@ import couponsReducer from './slices/couponsSlice';
 import spinHistoryReducer from './slices/spinHistorySlice';
 import clientDashboardReducer from './slices/clientDashboardSlice';
 import globalSettingsReducer from './slices/globalSettingsSlice';
+import reclamationsReducer from './slices/reclamationsSlice';
 
 const rootReducer = combineReducers({
   // Core
@@ -51,6 +52,7 @@ const rootReducer = combineReducers({
   spinHistory: spinHistoryReducer,
   clientDashboard: clientDashboardReducer,
   globalSettings: globalSettingsReducer,
+  reclamations: reclamationsReducer,
 });
 
 const persistConfig = {
@@ -73,6 +75,7 @@ const persistConfig = {
     'appSettings',
     'ui',
     'webSession',
+    'reclamations',
   ],
 };
 

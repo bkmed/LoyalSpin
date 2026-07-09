@@ -60,7 +60,9 @@ export interface BusinessHours {
 // ---------- USER ACCOUNT ----------
 export interface UserAccount {
   id: string;
-  name: string;
+  name: string; // kept for backwards compatibility
+  firstName?: string;
+  lastName?: string;
   email: string;
   role: Role;
   projectId?: string;    // Which project they belong to
@@ -80,7 +82,9 @@ export interface UserAccount {
 // ---------- SUPER ADMIN ----------
 export interface SuperAdmin {
   id: string;
-  name: string;
+  name: string; // kept for backwards compatibility
+  firstName?: string;
+  lastName?: string;
   email: string;
   avatarUri?: string;
   phone?: string;
@@ -285,4 +289,20 @@ export interface AppNotification {
   isRead: boolean;
   link?: string;
   createdAt: string;
+}
+
+// ---------- RECLAMATIONS ----------
+export type ReclamationStatus = 'pending' | 'in_progress' | 'resolved' | 'rejected';
+
+export interface Reclamation {
+  id: string;
+  projectId?: string; // Optional if submitted by superadmin or anonymous
+  userId: string;     // Can be admin or user
+  userRole: Role;
+  subject: string;
+  message: string;
+  status: ReclamationStatus;
+  adminResponse?: string;
+  createdAt: string;
+  updatedAt: string;
 }

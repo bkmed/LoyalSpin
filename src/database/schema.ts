@@ -124,7 +124,7 @@ export interface RouletteConfig {
 }
 
 // ---------- STICKER CONFIG ----------
-export type StickerShape = 'round' | 'square' | 'rectangle';
+export type StickerShape = 'round' | 'square' | 'rectangle' | 'a4';
 export type StickerSize = 'small' | 'medium' | 'large' | 'custom';
 
 export interface StickerConfig {

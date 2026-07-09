@@ -73,18 +73,21 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
     }));
   }, [usersList]);
 
+  const canManageUser = React.useCallback((user: any) => {
+    if (isSuperAdmin || currentRole === 'super-admin') return true;
+    if (!sessionUser) return false;
+    if (projectId && user.projectId === projectId) return true;
+    if (user.managerId === sessionUser.id) return true;
+    if (user.id === sessionUser.id) return true;
+    return false;
+  }, [isSuperAdmin, currentRole, sessionUser, projectId]);
+
   const visibleEnrichedUsers = React.useMemo(() => {
     let baseUsers = enrichedUsers;
-    if (projectId) {
-      baseUsers = enrichedUsers.filter(u => u.projectId === projectId);
-    }
-    // super-admin sees all users; normal admin sees only their managed users
     if (isSuperAdmin || currentRole === 'super-admin') return baseUsers;
     if (!sessionUser) return [];
-    return baseUsers.filter(
-      u => u.managerId === sessionUser.id || u.id === sessionUser.id,
-    );
-  }, [enrichedUsers, currentRole, sessionUser, projectId, isSuperAdmin]);
+    return baseUsers.filter(u => canManageUser(u));
+  }, [enrichedUsers, currentRole, sessionUser, canManageUser]);
 
   const filteredUsers = React.useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
@@ -118,17 +121,12 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
 
   const handleToggleAccountAccess = () => {
     if (!selectedUser) return;
-    if (currentRole !== 'super-admin' && sessionUser) {
-      if (
-        selectedUser.managerId !== sessionUser.id &&
-        selectedUser.id !== sessionUser.id
-      ) {
-        showToast(
-          tCommon('adminUsers.accessDenied', 'Accès refusé : client non géré.'),
-          'error',
-        );
-        return;
-      }
+    if (!canManageUser(selectedUser)) {
+      showToast(
+        tCommon('adminUsers.accessDenied', 'Accès refusé : client non géré.'),
+        'error',
+      );
+      return;
     }
     if (
       sessionUser &&
@@ -180,6 +178,13 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
   const handleSaveUserEdit = (e: React.FormEvent) => {
     if (e?.preventDefault) e.preventDefault();
     if (!editingUser) return;
+    if (!canManageUser(editingUser)) {
+      showToast(
+        tCommon('adminUsers.accessDenied', 'Accès refusé : client non géré.'),
+        'error',
+      );
+      return;
+    }
     const updatedUser = {
       ...editingUser,
       name: editUserName.trim(),
@@ -198,6 +203,15 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
 
   const confirmDeleteUser = () => {
     if (!userToDelete) return;
+    if (!canManageUser(userToDelete)) {
+      showToast(
+        tCommon('adminUsers.accessDenied', 'Accès refusé : client non géré.'),
+        'error',
+      );
+      setShowDeleteConfirm(false);
+      setUserToDelete(null);
+      return;
+    }
     if (editingUser?.id === userToDelete.id) {
       setEditingUser(null);
     }
@@ -500,12 +514,39 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
                           </Text>
                         </td>
                         <td className="px-6 py-4 text-center">
-                          <View className="flex justify-center gap-2">
+                          <View className="flex flex-row justify-center gap-2">
                             <TouchableOpacity
                               onPress={() => setSelectedUserId(user.id)}
-                              className="bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-2xl text-[11px] font-black text-slate-700 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+                              className="bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-2xl hover:bg-slate-200 dark:hover:bg-slate-700 transition"
                             >
-                              {tCommon('adminUsers.viewAction', 'Voir')}
+                              <Text className="text-[11px] font-black text-slate-700 dark:text-slate-100">
+                                {tCommon('adminUsers.viewAction', 'Voir')}
+                              </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              onPress={() => {
+                                setEditingUser(user);
+                                setEditUserName(user.name);
+                                setEditUserEmail(user.email);
+                                setEditUserPhone(user.phone || '');
+                                setEditUserRole(user.role || 'user');
+                              }}
+                              className="bg-amber-100 dark:bg-amber-900/40 px-3 py-2 rounded-2xl transition"
+                            >
+                              <Text className="text-[11px] font-black text-amber-700 dark:text-amber-400">
+                                {tCommon('adminUsers.edit', 'Edit')}
+                              </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              onPress={() => {
+                                setUserToDelete(user);
+                                setShowDeleteConfirm(true);
+                              }}
+                              className="bg-rose-100 dark:bg-rose-900/40 px-3 py-2 rounded-2xl transition"
+                            >
+                              <Text className="text-[11px] font-black text-rose-700 dark:text-rose-400">
+                                {tCommon('adminUsers.delete', 'Del')}
+                              </Text>
                             </TouchableOpacity>
                           </View>
                         </td>
@@ -539,11 +580,15 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
                     )}
                   </Text>
                   <View className="flex flex-wrap items-center justify-center gap-2">
-                    <View className="rounded-full bg-amber-600 px-3 py-1 text-[11px] font-black uppercase tracking-[0.12em] text-slate-950">
-                      {selectedUser.level} Tier
+                    <View className="rounded-full bg-amber-600 px-3 py-1">
+                      <Text className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-950">
+                        {selectedUser.level} Tier
+                      </Text>
                     </View>
-                    <View className="rounded-full bg-slate-800 px-3 py-1 text-[11px] font-black uppercase tracking-[0.12em] text-slate-100">
-                      {selectedUser.verified ? 'Verified' : 'Unverified'}
+                    <View className="rounded-full bg-slate-800 px-3 py-1">
+                      <Text className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-100">
+                        {selectedUser.verified ? 'Verified' : 'Unverified'}
+                      </Text>
                     </View>
                   </View>
                 </View>
@@ -636,12 +681,14 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
 
                 <TouchableOpacity
                   onPress={handleSendNotification}
-                  className="w-full rounded-3xl bg-slate-100 text-slate-900 py-4 font-black text-base hover:bg-slate-200 transition"
+                  className="w-full rounded-3xl bg-slate-100 py-4 hover:bg-slate-200 transition"
                 >
-                  {tCommon(
-                    'adminUsers.sendNotification',
-                    'Send Custom Reward Notification',
-                  )}
+                  <Text className="text-slate-900 font-black text-base text-center">
+                    {tCommon(
+                      'adminUsers.sendNotification',
+                      'Send Custom Reward Notification',
+                    )}
+                  </Text>
                 </TouchableOpacity>
               </>
             ) : (

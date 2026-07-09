@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { useTheme } from '../../../context/ThemeContext';
 import type { Coupon, WheelSegment } from '../types';
 
@@ -72,10 +72,15 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     padding: 24,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.16,
-    shadowRadius: 24,
-    shadowOffset: { width: 0, height: 12 },
+    ...Platform.select({
+      web: { boxShadow: '0px 12px 24px rgba(0, 0, 0, 0.16)' },
+      default: {
+        shadowColor: '#000',
+        shadowOpacity: 0.16,
+        shadowRadius: 24,
+        shadowOffset: { width: 0, height: 12 },
+      },
+    }),
     elevation: 12,
   },
   hero: {

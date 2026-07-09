@@ -73,26 +73,25 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
 
   // Sync from Redux when saved config loads
   useEffect(() => {
-    if (projectId) {
-      if (savedConfig) {
-        setLocalConfig(JSON.parse(JSON.stringify(savedConfig)));
-      } else {
-        dispatch(fetchRouletteConfig(projectId)).catch(() => {
-          setLocalConfig(buildDefaultConfig(projectId));
-        });
-      }
+    if (!projectId) return;
+    if (savedConfig) {
+      setLocalConfig(JSON.parse(JSON.stringify(savedConfig)));
+      return;
     }
-  }, [projectId, savedConfig?.id]);
-
-  // After fetch, if still nothing set default
-  useEffect(() => {
-    if (projectId && !savedConfig && !localConfig) {
-      const timer = setTimeout(() => {
+    // fetchRouletteConfig returns null when offline or no document exists.
+    // The thunk still resolves as "fulfilled" so .catch() won't fire.
+    // We inspect the resolved value and fall back to defaults immediately.
+    dispatch(fetchRouletteConfig(projectId)).then((action: any) => {
+      if (action.payload == null) {
+        // Null means offline or no config in Firestore yet — use defaults.
         setLocalConfig(buildDefaultConfig(projectId));
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [projectId, savedConfig, localConfig]);
+      }
+      // Non-null payload is already stored in Redux; the savedConfig selector
+      // will update and trigger the first branch of this effect on re-render.
+    }).catch(() => {
+      setLocalConfig(buildDefaultConfig(projectId));
+    });
+  }, [projectId, savedConfig?.id]);
 
   const totalProbability = localConfig?.segments.reduce((sum, s) => sum + (Number(s.probability) || 0), 0) ?? 0;
 
@@ -416,7 +415,7 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
                         </Text>
                       </View>
                       <TextInput
-                        value={seg.probability === '' ? '' : String(seg.probability)}
+                        value={(seg.probability as unknown) === '' ? '' : String(seg.probability)}
                         onChangeText={v => {
                           if (v === '') {
                             updateSegment(seg.id, 'probability', '');

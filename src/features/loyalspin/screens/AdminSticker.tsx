@@ -71,7 +71,7 @@ export default function AdminSticker({ t, projectId }: Props) {
   const existingConfig = configs[resolvedProjectId] as StickerConfig | undefined;
 
   // ── Form State ──────────────────────────────────────────────────────────
-  const [shape, setShape] = useState<'round' | 'square' | 'rectangle'>(existingConfig?.shape || 'round');
+  const [shape, setShape] = useState<'round' | 'square' | 'rectangle' | 'a4'>(existingConfig?.shape || 'round');
   const [size, setSize] = useState<'small' | 'medium' | 'large'>(
     (existingConfig?.size as any) || 'medium',
   );
@@ -128,9 +128,171 @@ export default function AdminSticker({ t, projectId }: Props) {
   };
 
   const handleOpenDashboard = () => {
-    const dashboardUrl = `https://loyalspin.app/dashboard/${resolvedProjectId}`;
     if (Platform.OS === 'web') {
+      // window.location.origin contient automatiquement le bon protocole + hôte + port
+      // ?preview=true force l'affichage en vue client même pour les admins
+      const dashboardUrl = `${window.location.origin}/spin/${resolvedProjectId}?preview=true`;
       window.open(dashboardUrl, '_blank');
+    }
+  };
+
+  const handleDownloadPdf = async () => {
+    if (Platform.OS !== 'web') {
+      alert('Le téléchargement PDF n\'est disponible que sur le web.');
+      return;
+    }
+    try {
+      const html2canvas = (await import('html2canvas')).default;
+      const { jsPDF } = await import('jspdf');
+
+      // Taille du sticker en pixels (haute résolution pour PDF)
+      const SIZE = 600;
+      const isA4 = shape === 'a4';
+      const stickerW = shape === 'rectangle' ? SIZE * 1.4 : SIZE;
+      const stickerH = isA4 ? SIZE * 1.414 : SIZE;
+      const radius = shape === 'round' ? SIZE / 2 : shape === 'square' ? 24 : shape === 'a4' ? 0 : 20;
+
+      // Résoudre l'URL QR à utiliser
+      const finalQrUrl = activeQrUrl || `${QR_PLACEHOLDER}${encodeURIComponent(qrUrl || `https://loyalspin.app/spin/${resolvedProjectId}`)}`;
+
+      // Créer un div HTML hors-écran fidèle au sticker
+      const wrapper = document.createElement('div');
+      wrapper.style.cssText = `
+        position: fixed;
+        top: -9999px;
+        left: -9999px;
+        width: ${stickerW}px;
+        height: ${stickerH}px;
+        border-radius: ${radius}px;
+        border: 6px solid ${primaryColor};
+        background-color: #ffffff;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Arial', sans-serif;
+        box-sizing: border-box;
+      `;
+
+      // Fond coloré ou image
+      if (backgroundImageUri) {
+        wrapper.style.backgroundImage = `url(${backgroundImageUri})`;
+        wrapper.style.backgroundSize = 'cover';
+        wrapper.style.backgroundPosition = 'center';
+      } else {
+        wrapper.style.backgroundColor = secondaryColor + '22';
+      }
+
+      // Contenu intérieur
+      const inner = document.createElement('div');
+      inner.style.cssText = `
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 32px;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        background: ${backgroundImageUri ? 'rgba(255,255,255,0.15)' : 'transparent'};
+      `;
+
+      // Logo
+      if (logoUri) {
+        const logo = document.createElement('img');
+        logo.src = logoUri;
+        logo.style.cssText = `width: 80px; height: 80px; object-fit: contain; margin-bottom: 16px; border-radius: 8px;`;
+        logo.crossOrigin = 'anonymous';
+        inner.appendChild(logo);
+      }
+
+      // Titre
+      const titleEl = document.createElement('div');
+      titleEl.innerText = title || 'Scannez & Gagnez !';
+      titleEl.style.cssText = `
+        font-size: ${isA4 ? 48 : 36}px;
+        font-weight: 900;
+        color: ${primaryColor};
+        text-align: center;
+        margin-bottom: 12px;
+        line-height: 1.2;
+        max-width: 90%;
+        word-break: break-word;
+      `;
+      inner.appendChild(titleEl);
+
+      // QR Code
+      const qrImg = document.createElement('img');
+      qrImg.src = finalQrUrl;
+      qrImg.crossOrigin = 'anonymous';
+      qrImg.style.cssText = `width: ${isA4 ? 280 : 200}px; height: ${isA4 ? 280 : 200}px; object-fit: contain; margin: 16px 0;`;
+      inner.appendChild(qrImg);
+
+      // Sous-titre
+      if (subtitle) {
+        const subEl = document.createElement('div');
+        subEl.innerText = subtitle;
+        subEl.style.cssText = `
+          font-size: ${isA4 ? 28 : 22}px;
+          font-weight: 600;
+          color: ${primaryColor}cc;
+          text-align: center;
+          margin-top: 8px;
+          max-width: 90%;
+          word-break: break-word;
+        `;
+        inner.appendChild(subEl);
+      }
+
+      wrapper.appendChild(inner);
+      document.body.appendChild(wrapper);
+
+      // Attendre que les images chargent
+      await new Promise(res => setTimeout(res, 800));
+
+      const canvas = await html2canvas(wrapper, {
+        scale: 3,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: null,
+        width: stickerW,
+        height: stickerH,
+      });
+
+      document.body.removeChild(wrapper);
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const canvasRatio = canvas.height / canvas.width;
+
+      const margin = 10;
+      const maxStickerWidth = pdfWidth - 2 * margin;
+      const maxStickerHeight = pdfHeight - 2 * margin;
+
+      let finalW = maxStickerWidth;
+      let finalH = finalW * canvasRatio;
+
+      if (finalH > maxStickerHeight) {
+        finalH = maxStickerHeight;
+        finalW = finalH / canvasRatio;
+      }
+
+      const xOffset = (pdfWidth - finalW) / 2;
+      const yOffset = (pdfHeight - finalH) / 2;
+
+      pdf.addImage(imgData, 'PNG', xOffset, yOffset, finalW, finalH);
+      pdf.save(`sticker_${resolvedProjectId}.pdf`);
+    } catch (err) {
+      console.error('PDF generation error:', err);
+      alert('Erreur lors de la génération du PDF.');
     }
   };
 
@@ -168,8 +330,9 @@ export default function AdminSticker({ t, projectId }: Props) {
   // ── Derived values ─────────────────────────────────────────────────────
   const previewSize = { small: 140, medium: 180, large: 220 }[size];
   const previewWidth = shape === 'rectangle' ? previewSize * 1.4 : previewSize;
+  const previewHeight = shape === 'a4' ? previewSize * 1.414 : previewSize;
   const borderRadius =
-    shape === 'round' ? previewSize / 2 : shape === 'square' ? 16 : 12;
+    shape === 'round' ? previewSize / 2 : shape === 'square' ? 16 : shape === 'a4' ? 0 : 12;
 
   const activeQrUrl =
     qrPreviewUrl ||
@@ -222,7 +385,7 @@ export default function AdminSticker({ t, projectId }: Props) {
             <View>
               <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Forme</Text>
               <View className="flex-row space-x-2">
-                {(['round', 'square', 'rectangle'] as const).map(s => (
+                {(['round', 'square', 'rectangle', 'a4'] as const).map(s => (
                   <TouchableOpacity
                     key={s}
                     onPress={() => setShape(s)}
@@ -233,7 +396,7 @@ export default function AdminSticker({ t, projectId }: Props) {
                     }`}
                   >
                     <Text className={`capitalize ${shape === s ? 'text-blue-700 dark:text-blue-300 font-bold' : 'dark:text-white'}`}>
-                      {s === 'round' ? 'Rond' : s === 'square' ? 'Carré' : 'Rectangle'}
+                      {s === 'round' ? 'Rond' : s === 'square' ? 'Carré' : s === 'rectangle' ? 'Rectangle' : 'A4'}
                     </Text>
                   </TouchableOpacity>
                 ))}
@@ -372,6 +535,14 @@ export default function AdminSticker({ t, projectId }: Props) {
              >
                <Text className="text-[#1E3A5F] dark:text-blue-400 font-bold">🔗 Ouvrir la page de fidélité</Text>
              </TouchableOpacity>
+
+             {/* Bouton Télécharger PDF */}
+             <TouchableOpacity
+               onPress={handleDownloadPdf}
+               className="bg-red-500 py-3 rounded-xl items-center flex-row justify-center space-x-2"
+             >
+               <Text className="text-white font-bold">📄 Télécharger en PDF</Text>
+             </TouchableOpacity>
            </View>
 
            {/* ─── RIGHT: Preview ──────────────────────────────────────── */}
@@ -380,10 +551,11 @@ export default function AdminSticker({ t, projectId }: Props) {
 
              {/* Sticker preview */}
              <View
+               nativeID="sticker-preview-container"
                style={Object.assign(
                  {
                    width: previewWidth,
-                   height: previewSize,
+                   height: previewHeight,
                    borderRadius,
                    borderColor: primaryColor,
                    borderWidth: 4,
@@ -415,7 +587,7 @@ export default function AdminSticker({ t, projectId }: Props) {
                )}
 
                {/* Overlay content */}
-               <View style={{ flex: 1, alignItems: 'center', justifyItems: 'center', justifyContent: 'center', padding: 8 }}>
+               <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 8 }}>
                  {logoUri && (
                    <Image
                      source={{ uri: logoUri }}
@@ -448,7 +620,7 @@ export default function AdminSticker({ t, projectId }: Props) {
 
              {/* Info taille */}
              <Text className="text-xs text-slate-400 dark:text-slate-500">
-               {size === 'small' ? '5×5 cm' : size === 'medium' ? '7×7 cm' : '10×10 cm'} — {shape}
+               {shape === 'a4' ? 'Format A4' : `${size === 'small' ? '5×5 cm' : size === 'medium' ? '7×7 cm' : '10×10 cm'} — ${shape}`}
              </Text>
            </View>
          </View>

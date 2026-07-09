@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, Switch } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, ScrollView, Switch, ActivityIndicator } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../../store';
-import { projectsService } from '../../../services/projectsService';
 import { Project, UserAccount } from '../../../database/schema';
-import { upsertProject, removeProject, fetchProjects, updateProject, deleteProject } from '../../../store/slices/projectsSlice';
+import {
+  fetchProjects,
+  createProject,
+  updateProject,
+  deleteProject,
+  selectAllProjects,
+} from '../../../store/slices/projectsSlice';
 import { fetchAdmins, addAdmin, updateAdmin, deleteAdmin } from '../../../store/slices/adminsSlice';
-import { fetchAllUsers } from '../../../store/slices/usersSlice';
+import { fetchAllUsers, saveNewUser } from '../../../store/slices/usersSlice';
+import { createCoupon } from '../../../store/slices/couponsSlice';
+import { saveStickerConfig } from '../../../store/slices/stickerConfigSlice';
+import { saveRouletteConfig } from '../../../store/slices/rouletteConfigSlice';
 import { useToast } from '../../../context/ToastContext';
 import { doc, setDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../services/firebaseConfig';
@@ -30,6 +38,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
   const admins = useSelector((state: RootState) => state.admins?.items || []);
 
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<'projects' | 'admins' | 'sectors'>('projects');
   
   // Project Form State
@@ -65,6 +74,9 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
     fetchData();
   }, [dispatch]);
 
+  // ────────────────────────────────────────────
+  // PROJECT CRUD — using proper thunks
+  // ────────────────────────────────────────────
   const handleSaveProject = async () => {
     if (!currentProject.name || !currentProject.adminId || !currentProject.email || !currentProject.phone) {
       showToast('Tous les champs obligatoires (nom, admin, email, tel) sont requis', 'error');
@@ -83,51 +95,202 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
       return;
     }
     
-    if (currentProject.id) {
-      // 1. Optimistic Redux Update
-      const updatedProj = { ...currentProject, updatedAt: new Date().toISOString() } as Project;
-      dispatch(upsertProject(updatedProj));
-      showToast('Projet mis à jour avec succès', 'success');
-      
-      // 2. Background Firebase Update
-      updateDoc(doc(db, 'projects', updatedProj.id), updatedProj as any).catch(err => {
-        console.error('Firebase error updateProject:', err);
-      });
-    } else {
-      const id = `proj_${Date.now()}`;
-      const newProj = {
-        ...currentProject,
-        id,
+    setSaving(true);
+    
+    try {
+      if (currentProject.id) {
+        // ── UPDATE existing project via thunk ──
+        const { id, createdAt, ...updateData } = currentProject as Project;
+        await dispatch(updateProject({ id, data: updateData })).unwrap();
+        showToast('Projet mis à jour avec succès ✅', 'success');
+      } else {
+        // ── CREATE new project via thunk ──
+        const slug = (currentProject.name || '')
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '');
+
+        const projectData = {
+          name: currentProject.name!,
+          slug,
+          description: currentProject.description || '',
+          email: currentProject.email || '',
+          phone: currentProject.phone || '',
+          adminId: currentProject.adminId || '',
+          isActive: currentProject.isActive !== false,
+          paymentStatus: currentProject.paymentStatus || 'pending' as const,
+          industry: currentProject.industry || '',
+          logoUri: currentProject.logoUri,
+          bannerUri: currentProject.bannerUri,
+          address: currentProject.address,
+          googleMapsUrl: currentProject.googleMapsUrl,
+          facebookUrl: currentProject.facebookUrl,
+          instagramUrl: currentProject.instagramUrl,
+          tiktokUrl: currentProject.tiktokUrl,
+          websiteUrl: currentProject.websiteUrl,
+        };
+
+        const newProject = await dispatch(createProject(projectData as any)).unwrap();
+        showToast('Projet créé avec succès ✅', 'success');
+
+        // ── AUTO-CREATE full config for the new project ──
+        await createFullProjectConfig(newProject.id, newProject.name, currentProject.adminId || '');
+      }
+
+      setIsEditing(false);
+      setCurrentProject({});
+    } catch (error: any) {
+      console.error('❌ handleSaveProject error:', error);
+      showToast(`Erreur: ${error?.message || 'Impossible de sauvegarder le projet'}`, 'error');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  /**
+   * Creates default sticker config, roulette config, sample coupon,
+   * and sample user for a newly created project.
+   */
+  const createFullProjectConfig = async (projectId: string, projectName: string, adminId: string) => {
+    try {
+      // 1. Default Sticker Config
+      await dispatch(saveStickerConfig({
+        id: `sticker_${projectId}`,
+        projectId,
+        isActive: true,
+        shape: 'round',
+        size: 'medium',
+        primaryColor: '#1E3A5F',
+        secondaryColor: '#F59E0B',
+        textColor: '#FFFFFF',
+        title: projectName,
+        subtitle: 'Scannez pour jouer !',
+        qrCodeUrl: `https://loyalspin.app/${projectId}`,
+        qrCodeColor: '#1E3A5F',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-      } as Project;
-      
-      // 1. Optimistic Redux Update
-      dispatch(upsertProject(newProj));
-      showToast('Projet créé avec succès', 'success');
-      
-      // 2. Background Firebase Update
-      setDoc(doc(db, 'projects', id), newProj).catch(err => {
-        console.error('Firebase error createProject:', err);
-      });
+      })).unwrap();
+      console.log('✅ Default sticker config created for project:', projectId);
+
+      // 2. Default Roulette Config with sample segments
+      await dispatch(saveRouletteConfig({
+        id: `roulette_${projectId}`,
+        projectId,
+        wheelName: `Roulette ${projectName}`,
+        isActive: true,
+        spinLimitType: 'per_user_per_day',
+        spinLimitValue: 1,
+        animationSpeed: 'normal',
+        soundEnabled: true,
+        primaryColor: '#1E3A5F',
+        secondaryColor: '#F59E0B',
+        segments: [
+          {
+            id: 'seg_1',
+            label: '🎉 -10%',
+            description: 'Réduction de 10%',
+            color: '#10B981',
+            probability: 30,
+            isGift: true,
+            giftValue: '10% de réduction',
+          },
+          {
+            id: 'seg_2',
+            label: '🎁 Cadeau',
+            description: 'Un cadeau surprise',
+            color: '#3B82F6',
+            probability: 10,
+            isGift: true,
+            giftValue: 'Cadeau surprise',
+          },
+          {
+            id: 'seg_3',
+            label: '😢 Perdu',
+            description: 'Pas de chance',
+            color: '#EF4444',
+            probability: 30,
+            isGift: false,
+          },
+          {
+            id: 'seg_4',
+            label: '🍕 -20%',
+            description: 'Réduction de 20%',
+            color: '#F59E0B',
+            probability: 15,
+            isGift: true,
+            giftValue: '20% de réduction',
+          },
+          {
+            id: 'seg_5',
+            label: '🔄 Rejouez',
+            description: 'Tentez à nouveau',
+            color: '#8B5CF6',
+            probability: 15,
+            isGift: false,
+          },
+        ],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      })).unwrap();
+      console.log('✅ Default roulette config created for project:', projectId);
+
+      // 3. Default Coupon
+      await dispatch(createCoupon({
+        projectId,
+        code: `BIENVENUE${Date.now().toString().slice(-4)}`,
+        title: 'Coupon de bienvenue',
+        description: `Coupon de bienvenue pour ${projectName} - 10% de réduction`,
+        type: 'percentage',
+        value: 10,
+        isActive: true,
+        totalQuantity: 100,
+        limitPerUser: 1,
+      })).unwrap();
+      console.log('✅ Default coupon created for project:', projectId);
+
+      // 4. Sample User
+      const sampleUserId = `user_${Date.now()}`;
+      await dispatch(saveNewUser({
+        id: sampleUserId,
+        name: 'Utilisateur Test',
+        email: `test_${projectId}@loyalspin.app`,
+        role: 'user',
+        projectId,
+        status: 'active',
+        phone: '+33600000000',
+        preferredLanguage: 'fr',
+        emailVerified: true,
+        authProvider: 'email',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      })).unwrap();
+      console.log('✅ Sample user created for project:', projectId);
+
+      showToast('🎉 Projet entièrement configuré : sticker, roulette, coupon, utilisateur', 'success');
+    } catch (error: any) {
+      console.error('⚠️ Partial config creation error:', error);
+      showToast('Projet créé mais certaines configs par défaut ont échoué. Vous pouvez les configurer manuellement.', 'warning');
     }
-    setIsEditing(false);
-    setCurrentProject({});
   };
 
   const handleDeleteProject = async (id: string) => {
     if (window.confirm('Voulez-vous vraiment supprimer ce projet ?')) {
-      // 1. Optimistic Redux Update
-      dispatch(removeProject(id));
-      showToast('Projet supprimé', 'info');
-      
-      // 2. Background Firebase Update
-      deleteDoc(doc(db, 'projects', id)).catch(err => {
-        console.error('Firebase error deleteProject:', err);
-      });
+      setSaving(true);
+      try {
+        await dispatch(deleteProject(id)).unwrap();
+        showToast('Projet supprimé ✅', 'info');
+      } catch (error: any) {
+        console.error('❌ handleDeleteProject error:', error);
+        showToast(`Erreur suppression: ${error?.message || 'Échec'}`, 'error');
+      } finally {
+        setSaving(false);
+      }
     }
   };
 
+  // ────────────────────────────────────────────
+  // ADMIN CRUD — using proper thunks + Firebase
+  // ────────────────────────────────────────────
   const handleSaveAdmin = async () => {
     if (!currentAdmin.name || !currentAdmin.email) {
       showToast('Le nom et l\'email sont requis', 'error');
@@ -140,53 +303,66 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
       return;
     }
 
-    if (currentAdmin.id) {
-      // 1. Optimistic Redux Update
-      dispatch(updateAdmin(currentAdmin as UserAccount));
-      showToast('Admin mis à jour avec succès', 'success');
+    setSaving(true);
+    try {
+      if (currentAdmin.id) {
+        // UPDATE admin
+        const updatedAdmin = {
+          ...currentAdmin,
+          updatedAt: new Date().toISOString(),
+        } as UserAccount;
+        
+        await updateDoc(doc(db, 'users', currentAdmin.id), updatedAdmin as any);
+        dispatch(updateAdmin(updatedAdmin));
+        showToast('Admin mis à jour avec succès ✅', 'success');
+      } else {
+        // CREATE admin
+        const id = `admin_${Date.now()}`;
+        const newAdmin: UserAccount = {
+          id,
+          name: currentAdmin.name!,
+          email: currentAdmin.email!,
+          phone: currentAdmin.phone || '',
+          role: 'admin',
+          status: (currentAdmin.status as any) || 'active',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        
+        await setDoc(doc(db, 'users', id), newAdmin);
+        dispatch(addAdmin(newAdmin));
+        showToast('Admin créé avec succès ✅', 'success');
+      }
       
-      // 2. Background Firebase Update
-      updateDoc(doc(db, 'users', currentAdmin.id), currentAdmin as any).catch(err => {
-        console.error('Firebase error updateAdmin:', err);
-      });
-    } else {
-      const id = `admin_${Date.now()}`;
-      const newAdmin = {
-        ...currentAdmin,
-        id,
-        role: 'admin',
-        status: 'active',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-      
-      // 1. Optimistic Redux Update
-      dispatch(addAdmin(newAdmin as UserAccount));
-      showToast('Admin créé avec succès', 'success');
-      
-      // 2. Background Firebase Update
-      setDoc(doc(db, 'users', id), newAdmin).catch(err => {
-        console.error('Firebase error addAdmin:', err);
-      });
+      setIsEditingAdmin(false);
+      setCurrentAdmin({});
+    } catch (error: any) {
+      console.error('❌ handleSaveAdmin error:', error);
+      showToast(`Erreur: ${error?.message || 'Impossible de sauvegarder l\'admin'}`, 'error');
+    } finally {
+      setSaving(false);
     }
-    
-    setIsEditingAdmin(false);
-    setCurrentAdmin({});
   };
 
   const handleDeleteAdmin = async (id: string) => {
     if (window.confirm('Voulez-vous vraiment supprimer cet admin ?')) {
-      // 1. Optimistic Redux Update
-      dispatch(deleteAdmin(id));
-      showToast('Admin supprimé', 'info');
-      
-      // 2. Background Firebase Update
-      deleteDoc(doc(db, 'users', id)).catch(err => {
-        console.error('Firebase error deleteAdmin:', err);
-      });
+      setSaving(true);
+      try {
+        await deleteDoc(doc(db, 'users', id));
+        dispatch(deleteAdmin(id));
+        showToast('Admin supprimé ✅', 'info');
+      } catch (error: any) {
+        console.error('❌ handleDeleteAdmin error:', error);
+        showToast(`Erreur suppression: ${error?.message || 'Échec'}`, 'error');
+      } finally {
+        setSaving(false);
+      }
     }
   };
 
+  // ────────────────────────────────────────────
+  // SECTORS CRUD (local state)
+  // ────────────────────────────────────────────
   const handleAddSector = () => {
     if (!newSectorName.trim()) return;
     if (!sectors.includes(newSectorName)) {
@@ -350,11 +526,14 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
         </View>
 
         <View className="flex-row justify-end space-x-4 mt-6">
-          <TouchableOpacity onPress={() => setIsEditing(false)} className="px-6 py-3 rounded-lg bg-slate-200 dark:bg-slate-700">
+          <TouchableOpacity onPress={() => { setIsEditing(false); setCurrentProject({}); }} className="px-6 py-3 rounded-lg bg-slate-200 dark:bg-slate-700" disabled={saving}>
             <Text className="text-slate-800 dark:text-white font-bold">Annuler</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleSaveProject} className="px-6 py-3 rounded-lg bg-[#1E3A5F]">
-            <Text className="text-white font-bold">Enregistrer</Text>
+          <TouchableOpacity onPress={handleSaveProject} className="px-6 py-3 rounded-lg bg-[#1E3A5F] flex-row items-center" disabled={saving}>
+            {saving && <ActivityIndicator size="small" color="#fff" style={{ marginRight: 8 }} />}
+            <Text className="text-white font-bold">
+              {saving ? 'Enregistrement...' : 'Enregistrer'}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -408,11 +587,14 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
         </View>
 
         <View className="flex-row justify-end space-x-4 mt-6">
-          <TouchableOpacity onPress={() => setIsEditingAdmin(false)} className="px-6 py-3 rounded-lg bg-slate-200 dark:bg-slate-700">
+          <TouchableOpacity onPress={() => setIsEditingAdmin(false)} className="px-6 py-3 rounded-lg bg-slate-200 dark:bg-slate-700" disabled={saving}>
             <Text className="text-slate-800 dark:text-white font-bold">Annuler</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleSaveAdmin} className="px-6 py-3 rounded-lg bg-[#1E3A5F]">
-            <Text className="text-white font-bold">Enregistrer</Text>
+          <TouchableOpacity onPress={handleSaveAdmin} className="px-6 py-3 rounded-lg bg-[#1E3A5F] flex-row items-center" disabled={saving}>
+            {saving && <ActivityIndicator size="small" color="#fff" style={{ marginRight: 8 }} />}
+            <Text className="text-white font-bold">
+              {saving ? 'Enregistrement...' : 'Enregistrer'}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -547,7 +729,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
                       <TouchableOpacity onPress={() => { setCurrentProject(proj); setIsEditing(true); }} className="bg-blue-100 dark:bg-blue-900 px-3 py-1.5 rounded-lg">
                         <Text className="text-blue-700 dark:text-blue-300 font-bold">Éditer</Text>
                       </TouchableOpacity>
-                      <TouchableOpacity onPress={() => handleDeleteProject(proj.id)} className="bg-red-100 dark:bg-red-900 px-3 py-1.5 rounded-lg">
+                      <TouchableOpacity onPress={() => handleDeleteProject(proj.id)} className="bg-red-100 dark:bg-red-900 px-3 py-1.5 rounded-lg" disabled={saving}>
                         <Text className="text-red-700 dark:text-red-300 font-bold">Supprimer</Text>
                       </TouchableOpacity>
                     </View>
@@ -605,7 +787,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
                         <TouchableOpacity onPress={() => { setCurrentAdmin(adm); setIsEditingAdmin(true); }} className="bg-blue-100 dark:bg-blue-900 px-3 py-1.5 rounded-lg">
                           <Text className="text-blue-700 dark:text-blue-300 font-bold">Éditer</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => handleDeleteAdmin(adm.id)} className="bg-red-100 dark:bg-red-900 px-3 py-1.5 rounded-lg">
+                        <TouchableOpacity onPress={() => handleDeleteAdmin(adm.id)} className="bg-red-100 dark:bg-red-900 px-3 py-1.5 rounded-lg" disabled={saving}>
                           <Text className="text-red-700 dark:text-red-300 font-bold">Supprimer</Text>
                         </TouchableOpacity>
                       </View>

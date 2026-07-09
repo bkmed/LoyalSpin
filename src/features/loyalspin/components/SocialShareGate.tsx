@@ -6,6 +6,7 @@ import {
   Linking,
   StyleSheet,
   Animated,
+  Platform as RNPlatform,
 } from 'react-native';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -114,12 +115,12 @@ export default function SocialShareGate({
       Animated.timing(scaleAnim, {
         toValue: 1.08,
         duration: 180,
-        useNativeDriver: true,
+        useNativeDriver: RNPlatform.OS !== 'web',
       }),
       Animated.timing(scaleAnim, {
         toValue: 1,
         duration: 180,
-        useNativeDriver: true,
+        useNativeDriver: RNPlatform.OS !== 'web',
       }),
     ]).start(() => {
       onShared();
@@ -391,10 +392,15 @@ const styles = StyleSheet.create({
   platformCardSelected: {
     borderWidth: 2,
     borderColor: 'rgba(255,255,255,0.3)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.35,
-    shadowRadius: 12,
+    ...RNPlatform.select({
+      web: { boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.35)' },
+      default: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.35,
+        shadowRadius: 12,
+      },
+    }),
     elevation: 10,
   },
   platformCardAvailable: {
@@ -465,10 +471,15 @@ const styles = StyleSheet.create({
     paddingVertical: 18,
     paddingHorizontal: 24,
     alignItems: 'center',
-    shadowColor: '#10b981',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.45,
-    shadowRadius: 18,
+    ...RNPlatform.select({
+      web: { boxShadow: '0px 8px 18px rgba(16, 185, 129, 0.45)' },
+      default: {
+        shadowColor: '#10b981',
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.45,
+        shadowRadius: 18,
+      },
+    }),
     elevation: 12,
   },
   confirmButtonText: {

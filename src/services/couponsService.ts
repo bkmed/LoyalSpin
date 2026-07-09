@@ -6,14 +6,9 @@ const COLLECTION_NAME = 'coupons';
 
 export const couponsService = {
   async getByProject(projectId: string): Promise<Coupon[]> {
-    try {
-      const q = query(collection(db, COLLECTION_NAME), where('projectId', '==', projectId));
-      const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Coupon));
-    } catch (error) {
-      console.error('Error fetching coupons:', error);
-      return [];
-    }
+    const q = query(collection(db, COLLECTION_NAME), where('projectId', '==', projectId));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Coupon));
   },
 
   async create(data: Omit<Coupon, 'id' | 'createdAt' | 'updatedAt' | 'usedQuantity'>): Promise<Coupon> {
@@ -25,29 +20,20 @@ export const couponsService = {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    try {
-      await setDoc(doc(db, COLLECTION_NAME, id), newCoupon);
-    } catch (error) {
-      console.error('Error creating coupon:', error);
-    }
+    await setDoc(doc(db, COLLECTION_NAME, id), newCoupon);
+    console.log('✅ Coupon created in Firebase:', id);
     return newCoupon;
   },
 
   async update(id: string, data: Partial<Coupon>): Promise<Coupon> {
     const updatedData = { ...data, updatedAt: new Date().toISOString() };
-    try {
-      await updateDoc(doc(db, COLLECTION_NAME, id), updatedData);
-    } catch (error) {
-      console.error('Error updating coupon:', error);
-    }
-    return { id, ...data } as Coupon; // In real app, fetch the updated doc
+    await updateDoc(doc(db, COLLECTION_NAME, id), updatedData);
+    console.log('✅ Coupon updated in Firebase:', id);
+    return { id, ...updatedData } as Coupon;
   },
 
   async remove(id: string): Promise<void> {
-    try {
-      await deleteDoc(doc(db, COLLECTION_NAME, id));
-    } catch (error) {
-      console.error('Error deleting coupon:', error);
-    }
+    await deleteDoc(doc(db, COLLECTION_NAME, id));
+    console.log('✅ Coupon deleted from Firebase:', id);
   }
 };

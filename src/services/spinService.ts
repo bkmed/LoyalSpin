@@ -6,19 +6,14 @@ const COLLECTION_NAME = 'spinHistory';
 
 export const spinService = {
   async getHistory(projectId: string, userId?: string): Promise<SpinHistory[]> {
-    try {
-      let q = query(collection(db, COLLECTION_NAME), where('projectId', '==', projectId));
-      if (userId) {
-        q = query(q, where('userId', '==', userId));
-      }
-      const snapshot = await getDocs(q);
-      return snapshot.docs
-        .map(doc => ({ id: doc.id, ...doc.data() } as SpinHistory))
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    } catch (error) {
-      console.error('Error fetching spin history:', error);
-      return [];
+    let q = query(collection(db, COLLECTION_NAME), where('projectId', '==', projectId));
+    if (userId) {
+      q = query(q, where('userId', '==', userId));
     }
+    const snapshot = await getDocs(q);
+    return snapshot.docs
+      .map(d => ({ id: d.id, ...d.data() } as SpinHistory))
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   },
 
   async record(data: Omit<SpinHistory, 'id' | 'createdAt'>): Promise<SpinHistory> {
@@ -28,11 +23,8 @@ export const spinService = {
       id,
       createdAt: new Date().toISOString(),
     };
-    try {
-      await setDoc(doc(db, COLLECTION_NAME, id), newSpin);
-    } catch (error) {
-      console.error('Error recording spin:', error);
-    }
+    await setDoc(doc(db, COLLECTION_NAME, id), newSpin);
+    console.log('✅ Spin recorded in Firebase:', id);
     return newSpin;
   }
 };

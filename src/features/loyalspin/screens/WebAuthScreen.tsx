@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Platform } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { LogoSVG } from '../components/LogoSVG';
 import { WebSessionUser, Role } from '../utils/webTranslations';
@@ -189,7 +189,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
   };
 
   return (
-    <View style={{ flex: 1, minHeight: '100vh' }} className="min-h-screen grid grid-cols-1 lg:grid-cols-12 bg-slate-50 dark:bg-[#0B0F19] text-slate-800 dark:text-slate-100 transition-colors duration-300">
+    <View style={{ flex: 1, ...(Platform.OS === 'web' ? { minHeight: '100vh' as any } : {}) }} className="min-h-screen grid grid-cols-1 lg:grid-cols-12 bg-slate-50 dark:bg-[#0B0F19] text-slate-800 dark:text-slate-100 transition-colors duration-300">
       {/* Left panel branding visual presentation (desktop only) */}
       <View className="hidden lg:flex lg:col-span-5 relative bg-gradient-to-br from-[#0F2942] to-[#0A1724] p-12 flex-col justify-between overflow-hidden border-r border-slate-200 dark:border-slate-800">
         <View className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_20%_20%,#F97316_0%,transparent_50%)] pointer-events-none" />

@@ -6,27 +6,17 @@ const COLLECTION_NAME = 'projects';
 
 export const projectsService = {
   async getAll(): Promise<Project[]> {
-    try {
-      const snapshot = await getDocs(collection(db, COLLECTION_NAME));
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Project));
-    } catch (error) {
-      console.error('Error fetching projects:', error);
-      throw error;
-    }
+    const snapshot = await getDocs(collection(db, COLLECTION_NAME));
+    return snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Project));
   },
 
   async getById(id: string): Promise<Project | null> {
-    try {
-      const docRef = doc(db, COLLECTION_NAME, id);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        return { id: docSnap.id, ...docSnap.data() } as Project;
-      }
-      return null;
-    } catch (error) {
-      console.error('Error fetching project:', error);
-      return null;
+    const docRef = doc(db, COLLECTION_NAME, id);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() } as Project;
     }
+    return null;
   },
 
   async create(data: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>): Promise<Project> {
@@ -37,32 +27,23 @@ export const projectsService = {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    try {
-      await setDoc(doc(db, COLLECTION_NAME, id), newProject);
-    } catch (error) {
-      console.error('Error creating project:', error);
-    }
+    await setDoc(doc(db, COLLECTION_NAME, id), newProject);
+    console.log('✅ Project created in Firebase:', id);
     return newProject;
   },
 
   async update(id: string, data: Partial<Project>): Promise<Project> {
     const updatedData = { ...data, updatedAt: new Date().toISOString() };
-    try {
-      const docRef = doc(db, COLLECTION_NAME, id);
-      await updateDoc(docRef, updatedData);
-    } catch (error) {
-      console.error('Error updating project:', error);
-    }
-    // Return mock updated for now
+    const docRef = doc(db, COLLECTION_NAME, id);
+    await updateDoc(docRef, updatedData);
+    console.log('✅ Project updated in Firebase:', id);
     const proj = await this.getById(id);
-    return proj as Project;
+    if (!proj) throw new Error(`Project ${id} not found after update`);
+    return proj;
   },
 
   async remove(id: string): Promise<void> {
-    try {
-      await deleteDoc(doc(db, COLLECTION_NAME, id));
-    } catch (error) {
-      console.error('Error deleting project:', error);
-    }
+    await deleteDoc(doc(db, COLLECTION_NAME, id));
+    console.log('✅ Project deleted from Firebase:', id);
   }
 };

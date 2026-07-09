@@ -348,10 +348,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#10b981',
     opacity: 0.85,
     top: '50%',
-    shadowColor: '#10b981',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 1,
-    shadowRadius: 6,
+    ...Platform.select({
+      web: { boxShadow: '0px 0px 6px rgba(16, 185, 129, 1)' },
+      default: {
+        shadowColor: '#10b981',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+      },
+    }),
     elevation: 8,
   },
 

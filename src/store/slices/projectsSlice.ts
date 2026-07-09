@@ -117,24 +117,43 @@ const projectsSlice = createSlice({
 
     // create
     builder
+      .addCase(createProject.pending, state => { state.loading = true; state.error = null; })
       .addCase(createProject.fulfilled, (state, action) => {
+        state.loading = false;
         state.items.unshift(action.payload);
+      })
+      .addCase(createProject.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? 'Failed to create project';
       });
 
     // update / toggleActive / updatePayment
     const handleUpdate = (state: ProjectsState, action: PayloadAction<Project>) => {
+      state.loading = false;
       const idx = state.items.findIndex(p => p.id === action.payload.id);
       if (idx >= 0) state.items[idx] = action.payload;
     };
     builder
+      .addCase(updateProject.pending, state => { state.loading = true; state.error = null; })
       .addCase(updateProject.fulfilled, handleUpdate)
+      .addCase(updateProject.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? 'Failed to update project';
+      })
       .addCase(toggleProjectActive.fulfilled, handleUpdate)
       .addCase(updatePaymentStatus.fulfilled, handleUpdate);
 
     // delete
-    builder.addCase(deleteProject.fulfilled, (state, action) => {
-      state.items = state.items.filter(p => p.id !== action.payload);
-    });
+    builder
+      .addCase(deleteProject.pending, state => { state.loading = true; state.error = null; })
+      .addCase(deleteProject.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = state.items.filter(p => p.id !== action.payload);
+      })
+      .addCase(deleteProject.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? 'Failed to delete project';
+      });
   },
 });
 

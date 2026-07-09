@@ -23,7 +23,7 @@ module.exports = {
       {
         test: /\.(js|ts)x?$/,
         exclude:
-          /node_modules[/\\](?!(react-native-chart-kit|@react-native-community[\\/]datetimepicker|react-native-image-picker|react-native-vector-icons|react-native-css-interop|nativewind|react-native-confetti-cannon)[/\\])/,
+          /node_modules[/\\](?!(react-native-chart-kit|@react-native-community[\\/]datetimepicker|react-native-image-picker|react-native-vector-icons|react-native-css-interop|nativewind|react-native-confetti-cannon|react-native-qrcode-svg)[/\\])/,
 
         use: {
           loader: 'babel-loader',
@@ -35,7 +35,9 @@ module.exports = {
                   loose: true,
                 },
               ],
+              ['@babel/preset-react', { runtime: 'automatic' }],
             ],
+            plugins: ['react-native-web'],
           },
         },
       },

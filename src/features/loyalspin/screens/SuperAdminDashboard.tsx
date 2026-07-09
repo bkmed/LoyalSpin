@@ -7,6 +7,7 @@ import { projectsService } from '../../../services/projectsService';
 import { Project, UserAccount } from '../../../database/schema';
 import { upsertProject, removeProject, fetchProjects, updateProject, deleteProject } from '../../../store/slices/projectsSlice';
 import { fetchAdmins, addAdmin, updateAdmin, deleteAdmin } from '../../../store/slices/adminsSlice';
+import { fetchAllUsers } from '../../../store/slices/usersSlice';
 import { useToast } from '../../../context/ToastContext';
 import { doc, setDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../services/firebaseConfig';
@@ -55,6 +56,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
       try {
         await dispatch(fetchProjects() as any);
         await dispatch(fetchAdmins() as any);
+        await dispatch(fetchAllUsers() as any);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -466,7 +468,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
             )}
             {managingTab === 'coupons' && <AdminCoupons projectId={managingProjectId} />}
             {managingTab === 'roulette' && <AdminRoulette t={t} projectId={managingProjectId} />}
-            {managingTab === 'users' && <AdminUsers t={t} showToast={showToast} projectId={managingProjectId} />}
+            {managingTab === 'users' && <AdminUsers t={t} showToast={showToast} projectId={managingProjectId} isSuperAdmin={true} />}
             {managingTab === 'stickers' && <AdminSticker t={t} projectId={managingProjectId} />}
           </View>
         ) : (

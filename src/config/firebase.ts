@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import { Platform } from 'react-native';
 
 // REPLACE WITH YOUR FIREBASE CONFIG
@@ -15,13 +15,15 @@ const firebaseConfig = {
 
 let app: any;
 
-if (Platform.OS === 'web') {
-  try {
+try {
+  if (getApps().length === 0) {
     app = initializeApp(firebaseConfig);
-    console.log('Firebase App initialized for Web');
-  } catch (error) {
-    console.warn('Firebase initialization failed:', error);
+  } else {
+    app = getApp();
   }
+  console.log('Firebase JS App initialized');
+} catch (error) {
+  console.warn('Firebase initialization failed:', error);
 }
 
 export { app };

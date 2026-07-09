@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 
 import AdminStats from './admin/AdminStats';
 import AdminRoulette from './admin/AdminRoulette';
-import AdminSticker from './admin/AdminSticker';
+import AdminSticker from './AdminSticker';
 import AdminCoupons from './admin/AdminCoupons';
 import AdminHistory from './admin/AdminHistory';
 

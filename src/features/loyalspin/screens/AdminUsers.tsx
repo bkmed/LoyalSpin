@@ -2,22 +2,21 @@ import React from 'react';
 import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../store';
-import { updateUser, deleteUser, addUser } from '../../../store/slices/usersSlice';
+import { RootState, AppDispatch } from '../../../store';
+import { updateUser, deleteUser, saveNewUser } from '../../../store/slices/usersSlice';
 import { setActiveTab } from '../../../store/slices/uiSlice';
-import { doc, setDoc } from 'firebase/firestore';
-import { db } from '../../../services/firebaseConfig';
 
 interface AdminUsersProps {
   showToast: any;
   t: any;
   projectId?: string | null;
+  isSuperAdmin?: boolean;
 }
 
-export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId }) => {
+export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId, isSuperAdmin }) => {
   const tCommon = (key: string, defaultValue: string) =>
     t(key, { defaultValue });
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const usersList = useSelector((state: RootState) => state.users?.items ?? []);
   const sessionUser = useSelector(
     (state: RootState) => (state as any).webSession?.sessionUser,
@@ -80,12 +79,12 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId 
       baseUsers = enrichedUsers.filter(u => u.projectId === projectId);
     }
     // super-admin sees all users; normal admin sees only their managed users
-    if (currentRole === 'super-admin') return baseUsers;
+    if (isSuperAdmin || currentRole === 'super-admin') return baseUsers;
     if (!sessionUser) return [];
     return baseUsers.filter(
       u => u.managerId === sessionUser.id || u.id === sessionUser.id,
     );
-  }, [enrichedUsers, currentRole, sessionUser, projectId]);
+  }, [enrichedUsers, currentRole, sessionUser, projectId, isSuperAdmin]);
 
   const filteredUsers = React.useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
@@ -221,8 +220,24 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId 
     if (!newUserName.trim() || newUserName.trim().length < 2)
       errors.name = 'Le nom est requis (minimum 2 caractères).';
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!newUserEmail.trim() || !emailRegex.test(newUserEmail.trim()))
+    const cleanEmail = newUserEmail.trim().toLowerCase();
+    
+    if (!cleanEmail || !emailRegex.test(cleanEmail)) {
       errors.email = 'Un email valide est requis.';
+    } else {
+      const emailExists = usersList.some((u: any) => u.email.toLowerCase() === cleanEmail);
+      if (emailExists) {
+        errors.email = 'Cet email est déjà utilisé par un autre compte.';
+      }
+    }
+    
+    if (newUserPhone.trim()) {
+      const phoneExists = usersList.some((u: any) => u.phone === newUserPhone.trim());
+      if (phoneExists) {
+        errors.phone = 'Ce numéro de téléphone est déjà utilisé.';
+      }
+    }
+
     setCreateUserErrors(errors);
     if (Object.keys(errors).length > 0) return;
 
@@ -238,21 +253,24 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId 
       updatedAt: new Date().toISOString(),
     };
 
-    dispatch(addUser(newUser));
-    setDoc(doc(db, 'users', newUser.id), newUser).catch((err: any) =>
-      console.error('Firebase error createUser:', err)
-    );
-    showToast(
-      tCommon('adminUsers.userCreated', 'Utilisateur créé avec succès !'),
-      'success',
-    );
-    setShowCreateUser(false);
-    setNewUserName('');
-    setNewUserEmail('');
-    setNewUserPhone('');
-    setNewUserRole('user');
-    setNewUserStatus('active');
-    setCreateUserErrors({});
+    dispatch(saveNewUser(newUser))
+      .unwrap()
+      .then(() => {
+        showToast(
+          tCommon('adminUsers.userCreated', 'Utilisateur créé avec succès !'),
+          'success',
+        );
+        setShowCreateUser(false);
+        setNewUserName('');
+        setNewUserEmail('');
+        setNewUserPhone('');
+        setNewUserRole('user');
+        setNewUserStatus('active');
+        setCreateUserErrors({});
+      })
+      .catch((err: any) => {
+        showToast("Erreur lors de la création de l'utilisateur.", 'error');
+      });
   };
 
   return (
@@ -387,13 +405,17 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId 
               </Text>
             </View>
             <View className="flex flex-wrap gap-2">
-              <View className="rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-2 text-[11px] font-black text-slate-700 dark:text-slate-200">
-                {tCommon('adminUsers.statusActive', 'Actifs')} :{' '}
-                {filteredUsers.filter(u => u.status === 'active').length}
+              <View className="rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-2">
+                <Text className="text-[11px] font-black text-slate-700 dark:text-slate-200">
+                  {tCommon('adminUsers.statusActive', 'Actifs')} :{' '}
+                  {filteredUsers.filter(u => u.status === 'active').length}
+                </Text>
               </View>
-              <View className="rounded-full bg-rose-100 dark:bg-rose-900/20 px-3 py-2 text-[11px] font-black text-rose-700 dark:text-rose-200">
-                {tCommon('adminUsers.statusBlocked', 'Bloqués')} :{' '}
-                {filteredUsers.filter(u => u.status !== 'active').length}
+              <View className="rounded-full bg-rose-100 dark:bg-rose-900/20 px-3 py-2">
+                <Text className="text-[11px] font-black text-rose-700 dark:text-rose-200">
+                  {tCommon('adminUsers.statusBlocked', 'Bloqués')} :{' '}
+                  {filteredUsers.filter(u => u.status !== 'active').length}
+                </Text>
               </View>
             </View>
           </View>

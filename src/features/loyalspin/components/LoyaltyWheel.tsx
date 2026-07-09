@@ -369,11 +369,18 @@ const LoyaltyWheel: React.FC<LoyaltyWheelProps> = ({ segments, onFinish }) => {
             animatedIndicatorStyle,
             {
               borderBottomColor: theme.colors.accent,
-              shadowColor: theme.colors.accent,
-              shadowOffset: { width: 0, height: 10 },
-              shadowOpacity: 0.22,
-              shadowRadius: 12,
               elevation: 10,
+              ...Platform.select({
+                web: {
+                  boxShadow: `0px 10px 12px ${theme.colors.accent}38` as any,
+                },
+                default: {
+                  shadowColor: theme.colors.accent,
+                  shadowOffset: { width: 0, height: 10 },
+                  shadowOpacity: 0.22,
+                  shadowRadius: 12,
+                }
+              })
             },
           ]}
         />
@@ -432,12 +439,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 999,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 18 },
-    shadowOpacity: 0.24,
-    shadowRadius: 30,
-    elevation: 18,
     backgroundColor: 'transparent',
+    elevation: 18,
+    ...Platform.select({
+      web: {
+        boxShadow: '0px 18px 30px rgba(0, 0, 0, 0.24)' as any,
+      },
+      default: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 18 },
+        shadowOpacity: 0.24,
+        shadowRadius: 30,
+      }
+    }),
   },
   wheelCenter: {
     position: 'absolute',
@@ -445,11 +459,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 4,
     borderColor: 'rgba(255,255,255,0.16)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.12,
-    shadowRadius: 18,
     elevation: 10,
+    ...Platform.select({
+      web: {
+        boxShadow: '0px 10px 18px rgba(0, 0, 0, 0.12)' as any,
+      },
+      default: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.12,
+        shadowRadius: 18,
+      }
+    }),
   },
   centerText: {
     fontSize: 15,
@@ -457,9 +478,16 @@ const styles = StyleSheet.create({
     letterSpacing: 1.6,
     textTransform: 'uppercase',
     textAlign: 'center',
-    textShadowColor: 'rgba(0, 0, 0, 0.14)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
+    ...Platform.select({
+      web: {
+        textShadow: '0px 1px 2px rgba(0, 0, 0, 0.14)' as any,
+      },
+      default: {
+        textShadowColor: 'rgba(0, 0, 0, 0.14)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 2,
+      }
+    }),
   },
   indicator: {
     position: 'absolute',
@@ -471,10 +499,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 28,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
   },
   spinButton: {
     marginTop: 28,
@@ -482,13 +506,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     paddingVertical: 16,
     borderRadius: 28,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 14 },
-    shadowOpacity: 0.24,
-    shadowRadius: 20,
     elevation: 10,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.18)',
+    ...Platform.select({
+      web: {
+        boxShadow: '0px 14px 20px rgba(0, 0, 0, 0.24)' as any,
+      },
+      default: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 14 },
+        shadowOpacity: 0.24,
+        shadowRadius: 20,
+      }
+    }),
   },
   spinButtonText: {
     color: '#fff',

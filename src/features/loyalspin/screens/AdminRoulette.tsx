@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Switch, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Switch, ScrollView, Platform, Image, ActivityIndicator } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
 import {
@@ -10,6 +10,8 @@ import {
 } from '../../../store/slices/rouletteConfigSlice';
 import { useToast } from '../../../context/ToastContext';
 import type { RouletteConfig, RouletteSegment } from '../../../database/schema';
+import { FirebaseStorageService } from '../../../services/FirebaseStorageService';
+import * as ImagePicker from 'react-native-image-picker';
 
 interface AdminRouletteProps {
   t?: any;
@@ -67,6 +69,7 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
   const [localConfig, setLocalConfig] = useState<RouletteConfig | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [segErrors, setSegErrors] = useState<Record<string, string>>({});
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   // Sync from Redux when saved config loads
   useEffect(() => {
@@ -165,6 +168,54 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
     }
   };
 
+  const handleUploadBackground = async () => {
+    if (Platform.OS === 'web') {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.onchange = async (e: any) => {
+        const file = e.target.files[0];
+        if (file) {
+          try {
+            setUploadingImage(true);
+            const url = URL.createObjectURL(file);
+            const downloadUrl = await FirebaseStorageService.uploadImageAsync(
+              url,
+              `projects/${projectId}/roulette_bg_${Date.now()}`
+            );
+            updateField('backgroundImageUrl', downloadUrl);
+            showToast('Image de fond téléchargée !', 'success');
+          } catch (err) {
+            showToast("Erreur d'upload", 'error');
+          } finally {
+            setUploadingImage(false);
+          }
+        }
+      };
+      input.click();
+    } else {
+      ImagePicker.launchImageLibrary({ mediaType: 'photo' }, async (response) => {
+        if (response.didCancel || !response.assets || response.assets.length === 0) return;
+        const asset = response.assets[0];
+        if (asset.uri) {
+          try {
+            setUploadingImage(true);
+            const downloadUrl = await FirebaseStorageService.uploadImageAsync(
+              asset.uri,
+              `projects/${projectId}/roulette_bg_${Date.now()}`
+            );
+            updateField('backgroundImageUrl', downloadUrl);
+            showToast('Image de fond téléchargée !', 'success');
+          } catch (err) {
+            showToast("Erreur d'upload", 'error');
+          } finally {
+            setUploadingImage(false);
+          }
+        }
+      });
+    }
+  };
+
   if (!projectId) {
     return (
       <View className="py-16 items-center">
@@ -225,7 +276,7 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
             {!!errors.wheelName && <Text className="text-red-400 text-xs mt-1">{errors.wheelName}</Text>}
           </View>
 
-          {/* Spin rules */}
+          {/* Spin rules & Background */}
           <View className="grid grid-cols-2 gap-4 mb-6">
             <View className="rounded-3xl bg-slate-900 border border-slate-800 p-4">
               <Text className="text-xs uppercase tracking-widest text-slate-500 mb-2">
@@ -249,6 +300,30 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
                 className="w-full rounded-2xl border border-slate-700 px-4 py-3 text-sm text-white bg-slate-950"
                 placeholderTextColor="#6B7280"
               />
+            </View>
+          </View>
+          
+          <View className="mb-6 rounded-3xl bg-slate-900 border border-slate-800 p-4">
+            <Text className="text-xs uppercase tracking-widest text-slate-500 mb-2">Image de Fond (Optionnel)</Text>
+            <View className="flex-row items-center gap-4">
+              <TouchableOpacity
+                onPress={handleUploadBackground}
+                disabled={uploadingImage}
+                className="bg-slate-800 border border-slate-700 px-4 py-3 rounded-2xl flex-row items-center justify-center flex-1"
+              >
+                {uploadingImage ? (
+                  <ActivityIndicator size="small" color="#F97316" />
+                ) : (
+                  <Text className="text-white font-bold text-sm">
+                    {localConfig.backgroundImageUrl ? 'Changer l\'image' : 'Uploader une image'}
+                  </Text>
+                )}
+              </TouchableOpacity>
+              {localConfig.backgroundImageUrl && (
+                <View className="w-12 h-12 rounded-xl overflow-hidden border border-slate-700">
+                  <Image source={{ uri: localConfig.backgroundImageUrl }} className="w-full h-full" />
+                </View>
+              )}
             </View>
           </View>
 
@@ -334,10 +409,27 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
                       />
                     </View>
                     <View className="flex-1">
-                      <Text className="text-xs text-slate-500 mb-1">Probabilité (%) *</Text>
+                      <View className="flex-row justify-between items-center mb-1">
+                        <Text className="text-xs text-slate-500">Probabilité (%) *</Text>
+                        <Text className="text-xs font-bold text-[#10B981]">
+                          Max: {Math.max(0, 100 - (totalProbability - (Number(seg.probability) || 0)))}%
+                        </Text>
+                      </View>
                       <TextInput
-                        value={String(seg.probability)}
-                        onChangeText={v => updateSegment(seg.id, 'probability', Number(v) || 0)}
+                        value={seg.probability === '' ? '' : String(seg.probability)}
+                        onChangeText={v => {
+                          if (v === '') {
+                            updateSegment(seg.id, 'probability', '');
+                            return;
+                          }
+                          let num = parseInt(v, 10);
+                          if (isNaN(num)) return;
+                          const othersTotal = totalProbability - (Number(seg.probability) || 0);
+                          const maxAllowed = Math.max(0, 100 - othersTotal);
+                          if (num > maxAllowed) num = maxAllowed;
+                          if (num < 0) num = 0;
+                          updateSegment(seg.id, 'probability', num);
+                        }}
                         keyboardType="numeric"
                         className={`rounded-xl border px-3 py-2 text-white text-xs bg-slate-950 ${segErrors[`${seg.id}_probability`] ? 'border-red-500' : 'border-slate-700'}`}
                         placeholderTextColor="#6B7280"
@@ -386,8 +478,15 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
                 overflow: 'hidden',
                 borderWidth: 4,
                 borderColor: localConfig.primaryColor || '#F97316',
+                position: 'relative',
               }}
             >
+              {localConfig.backgroundImageUrl && (
+                <Image
+                  source={{ uri: localConfig.backgroundImageUrl }}
+                  style={{ position: 'absolute', width: '100%', height: '100%', opacity: 0.5 }}
+                />
+              )}
               {localConfig.segments.map((seg, i) => {
                 const angle = (seg.probability / 100) * 360;
                 return (
@@ -395,7 +494,7 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
                     key={seg.id}
                     style={{
                       flex: seg.probability,
-                      backgroundColor: seg.color,
+                      backgroundColor: localConfig.backgroundImageUrl ? 'transparent' : seg.color,
                       justifyContent: 'center',
                       alignItems: 'center',
                       minHeight: 30,

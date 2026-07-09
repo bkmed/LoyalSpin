@@ -118,6 +118,7 @@ export interface RouletteConfig {
   centerImageUri?: string;
   primaryColor?: string;
   secondaryColor?: string;
+  backgroundImageUrl?: string;
   updatedAt: string;
   createdAt: string;
 }

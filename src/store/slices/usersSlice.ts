@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { UserAccount, Role } from '../../database/schema';
 import { RootState } from '../index';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '../../services/firebaseConfig';
 
 export const fetchUsersByProject = createAsyncThunk(
   'users/fetchByProject',
@@ -30,6 +32,20 @@ export const fetchAllUsers = createAsyncThunk(
     );
     const snapshot = await getDocs(q);
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as UserAccount));
+  }
+);
+
+export const saveNewUser = createAsyncThunk(
+  'users/saveNewUser',
+  async (newUser: UserAccount) => {
+    try {
+      const userRef = doc(db, 'users', newUser.id);
+      await setDoc(userRef, newUser);
+      return newUser;
+    } catch (error) {
+      console.error('Error saving new user to Firestore:', error);
+      throw error;
+    }
   }
 );
 
@@ -94,6 +110,19 @@ const usersSlice = createSlice({
       .addCase(fetchAllUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Failed to fetch users';
+      })
+      .addCase(saveNewUser.pending, (state) => { state.loading = true; })
+      .addCase(saveNewUser.fulfilled, (state, action) => {
+        state.loading = false;
+        // Check if user already exists
+        const index = state.items.findIndex(u => u.id === action.payload.id);
+        if (index === -1) {
+          state.items.push(action.payload);
+        }
+      })
+      .addCase(saveNewUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to create user';
       });
   }
 });

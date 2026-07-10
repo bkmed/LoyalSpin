@@ -19,7 +19,7 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
     name: 'Jean Dupont',
     points: 2850,
     level: 'Gold',
-    lastVisit: "Aujourd'hui à 14:30",
+    lastVisit: 'Today at 14:30',
     visits: 23,
   };
 
@@ -27,7 +27,7 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
     {
       id: 1,
       title: t('loyalspin.demoDashboard.rewards.freeCoffee.title', {
-        defaultValue: 'Café Gratuit',
+        defaultValue: 'Free Coffee',
       }),
       value: '2.50€',
       icon: '☕',
@@ -38,7 +38,7 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
     {
       id: 2,
       title: t('loyalspin.demoDashboard.rewards.freeCroissant.title', {
-        defaultValue: 'Croissant Offert',
+        defaultValue: 'Free Croissant',
       }),
       value: '1.20€',
       icon: '🥐',
@@ -49,7 +49,7 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
     {
       id: 3,
       title: t('loyalspin.demoDashboard.rewards.discount20.title', {
-        defaultValue: 'Réduction 20%',
+        defaultValue: '20% Discount',
       }),
       value: '-20%',
       icon: '🏷️',
@@ -60,7 +60,7 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
     {
       id: 4,
       title: t('loyalspin.demoDashboard.rewards.mysteryGift.title', {
-        defaultValue: 'Cadeau Mystère',
+        defaultValue: 'Mystery Gift',
       }),
       value: '?',
       icon: '🎁',
@@ -80,21 +80,21 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
     },
     {
       label: t('loyalspin.demoDashboard.stats.pointsEarned', {
-        defaultValue: 'Points Accumulés',
+        defaultValue: 'Points Earned',
       }),
       value: '2,850',
       unit: 'pts',
     },
     {
       label: t('loyalspin.demoDashboard.stats.rewardsEarned', {
-        defaultValue: 'Récompenses Gagnées',
+        defaultValue: 'Rewards Earned',
       }),
       value: '8',
       unit: '',
     },
     {
       label: t('loyalspin.demoDashboard.stats.level', {
-        defaultValue: 'Niveau',
+        defaultValue: 'Level',
       }),
       value: 'GOLD',
       unit: '',
@@ -266,7 +266,7 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
         </Text>
         <Text style={styles.headerSubtitle}>
           {t('loyalspin.demoDashboard.subtitle', {
-            defaultValue: "Explorez l'expérience client complète",
+            defaultValue: 'Explore the full customer experience',
           })}
         </Text>
       </View>
@@ -282,7 +282,7 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
             <View style={styles.profileInfo}>
               <Text style={styles.profileName}>{customerData.name}</Text>
               <Text style={styles.profileLevel}>
-                Niveau: {customerData.level}
+                Level: {customerData.level}
               </Text>
             </View>
             <View style={styles.profileBadge}>
@@ -313,14 +313,14 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
 
         <Text style={styles.infoText}>
           {t('loyalspin.demoDashboard.demoNotice', {
-            defaultValue: 'ℹ️ Ceci est une démo interactive en lecture seule',
+            defaultValue: 'ℹ️ This is a read-only interactive demo',
           })}
         </Text>
 
         {/* Rewards Section */}
         <Text style={styles.sectionTitle}>
           {t('loyalspin.demoDashboard.rewardsSectionTitle', {
-            defaultValue: 'Récompenses Disponibles',
+            defaultValue: 'Available rewards',
           })}
         </Text>
         <View style={styles.rewardsGrid}>
@@ -337,20 +337,20 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
         {/* Spin Wheel Section */}
         <Text style={styles.sectionTitle}>
           {t('loyalspin.demoDashboard.spinWheelSectionTitle', {
-            defaultValue: 'Lancer la Roulette',
+            defaultValue: 'Spin the Wheel',
           })}
         </Text>
         <View style={styles.rewardCard}>
           <Text style={{ fontSize: 60, marginBottom: 12 }}>🎡</Text>
           <Text style={styles.rewardTitle}>
             {t('loyalspin.demoDashboard.spinWheelTitle', {
-              defaultValue: 'Votre Roulette 3D',
+              defaultValue: 'Your 3D Wheel',
             })}
           </Text>
           <Text style={styles.rewardCondition}>
             {t('loyalspin.demoDashboard.spinWheelDescription', {
               defaultValue:
-                'À chaque visite, lancez la roulette et gagnez des récompenses instantanées!',
+                'At each visit, spin the wheel and win instant rewards!',
             })}
           </Text>
         </View>
@@ -358,14 +358,14 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
         {/* Coupon Section */}
         <Text style={styles.sectionTitle}>
           {t('loyalspin.demoDashboard.couponsSectionTitle', {
-            defaultValue: 'Vos Coupons',
+            defaultValue: 'Your Coupons',
           })}
         </Text>
         <View style={styles.rewardCard}>
           <Text style={{ fontSize: 60, marginBottom: 12 }}>🎟️</Text>
           <Text style={styles.rewardTitle}>
             {t('loyalspin.demoDashboard.activeCouponsTitle', {
-              defaultValue: 'Coupons Actifs',
+              defaultValue: 'Active Coupons',
             })}
           </Text>
           <Text
@@ -379,7 +379,7 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
           <Text style={styles.rewardCondition}>
             {t('loyalspin.demoDashboard.activeCouponsDescription', {
               defaultValue:
-                'Consultez vos coupons disponibles et présentez-les au comptoir',
+                'View your available coupons and present them at the counter',
             })}
           </Text>
         </View>
@@ -387,20 +387,20 @@ export const DemoDashboardScreen: React.FC<DemoDashboardScreenProps> = ({
         {/* Card Section */}
         <Text style={styles.sectionTitle}>
           {t('loyalspin.demoDashboard.loyaltyCardSectionTitle', {
-            defaultValue: 'Votre Carte Fidélité',
+            defaultValue: 'Your Loyalty Card',
           })}
         </Text>
         <View style={styles.rewardCard}>
           <Text style={{ fontSize: 60, marginBottom: 12 }}>💳</Text>
           <Text style={styles.rewardTitle}>
             {t('loyalspin.demoDashboard.digitalCardTitle', {
-              defaultValue: 'Carte Fidélité Numérique',
+              defaultValue: 'Digital Loyalty Card',
             })}
           </Text>
           <Text style={styles.rewardCondition}>
             {t('loyalspin.demoDashboard.digitalCardDescription', {
               defaultValue:
-                'Accédez à votre QR code personnel à présenter à chaque visite',
+                'Access your personal QR code to present at each visit',
             })}
           </Text>
         </View>

@@ -15,42 +15,42 @@ interface CouponMobileProps {
 const getCoupons = (tCommon: any) => [
   {
     id: 'coupon-1',
-    title: tCommon('web.coupons.items.1.title', '15% de réduction'),
+    title: tCommon('web.coupons.items.1.title', '15% off'),
     code: 'LOYAL15',
     expiry: '31/12/2026',
     description: tCommon(
       'web.coupons.items.1.description',
-      'Réduction utilisable sur votre prochaine récompense LoyalSpin.',
+      'Discount usable on your next LoyalSpin reward.',
     ),
-    status: tCommon('web.coupons.items.1.status', 'Actif'),
+    status: tCommon('web.coupons.items.1.status', 'Active'),
   },
   {
     id: 'coupon-2',
-    title: tCommon('web.coupons.items.2.title', 'Livraison offerte'),
+    title: tCommon('web.coupons.items.2.title', 'Free delivery'),
     code: 'FREEDEL',
     expiry: '30/09/2026',
     description: tCommon(
       'web.coupons.items.2.description',
-      'Livraison gratuite sur toute commande dans le catalogue.',
+      'Free delivery on any catalog order.',
     ),
-    status: tCommon('web.coupons.items.2.status', 'Actif'),
+    status: tCommon('web.coupons.items.2.status', 'Active'),
   },
   {
     id: 'coupon-3',
-    title: tCommon('web.coupons.items.3.title', '10 DT offerts'),
+    title: tCommon('web.coupons.items.3.title', '10 DT off'),
     code: 'BONUS10',
     expiry: '15/07/2026',
     description: tCommon(
       'web.coupons.items.3.description',
-      'Offre spéciale fidélité pour les 10 premiers clients du mois.',
+      'Special loyalty offer for the first 10 customers of the month.',
     ),
-    status: tCommon('web.coupons.items.3.status', 'Expiré'),
+    status: tCommon('web.coupons.items.3.status', 'Expired'),
   },
 ];
 
 const CouponMobile: React.FC<CouponMobileProps> = ({ t }) => {
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState<'Tous' | 'Actif' | 'Expiré'>('Tous');
+  const [filter, setFilter] = useState<'All' | 'Active' | 'Expired'>('All');
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const tCommon = (key: string, defaultValue: string) =>
@@ -77,10 +77,10 @@ const CouponMobile: React.FC<CouponMobileProps> = ({ t }) => {
       navigator.clipboard.writeText(code);
     }
     Alert.alert(
-      tCommon('web.coupons.copied', 'Code copié !'),
+      tCommon('web.coupons.copied', 'Code copied!'),
       `${code} ${tCommon(
         'web.coupons.copiedSuffix',
-        'a été copié dans le presse-papiers.',
+        'has been copied to clipboard.',
       )}`,
     );
   };
@@ -88,12 +88,12 @@ const CouponMobile: React.FC<CouponMobileProps> = ({ t }) => {
   return (
     <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in text-left">
       <Text className="text-3xl font-black text-slate-900 dark:text-white">
-        {tCommon('web.coupons.title', 'Mes coupons fidélité')}
+        {tCommon('web.coupons.title', 'My loyalty coupons')}
       </Text>
       <Text className="text-slate-500 dark:text-slate-400 text-sm mt-2 max-w-2xl">
         {tCommon(
           'web.coupons.subtitle',
-          'Utilisez vos bons exclusifs pour économiser sur vos prochaines interventions.',
+          'Use your exclusive vouchers to save on your next services.',
         )}
       </Text>
 
@@ -103,12 +103,12 @@ const CouponMobile: React.FC<CouponMobileProps> = ({ t }) => {
           onChangeText={setSearch}
           placeholder={tCommon(
             'web.coupons.searchPlaceholder',
-            'Chercher un coupon...',
+            'Search a coupon...',
           )}
           className="w-full sm:w-1/2 rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-5 py-3 text-sm text-slate-900 dark:text-white focus:border-[#F97316]"
         />
         <View className="inline-flex rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 p-1">
-          {['Tous', 'Actif', 'Expiré'].map(status => (
+          {['All', 'Active', 'Expired'].map(status => (
             <TouchableOpacity
               key={status}
               onPress={() => setFilter(status as any)}
@@ -150,7 +150,7 @@ const CouponMobile: React.FC<CouponMobileProps> = ({ t }) => {
 
             <View className="mt-6 flex flex-col gap-2 text-sm text-slate-600 dark:text-slate-300">
               <Text>
-                {tCommon('web.coupons.expiry', 'Valide jusqu’au')}{' '}
+                {tCommon('web.coupons.expiry', 'Valid until')}{' '}
                 {coupon.expiry}
               </Text>
             </View>
@@ -162,16 +162,16 @@ const CouponMobile: React.FC<CouponMobileProps> = ({ t }) => {
                 }
                 className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 px-4 py-3 text-sm font-black text-slate-900 dark:text-white hover:bg-[#F97316]/10 transition"
               >
-                {tCommon('web.coupons.showQr', 'Voir le QR')}
+                {tCommon('web.coupons.showQr', 'View QR')}
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => onCopyCode(coupon.code)}
                 className="rounded-3xl bg-[#1E3A5F] px-4 py-3 text-sm font-black text-white hover:bg-[#152a47] transition"
               >
-                {tCommon('web.coupons.copyCode', 'Copier le code')}
+                {tCommon('web.coupons.copyCode', 'Copy code')}
               </TouchableOpacity>
             </View>
-
+ 
             {selectedId === coupon.id && (
               <View className="mt-6 rounded-3xl border border-dashed border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 p-5 text-center">
                 <View className="mx-auto mb-4 h-36 w-36 rounded-3xl bg-slate-200 dark:bg-slate-800 grid place-items-center">
@@ -182,7 +182,7 @@ const CouponMobile: React.FC<CouponMobileProps> = ({ t }) => {
                 <Text className="text-sm font-semibold text-slate-700 dark:text-slate-200">
                   {tCommon(
                     'web.coupons.presentAtCheckout',
-                    'Montrez ce QR à la caisse pour valider votre coupon.',
+                    'Show this QR at checkout to validate your coupon.',
                   )}
                 </Text>
               </View>

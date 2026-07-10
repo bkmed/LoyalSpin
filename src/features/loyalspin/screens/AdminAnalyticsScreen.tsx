@@ -35,38 +35,38 @@ const AdminAnalyticsScreen = ({ t }: AdminAnalyticsScreenProps) => {
       <Text className="text-3xl font-black tracking-tight text-slate-900 dark:text-slate-100">
         {tCommon(
           'admin.realtimeAnalyticsTitle',
-          "Statistiques Réelles d'Utilisation",
+          'Real-time usage statistics',
         )}
       </Text>
       <Text className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-1 font-semibold">
         {tCommon(
           'admin.realtimeAnalyticsDescription',
-          'Consultez les vues de pages, les partages et les clics sur appel.',
+          'View page views, shares, and call clicks.',
         )}
       </Text>
 
       <View className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
         {[
           {
-            label: tCommon('admin.totalViews', 'Vues Totales'),
+            label: tCommon('admin.totalViews', 'Total Views'),
             value: totalViews.toString(),
-            detail: tCommon('admin.totalViewsDetail', 'Pages consultées'),
+            detail: tCommon('admin.totalViewsDetail', 'Pages viewed'),
           },
           {
-            label: tCommon('admin.totalShares', 'Partages Totaux'),
+            label: tCommon('admin.totalShares', 'Total Shares'),
             value: totalShares.toString(),
             detail: tCommon(
               'admin.totalSharesDetail',
-              'Sur Facebook et WhatsApp',
+              'On Facebook and WhatsApp',
             ),
           },
           {
-            label: tCommon('admin.callClicks', 'Clics sur Appel'),
+            label: tCommon('admin.callClicks', 'Call Clicks'),
             value: callClicks.toString(),
-            detail: tCommon('admin.callClicksDetail', 'Demandes de contact'),
+            detail: tCommon('admin.callClicksDetail', 'Contact requests'),
           },
           {
-            label: tCommon('admin.engagementRate', "Taux d'Engagement"),
+            label: tCommon('admin.engagementRate', 'Engagement Rate'),
             value:
               totalViews > 0
                 ? `${Math.round(
@@ -75,7 +75,7 @@ const AdminAnalyticsScreen = ({ t }: AdminAnalyticsScreenProps) => {
                 : '0%',
             detail: tCommon(
               'admin.engagementDetail',
-              '(Partages + Appels) / Vues',
+              '(Shares + Calls) / Views',
             ),
           },
         ].map((metric, idx) => (
@@ -99,14 +99,14 @@ const AdminAnalyticsScreen = ({ t }: AdminAnalyticsScreenProps) => {
       <View className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10">
         <View className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
           <Text className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-slate-100">
-            {tCommon('admin.pageViewsChartTitle', 'Vues par page')}
+            {tCommon('admin.pageViewsChartTitle', 'Views per page')}
           </Text>
           <View className="space-y-4 pt-4">
             {Object.entries(pageViewsMap || {}).length === 0 ? (
               <Text className="text-slate-400 text-xs dark:text-slate-300">
                 {tCommon(
                   'admin.noPageViewsData',
-                  'Aucune donnée de vue pour le moment.',
+                  'No view data available yet.',
                 )}
               </Text>
             ) : (
@@ -140,13 +140,13 @@ const AdminAnalyticsScreen = ({ t }: AdminAnalyticsScreenProps) => {
           <Text className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-slate-100">
             {tCommon(
               'admin.sharesBreakdownTitle',
-              'Éléments les plus partagés',
+              'Most shared items',
             )}
           </Text>
           <View className="space-y-5 pt-4 text-xs font-bold text-slate-500">
             {Object.entries(sharesMap || {}).length === 0 ? (
               <Text className="text-slate-400 dark:text-slate-300">
-                {tCommon('admin.noSharesData', 'Aucun partage pour le moment.')}
+                {tCommon('admin.noSharesData', 'No shares yet.')}
               </Text>
             ) : (
               Object.entries(sharesMap || {})

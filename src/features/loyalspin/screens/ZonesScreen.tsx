@@ -101,14 +101,14 @@ const ZonesScreen = ({
   const handleSubmit = () => {
     if (!interventionName || !interventionPhone) {
       showToast(
-        tCommon('web.request_name_phone_required', 'Nom et téléphone requis'),
+        tCommon('web.request_name_phone_required', 'Name and phone are required'),
         'error',
       );
       return;
     }
-
+ 
     showToast(
-      tCommon('web.request_submitted', 'Demande envoyée avec succès'),
+      tCommon('web.request_submitted', 'Request submitted successfully'),
       'success',
     );
     setInterventionName('');
@@ -120,15 +120,15 @@ const ZonesScreen = ({
     <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 animate-fade-in text-left">
       <View className="text-center max-w-3xl mx-auto mb-16">
         <Text className="bg-[#1E3A5F] text-white font-extrabold text-[10px] px-3.5 py-1.5 rounded-full uppercase tracking-widest leading-none">
-          {tCommon('web.zones_directes', "Zones d'intervention directes")}
+          {tCommon('web.zones_directes', 'Direct intervention zones')}
         </Text>
         <Text className="text-3xl sm:text-4xl font-black tracking-tight mt-6 text-slate-900 dark:text-slate-100">
-          {tCommon('zones.zones', 'Zones Couvertes')}
+          {tCommon('zones.zones', 'Covered Zones')}
         </Text>
         <Text className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-3 font-semibold">
           {tCommon(
             'zones.zone_tagline',
-            'Nous intervenons rapidement dans ces régions.',
+            'We respond quickly in these areas.',
           )}
         </Text>
       </View>
@@ -137,7 +137,7 @@ const ZonesScreen = ({
         <View className="lg:col-span-7 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col justify-between min-h-[500px]">
           <View>
             <Text className="text-base font-black text-slate-800 dark:text-slate-100">
-              {tCommon('zones.carte_interactive', 'Carte Interactive')}
+              {tCommon('zones.carte_interactive', 'Interactive Map')}
             </Text>
             <Text className="text-slate-400 text-xs mt-1 font-semibold dark:text-slate-300">
               {tCommon(
@@ -339,7 +339,7 @@ const ZonesScreen = ({
             <View className="grid grid-cols-2 gap-4">
               <View className="space-y-2">
                 <Text className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest dark:text-slate-400">
-                  {tCommon('zones.ville', 'Ville')}
+                  {tCommon('zones.ville', 'City')}
                 </Text>
                 <select
                   value={interventionGov}
@@ -363,17 +363,17 @@ const ZonesScreen = ({
                   onChange={e => setInterventionProblem(e.target.value)}
                   className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-3 text-xs font-bold focus:outline-none"
                 >
-                  <option value="Fuite d'eau">
-                    {tCommon('zones.prob_fuite', "Fuite d'eau / Tuyau cassé")}
+                  <option value="Water leak">
+                    {tCommon('zones.prob_fuite', 'Water leak / Broken pipe')}
                   </option>
-                  <option value="Panne Chauffe-eau">
-                    {tCommon('zones.prob_chauffe_eau', 'Panne Chauffe-eau')}
+                  <option value="Water heater failure">
+                    {tCommon('zones.prob_chauffe_eau', 'Water heater failure')}
                   </option>
-                  <option value="Climatisation">
-                    {tCommon('zones.prob_climatiseur', 'Problème Climatiseur')}
+                  <option value="Air conditioner issue">
+                    {tCommon('zones.prob_climatiseur', 'Air conditioner issue')}
                   </option>
-                  <option value="Gaz STEG">
-                    {tCommon('zones.prob_gaz', 'Tuyauterie Gaz / Sécurité')}
+                  <option value="Gas piping safety">
+                    {tCommon('zones.prob_gaz', 'Gas piping / Safety')}
                   </option>
                 </select>
               </View>

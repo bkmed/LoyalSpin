@@ -1034,7 +1034,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
         
         <View className="flex-row space-x-4 mt-2">
           <View className="flex-1">
-            <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">{tCommon('superadmin.industryLabel', 'Secteur d'activité')}</Text>
+            <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">{tCommon('superadmin.industryLabel', "Secteur d'activité")}</Text>
             <View className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden h-12 justify-center mb-2">
               <Picker
                 selectedValue={currentProject.industry || ''}

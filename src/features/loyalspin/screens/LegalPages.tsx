@@ -21,15 +21,15 @@ export const LegalPages: React.FC<LegalPagesProps> = ({
         <View className="max-w-4xl mx-auto bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[32px] p-8 sm:p-12 shadow-sm">
           <View className="space-y-4 text-center">
             <Text className="text-xs font-black uppercase tracking-[0.25em] text-[#F97316]">
-              {tc('informations', 'Informations')}
+              {tc('informations', 'Legal Info')}
             </Text>
             <Text className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-slate-100">
-              {tc('informations', 'Informations légales')}
+              {tc('informations', 'Legal Information')}
             </Text>
             <Text className="text-sm text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
               {tc(
                 'informations_desc',
-                'Retrouvez ici toutes les informations légales.',
+                'Find all legal information here.',
               )}
             </Text>
           </View>
@@ -38,26 +38,26 @@ export const LegalPages: React.FC<LegalPagesProps> = ({
             {[
               {
                 id: 'Politique',
-                label: tc('politique', 'Politique de confidentialité'),
+                label: tc('politique', 'Privacy policy'),
                 desc: tc(
                   'privacy_intro',
-                  'Découvrez comment nous protégeons vos données.',
+                  'Learn how we protect your data.',
                 ),
               },
               {
                 id: 'Conditions',
-                label: tc('conditions_util', "Conditions d'utilisation"),
+                label: tc('conditions_util', 'Terms of use'),
                 desc: tc(
                   'terms_intro',
-                  "Les règles d'utilisation de notre service.",
+                  'The rules for using our service.',
                 ),
               },
               {
                 id: 'PlanSite',
-                label: tc('plan_site', 'Plan du site'),
+                label: tc('plan_site', 'Sitemap'),
                 desc: tc(
                   'sitemap_intro',
-                  'Naviguez facilement dans notre site.',
+                  'Navigate our site easily.',
                 ),
               },
             ].map(item => (
@@ -86,21 +86,21 @@ export const LegalPages: React.FC<LegalPagesProps> = ({
         <View className="max-w-4xl mx-auto bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[32px] p-8 sm:p-12 shadow-sm space-y-8">
           <View className="space-y-4">
             <Text className="text-xs font-black uppercase tracking-[0.25em] text-[#F97316]">
-              {tc('politique', 'Politique de confidentialité')}
+              {tc('politique', 'Privacy policy')}
             </Text>
             <Text className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-slate-100">
-              {tc('politique', 'Politique de confidentialité')}
+              {tc('politique', 'Privacy policy')}
             </Text>
             <Text className="text-sm text-slate-500 dark:text-slate-400">
-              {tc('privacy_intro', 'Nous respectons votre vie privée.')}
+              {tc('privacy_intro', 'We respect your privacy.')}
             </Text>
           </View>
 
           <View className="grid gap-4 sm:grid-cols-3">
             {[
-              tc('privacy_point_1', 'Vos données sont sécurisées.'),
-              tc('privacy_point_2', 'Aucune revente à des tiers.'),
-              tc('privacy_point_3', 'Vous pouvez demander leur suppression.'),
+              tc('privacy_point_1', 'Your data is secure.'),
+              tc('privacy_point_2', 'No resale to third parties.'),
+              tc('privacy_point_3', 'You can request deletion.'),
             ].map((point, idx) => (
               <View
                 key={idx}
@@ -119,7 +119,7 @@ export const LegalPages: React.FC<LegalPagesProps> = ({
               className="py-2 px-1 transition"
             >
               <Text className="text-xs font-black uppercase tracking-[0.25em] text-[#1E3A5F] hover:text-[#F97316]">
-                {tc('retour_accueil', '← Retour')}
+                {tc('retour_accueil', '← Back')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -127,7 +127,7 @@ export const LegalPages: React.FC<LegalPagesProps> = ({
               className="py-2 px-1 transition"
             >
               <Text className="text-xs font-black uppercase tracking-[0.25em] text-[#F97316] hover:text-[#1E3A5F]">
-                {tc('plan_site', 'Plan du site')}
+                {tc('plan_site', 'Sitemap')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -142,10 +142,10 @@ export const LegalPages: React.FC<LegalPagesProps> = ({
         <View className="max-w-4xl mx-auto bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[32px] p-8 sm:p-12 shadow-sm space-y-8">
           <View className="space-y-4">
             <Text className="text-xs font-black uppercase tracking-[0.25em] text-[#F97316]">
-              {tc('conditions_util', "Conditions d'utilisation")}
+              {tc('conditions_util', 'Terms of use')}
             </Text>
             <Text className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-slate-100">
-              {tc('conditions_util', "Conditions d'utilisation")}
+              {tc('conditions_util', 'Terms of use')}
             </Text>
             <Text className="text-sm text-slate-500 dark:text-slate-400">
               {tc(
@@ -157,11 +157,11 @@ export const LegalPages: React.FC<LegalPagesProps> = ({
 
           <View className="space-y-3">
             {[
-              tc('terms_point_1', 'Utilisation à des fins légales uniquement.'),
-              tc('terms_point_2', 'Respect des autres utilisateurs.'),
+              tc('terms_point_1', 'Use for legal purposes only.'),
+              tc('terms_point_2', 'Respect other users.'),
               tc(
                 'terms_point_3',
-                'Nous nous réservons le droit de modifier les conditions.',
+                'We reserve the right to change these terms.',
               ),
             ].map((point, idx) => (
               <View
@@ -184,7 +184,7 @@ export const LegalPages: React.FC<LegalPagesProps> = ({
               className="py-2 px-1 transition"
             >
               <Text className="text-xs font-black uppercase tracking-[0.25em] text-[#1E3A5F] hover:text-[#F97316]">
-                {tc('retour_accueil', '← Retour')}
+                {tc('retour_accueil', '← Back')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -207,13 +207,13 @@ export const LegalPages: React.FC<LegalPagesProps> = ({
       <View className="max-w-4xl mx-auto bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[32px] p-8 sm:p-12 shadow-sm space-y-8">
         <View className="space-y-4">
           <Text className="text-xs font-black uppercase tracking-[0.25em] text-[#F97316]">
-            {tc('plan_site', 'Plan du site')}
+            {tc('plan_site', 'Sitemap')}
           </Text>
           <Text className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-slate-100">
-            {tc('plan_site', 'Plan du site')}
+            {tc('plan_site', 'Sitemap')}
           </Text>
           <Text className="text-sm text-slate-500 dark:text-slate-400">
-            {tc('sitemap_intro', 'Retrouvez toutes les pages de notre site.')}
+            {tc('sitemap_intro', 'Find all pages on our site.')}
           </Text>
         </View>
 
@@ -250,7 +250,7 @@ export const LegalPages: React.FC<LegalPagesProps> = ({
             className="py-2 px-1 transition"
           >
             <Text className="text-xs font-black uppercase tracking-[0.25em] text-[#1E3A5F] hover:text-[#F97316]">
-              {tc('retour_accueil', '← Retour')}
+              {tc('retour_accueil', '← Back')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity

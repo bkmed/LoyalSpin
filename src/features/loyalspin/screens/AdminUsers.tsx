@@ -140,7 +140,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
     if (!selectedUser) return;
     if (!canManageUser(selectedUser)) {
       showToast(
-        tCommon('adminUsers.accessDenied', 'Accès refusé : client non géré.'),
+        tCommon('adminUsers.accessDenied', 'Access denied: unmanaged client.'),
         'error',
       );
       return;
@@ -179,15 +179,15 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
               ? 'adminUsers.userBlocked'
               : 'adminUsers.userReactivated',
             selectedUser.status === 'active'
-              ? 'Utilisateur bloqué avec succès !'
-              : 'Compte réactivé !',
+              ? 'User blocked successfully!'
+              : 'Account reactivated!'
           ),
           'info',
         );
       })
       .catch(() => {
         showToast(
-          tCommon('adminUsers.userUpdateFailed', 'Impossible de mettre à jour l utilisateur.'),
+          tCommon('adminUsers.userUpdateFailed', 'Unable to update user.'),
           'error',
         );
       });
@@ -198,7 +198,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
     showToast(
       tCommon(
         'adminUsers.notificationSent',
-        `Notification envoyée à ${selectedUser.name} !`,
+        `Notification sent to ${selectedUser.name}!`,
       ),
       'success',
     );
@@ -213,7 +213,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
     if (!editingUser) return;
     if (!canManageUser(editingUser)) {
       showToast(
-        tCommon('adminUsers.accessDenied', 'Accès refusé : client non géré.'),
+        tCommon('adminUsers.accessDenied', 'Access denied: unmanaged client.'),
         'error',
       );
       return;
@@ -239,14 +239,14 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
           dispatch(deleteAdmin(updatedUser.id));
         }
         showToast(
-          tCommon('adminUsers.userUpdated', 'Utilisateur mis à jour avec succès !'),
+          tCommon('adminUsers.userUpdated', 'User updated successfully!'),
           'success',
         );
         setEditingUser(null);
       })
       .catch(() => {
         showToast(
-          tCommon('adminUsers.userUpdateFailed', 'Impossible de mettre à jour l utilisateur.'),
+          tCommon('adminUsers.userUpdateFailed', 'Unable to update user.'),
           'error',
         );
       });
@@ -256,7 +256,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
     if (!userToDelete) return;
     if (!canManageUser(userToDelete)) {
       showToast(
-        tCommon('adminUsers.accessDenied', 'Accès refusé : client non géré.'),
+        tCommon('adminUsers.accessDenied', 'Access denied: unmanaged client.'),
         'error',
       );
       setShowDeleteConfirm(false);
@@ -273,7 +273,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
           dispatch(deleteAdmin(userToDelete.id));
         }
         showToast(
-          tCommon('adminUsers.userDeleted', 'Utilisateur supprimé !'),
+          tCommon('adminUsers.userDeleted', 'User deleted successfully!'),
           'info',
         );
       })
@@ -295,23 +295,23 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
   const handleCreateUser = () => {
     const errors: Record<string, string> = {};
     if (!newUserName.trim() || newUserName.trim().length < 2)
-      errors.name = 'Le nom est requis (minimum 2 caractères).';
+      errors.name = tCommon('adminUsers.errorNameRequired', 'Name is required (minimum 2 characters).');
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const cleanEmail = newUserEmail.trim().toLowerCase();
     
     if (!cleanEmail || !emailRegex.test(cleanEmail)) {
-      errors.email = 'Un email valide est requis.';
+      errors.email = tCommon('adminUsers.errorEmailInvalid', 'A valid email is required.');
     } else {
       const emailExists = usersList.some((u: any) => u.email.toLowerCase() === cleanEmail);
       if (emailExists) {
-        errors.email = 'Cet email est déjà utilisé par un autre compte.';
+        errors.email = tCommon('adminUsers.errorEmailInUse', 'This email is already used by another account.');
       }
     }
     
     if (newUserPhone.trim()) {
       const phoneExists = usersList.some((u: any) => u.phone === newUserPhone.trim());
       if (phoneExists) {
-        errors.phone = 'Ce numéro de téléphone est déjà utilisé.';
+        errors.phone = tCommon('adminUsers.errorPhoneInUse', 'This phone number is already used.');
       }
     }
 
@@ -337,7 +337,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
           dispatch(addAdmin(newUser));
         }
         showToast(
-          tCommon('adminUsers.userCreated', 'Utilisateur créé avec succès !'),
+          tCommon('adminUsers.userCreated', 'User created successfully!'),
           'success',
         );
         setShowCreateUser(false);
@@ -349,7 +349,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
         setCreateUserErrors({});
       })
       .catch(() => {
-        showToast("Erreur lors de la création de l'utilisateur.", 'error');
+        showToast('Failed to create user.', 'error');
       });
   };
 
@@ -362,7 +362,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
           style={{ alignSelf: 'flex-start' }}
         >
           <Text className="text-xs font-black text-slate-600 dark:text-slate-200">
-            {tCommon('adminUsers.backToManage', '← Retour à Manage')}
+            {tCommon('adminUsers.backToManage', '← Back to Manage')}
           </Text>
         </TouchableOpacity>
       )}
@@ -370,12 +370,12 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
       <View className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <View>
           <Text className="text-3xl font-black tracking-tight text-slate-900 dark:text-slate-100">
-            {tCommon('adminUsers.title', 'Gestion des Comptes Membres')}
+            {tCommon('adminUsers.title', 'Member Account Management')}
           </Text>
           <Text className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-1 font-semibold max-w-2xl">
             {tCommon(
               'adminUsers.description',
-              'Visualisez la liste des inscrits, modifiez les rôles ou désactivez temporairement des accès.',
+              'View registered members, update roles, or temporarily suspend access.',
             )}
           </Text>
         </View>
@@ -430,7 +430,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
               <TextInput
                 value={newUserPhone}
                 onChangeText={setNewUserPhone}
-                placeholder={tCommon('adminUsers.phonePlaceholder', 'Telephone (optionnel)')}
+                placeholder={tCommon('adminUsers.phonePlaceholder', 'Phone (optional)')}
                 keyboardType="phone-pad"
                 className="w-full px-4 py-3 rounded-3xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100"
               />
@@ -441,8 +441,8 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
                 onValueChange={(val: any) => setNewUserRole(val)}
                 style={{ height: 50 }}
               >
-                <Picker.Item label={tCommon('adminUsers.roleUser', 'Utilisateur')} value="user" />
-                <Picker.Item label={tCommon('adminUsers.roleAdmin', 'Administrateur')} value="admin" />
+                <Picker.Item label={tCommon('adminUsers.roleUser', 'User')} value="user" />
+                <Picker.Item label={tCommon('adminUsers.roleAdmin', 'Administrator')} value="admin" />
               </Picker>
             </View>
             <View className="w-full border border-slate-300 dark:border-slate-700 rounded-3xl overflow-hidden bg-white dark:bg-slate-950">
@@ -451,9 +451,9 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
                 onValueChange={(val: any) => setNewUserStatus(val)}
                 style={{ height: 50 }}
               >
-              <Picker.Item label={tCommon('adminUsers.statusActive', 'Actif')} value="active" />
-                <Picker.Item label={tCommon('adminUsers.statusBlocked', 'Bloqué')} value="blocked" />
-                <Picker.Item label={tCommon('adminUsers.statusPending', 'En attente')} value="pending" />
+              <Picker.Item label={tCommon('adminUsers.statusActive', 'Active')} value="active" />
+                <Picker.Item label={tCommon('adminUsers.statusBlocked', 'Blocked')} value="blocked" />
+                <Picker.Item label={tCommon('adminUsers.statusPending', 'Pending')} value="pending" />
               </Picker>
             </View>
             <View className="md:col-span-2 flex flex-row justify-end gap-3 mt-2">
@@ -461,13 +461,13 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
                 onPress={() => { setShowCreateUser(false); setCreateUserErrors({}); }}
                 className="bg-slate-200 dark:bg-slate-700 px-6 py-3 rounded-3xl"
               >
-                <Text className="font-black text-slate-700 dark:text-slate-200">{tCommon('adminUsers.cancel', 'Annuler')}</Text>
+                <Text className="font-black text-slate-700 dark:text-slate-200">{tCommon('adminUsers.cancel', 'Cancel')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handleCreateUser}
                 className="bg-[#F97316] px-6 py-3 rounded-3xl"
               >
-                <Text className="font-black text-white">{tCommon('adminUsers.createUser', 'Créer l’utilisateur')}</Text>
+                <Text className="font-black text-white">{tCommon('adminUsers.createUser', 'Create user')}</Text>
               </TouchableOpacity>            </View>
           </View>
         </View>
@@ -478,23 +478,23 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
           <View className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <View>
               <Text className="text-lg font-black text-slate-900 dark:text-slate-100">
-                {tCommon('adminUsers.clientListHeading', 'Liste des Clients')}
+                {tCommon('adminUsers.clientListHeading', 'Client List')}
               </Text>
               <Text className="text-slate-500 dark:text-slate-400 text-xs mt-1">
                 {filteredUsers.length}{' '}
-                {tCommon('adminUsers.clientCount', 'clients trouvés')}
+                {tCommon('adminUsers.clientCount', 'clients found')}
               </Text>
             </View>
             <View className="flex flex-wrap gap-2">
               <View className="rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-2">
                 <Text className="text-[11px] font-black text-slate-700 dark:text-slate-200">
-                  {tCommon('adminUsers.statusActive', 'Actifs')} :{' '}
+                  {tCommon('adminUsers.statusActive', 'Active')} :{' '}
                   {filteredUsers.filter(u => u.status === 'active').length}
                 </Text>
               </View>
               <View className="rounded-full bg-rose-100 dark:bg-rose-900/20 px-3 py-2">
                 <Text className="text-[11px] font-black text-rose-700 dark:text-rose-200">
-                  {tCommon('adminUsers.statusBlocked', 'Bloqués')} :{' '}
+                  {tCommon('adminUsers.statusBlocked', 'Blocked')} :{' '}
                   {filteredUsers.filter(u => u.status !== 'active').length}
                 </Text>
               </View>
@@ -763,7 +763,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
                 <Text className="text-slate-300 text-lg font-black">
                   {tCommon(
                     'adminUsers.noUserSelected',
-                    'Sélectionnez un client pour afficher le profil.',
+                    'Select a client to view the profile.',
                   )}
                 </Text>
               </View>
@@ -782,7 +782,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
               <Text className="text-slate-500 dark:text-slate-400 text-sm mt-1">
                 {tCommon(
                   'adminUsers.editUserDescription',
-                  'Mettez à jour les informations utilisateur puis enregistrez.',
+                  'Update the user information then save your changes.',
                 )}
               </Text>
             </View>
@@ -818,7 +818,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
             <TextInput
               value={editUserPhone}
               onChangeText={setEditUserPhone}
-              placeholder={tCommon('adminUsers.phonePlaceholder', 'Téléphone')}
+              placeholder={tCommon('adminUsers.phonePlaceholder', 'Phone')}
               className="w-full px-4 py-3 rounded-3xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#F97316]"
             />
 
@@ -830,11 +830,11 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
                 }
               >
                 <Picker.Item
-                  label={tCommon('adminUsers.roleUser', 'Utilisateur')}
+                  label={tCommon('adminUsers.roleUser', 'User')}
                   value="user"
                 />
                 <Picker.Item
-                  label={tCommon('adminUsers.roleAdmin', 'Administrateur')}
+                  label={tCommon('adminUsers.roleAdmin', 'Administrator')}
                   value="admin"
                 />
               </Picker>
@@ -863,7 +863,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
               <Text className="text-sm text-slate-500 dark:text-slate-400 mt-2">
                 {tCommon(
                   'adminUsers.confirmDeleteUser',
-                  'Voulez-vous supprimer définitivement cet utilisateur ?',
+                  'Do you want to permanently delete this user?',
                 )}
               </Text>
             </View>

@@ -451,9 +451,9 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
                 onValueChange={(val: any) => setNewUserStatus(val)}
                 style={{ height: 50 }}
               >
-                <Picker.Item label="Actif" value="active" />
-                <Picker.Item label="Bloque" value="blocked" />
-                <Picker.Item label="En attente" value="pending" />
+              <Picker.Item label={tCommon('adminUsers.statusActive', 'Actif')} value="active" />
+                <Picker.Item label={tCommon('adminUsers.statusBlocked', 'Bloqué')} value="blocked" />
+                <Picker.Item label={tCommon('adminUsers.statusPending', 'En attente')} value="pending" />
               </Picker>
             </View>
             <View className="md:col-span-2 flex flex-row justify-end gap-3 mt-2">
@@ -467,9 +467,8 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
                 onPress={handleCreateUser}
                 className="bg-[#F97316] px-6 py-3 rounded-3xl"
               >
-                <Text className="font-black text-white">{tCommon('adminUsers.createUser', 'Creer l utilisateur')}</Text>
-              </TouchableOpacity>
-            </View>
+                <Text className="font-black text-white">{tCommon('adminUsers.createUser', 'Créer l’utilisateur')}</Text>
+              </TouchableOpacity>            </View>
           </View>
         </View>
       )}
@@ -812,7 +811,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
               keyboardType="email-address"
               value={editUserEmail}
               onChangeText={setEditUserEmail}
-              placeholder="Email"
+              placeholder={tCommon('adminUsers.emailPlaceholder', 'Email')}
               className="w-full px-4 py-3 rounded-3xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#F97316]"
             />
 

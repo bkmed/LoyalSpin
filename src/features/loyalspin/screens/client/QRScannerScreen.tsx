@@ -7,6 +7,7 @@ import {
   AppState,
   Platform,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import {
   Camera,
   useCameraDevice,
@@ -24,6 +25,10 @@ const CAMERA_PERMISSION =
 // ─── QR Scanner Screen (Native) ───────────────────────────────────────────────
 
 export default function QRScannerScreen({ navigation }: any) {
+  const { t } = useTranslation();
+  const tCommon = (key: string, defaultValue: string) =>
+    t(key, { defaultValue });
+
   const [permStatus, setPermStatus] = useState<PermStatus>('checking');
   const [scanned, setScanned] = useState(false);
   const [torchOn, setTorchOn] = useState(false);
@@ -99,14 +104,21 @@ export default function QRScannerScreen({ navigation }: any) {
   // ── UI states ─────────────────────────────────────────────────────────────
 
   if (permStatus === 'checking') {
-    return <StatusScreen message="Vérification de la caméra…" />;
+    return (
+      <StatusScreen
+        message={tCommon('client.qrScanner.checkingCamera', 'Vérification de la caméra…')}
+      />
+    );
   }
 
   if (permStatus === 'denied') {
     return (
       <StatusScreen
-        message="La caméra est nécessaire pour scanner le QR code."
-        action="Autoriser la caméra"
+        message={tCommon(
+          'client.qrScanner.cameraRequired',
+          'La caméra est nécessaire pour scanner le QR code.',
+        )}
+        action={tCommon('client.qrScanner.authorizeCamera', 'Autoriser la caméra')}
         onAction={checkAndRequestPermission}
         onBack={() => navigation.goBack()}
       />
@@ -118,10 +130,16 @@ export default function QRScannerScreen({ navigation }: any) {
       <StatusScreen
         message={
           Platform.OS === 'ios'
-            ? 'Accès caméra bloqué. Allez dans Réglages → LoyalSpin → Caméra.'
-            : 'Accès caméra bloqué. Allez dans Paramètres → Applications → LoyalSpin → Autorisations.'
+            ? tCommon(
+                'client.qrScanner.cameraBlockedIos',
+                'Accès caméra bloqué. Allez dans Réglages → LoyalSpin → Caméra.',
+              )
+            : tCommon(
+                'client.qrScanner.cameraBlockedAndroid',
+                'Accès caméra bloqué. Allez dans Paramètres → Applications → LoyalSpin → Autorisations.',
+              )
         }
-        action="Ouvrir les Réglages"
+        action={tCommon('client.qrScanner.openSettings', 'Ouvrir les Réglages')}
         onAction={() => {
           const { openSettings } = require('react-native-permissions');
           openSettings();
@@ -134,7 +152,10 @@ export default function QRScannerScreen({ navigation }: any) {
   if (!device) {
     return (
       <StatusScreen
-        message="Aucune caméra arrière trouvée sur cet appareil."
+        message={tCommon(
+          'client.qrScanner.noBackCamera',
+          'Aucune caméra arrière trouvée sur cet appareil.',
+        )}
         onBack={() => navigation.goBack()}
       />
     );
@@ -160,9 +181,13 @@ export default function QRScannerScreen({ navigation }: any) {
             style={styles.backButton}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <Text style={styles.backText}>✕ Annuler</Text>
+            <Text style={styles.backText}>
+              {tCommon('client.qrScanner.cancel', '✕ Annuler')}
+            </Text>
           </TouchableOpacity>
-          <Text style={styles.topTitle}>Scanner le QR Code</Text>
+          <Text style={styles.topTitle}>
+            {tCommon('client.qrScanner.scanTitle', 'Scanner le QR Code')}
+          </Text>
           <TouchableOpacity
             onPress={() => setTorchOn(t => !t)}
             style={styles.torchButton}

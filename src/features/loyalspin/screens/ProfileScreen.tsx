@@ -349,56 +349,69 @@ export const ProfileScreenWeb: React.FC<ProfileScreenWebProps> = ({
                   onPress={() => {
                     if (setSessionUser && sessionUser) {
                       setSessionUser({ ...sessionUser, firstName: editFirstName, lastName: editLastName });
-                      showToast('Profil mis à jour !', 'success');
+                      showToast(tCommon('web.profileUpdatedSuccess', 'Profil mis à jour !'), 'success');
                     }
                   }}
                   className="w-full mt-4 bg-[#1E3A5F] hover:bg-[#152a47] text-white text-[11px] font-black py-3 rounded-xl transition shadow-sm uppercase tracking-wider"
                 >
-                  <Text className="text-center text-white text-[11px] font-black uppercase">Mettre à jour le profil</Text>
+                  <Text className="text-center text-white text-[11px] font-black uppercase">
+                    {tCommon('web.updateProfileButton', 'Mettre à jour le profil')}
+                  </Text>
                 </TouchableOpacity>
               </View>
-
+ 
               {/* Reclamations */}
               <View className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 shadow-sm space-y-6">
                 <Text className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-slate-100">
                   {tCommon('web.reclamations', 'Mes Réclamations')}
                 </Text>
-
+ 
                 <View className="space-y-4">
                   <View className="space-y-2">
                     <Text className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest dark:text-slate-300">
-                      Sujet
+                      {tCommon('web.reclamationSubject', 'Sujet')}
                     </Text>
                     <TextInput
                       value={reclamationSubject}
                       onChangeText={setReclamationSubject}
-                      placeholder="Ex: Problème technique"
+                      placeholder={tCommon(
+                        'web.reclamationSubjectPlaceholder',
+                        'Ex: Problème technique',
+                      )}
                       className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 dark:text-slate-100 focus:outline-none"
                     />
                   </View>
                   <View className="space-y-2">
                     <Text className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest dark:text-slate-300">
-                      Message
+                      {tCommon('web.reclamationMessage', 'Message')}
                     </Text>
                     <TextInput
                       multiline
                       numberOfLines={4}
                       value={reclamationMessage}
                       onChangeText={setReclamationMessage}
-                      placeholder="Décrivez votre problème en détail..."
+                      placeholder={tCommon(
+                        'web.reclamationMessagePlaceholder',
+                        'Décrivez votre problème en détail...',
+                      )}
                       className="w-full min-h-[100px] bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-xs font-semibold text-slate-800 dark:text-slate-100 focus:outline-none"
                     />
                   </View>
                   <TouchableOpacity
                     onPress={() => {
                       if (!reclamationSubject || !reclamationMessage) return;
-                      showToast('Réclamation envoyée avec succès', 'success');
+                      showToast(
+                        tCommon('web.reclamationSubmitted', 'Réclamation envoyée avec succès'),
+                        'success',
+                      );
                       setReclamationSubject('');
                       setReclamationMessage('');
                     }}
                     className="w-full bg-[#1E3A5F] hover:bg-[#152a47] text-white text-[11px] font-black py-3 rounded-xl transition shadow-sm uppercase tracking-wider"
                   >
-                    <Text className="text-center text-white text-[11px] font-black uppercase">Envoyer la réclamation</Text>
+                    <Text className="text-center text-white text-[11px] font-black uppercase">
+                      {tCommon('web.sendReclamationButton', 'Envoyer la réclamation')}
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>

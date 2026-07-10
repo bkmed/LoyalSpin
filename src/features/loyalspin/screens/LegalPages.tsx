@@ -13,7 +13,7 @@ export const LegalPages: React.FC<LegalPagesProps> = ({
   setActiveTab,
 }) => {
   const tc = (key: string, fallback: string) =>
-    t(key, { defaultValue: fallback });
+    t(`legal.${key}`, { defaultValue: fallback });
 
   if (page === 'Informations') {
     return (

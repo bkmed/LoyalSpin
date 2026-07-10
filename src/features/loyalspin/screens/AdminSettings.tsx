@@ -34,7 +34,10 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ t }) => {
               </Text>
               <View className="h-36 rounded-3xl border border-dashed border-slate-700 bg-slate-950 flex items-center justify-center text-slate-500">
                 <Text className="text-sm">
-                  PNG ou SVG recommandé. Taille max: 2MB.
+                  {tCommon(
+                    'adminSettings.logoHelpText',
+                    'PNG ou SVG recommandé. Taille max: 2MB.',
+                  )}
                 </Text>
               </View>
               <TouchableOpacity className="mt-4 rounded-2xl border border-slate-700 bg-slate-800 px-4 py-3 text-sm font-bold text-white">

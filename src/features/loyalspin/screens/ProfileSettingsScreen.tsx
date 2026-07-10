@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../context/AuthContext';
 import { useToast } from '../../../context/ToastContext';
 
 const ProfileSettingsScreen = ({ navigation }: any) => {
+  const { t } = useTranslation();
   const { user, updateProfile, signOut } = useAuth();
   const { showToast } = useToast();
+  const tCommon = (key: string, defaultValue: string) =>
+    t(key, { defaultValue });
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -26,7 +30,7 @@ const ProfileSettingsScreen = ({ navigation }: any) => {
   const handleSave = async () => {
     if (!user) return;
     if (!email.trim()) {
-      showToast('Un email est requis.', 'error');
+      showToast(tCommon('profileSettings.errorEmailRequired', 'Un email est requis.'), 'error');
       return;
     }
 
@@ -42,11 +46,17 @@ const ProfileSettingsScreen = ({ navigation }: any) => {
         phone: phone.trim() || undefined,
         city: city.trim() || undefined,
       });
-      showToast('Profil mis à jour avec succès.', 'success');
+      showToast(
+        tCommon('profileSettings.successProfileUpdated', 'Profil mis à jour avec succès.'),
+        'success',
+      );
       navigation.goBack();
     } catch (error) {
       console.error('Error updating profile:', error);
-      showToast('Impossible de mettre à jour le profil.', 'error');
+      showToast(
+        tCommon('profileSettings.errorProfileUpdate', 'Impossible de mettre à jour le profil.'),
+        'error',
+      );
     } finally {
       setSaving(false);
     }
@@ -55,10 +65,16 @@ const ProfileSettingsScreen = ({ navigation }: any) => {
   const handleLogout = async () => {
     try {
       await signOut();
-      showToast('Déconnexion réussie.', 'success');
+      showToast(
+        tCommon('profileSettings.successLogout', 'Déconnexion réussie.'),
+        'success',
+      );
     } catch (error) {
       console.error('Error logging out:', error);
-      showToast('Impossible de se déconnecter.', 'error');
+      showToast(
+        tCommon('profileSettings.errorLogout', 'Impossible de se déconnecter.'),
+        'error',
+      );
     }
   };
 
@@ -70,10 +86,13 @@ const ProfileSettingsScreen = ({ navigation }: any) => {
       <View className="max-w-4xl mx-auto w-full">
         <View className="mb-8">
           <Text className="text-3xl font-black text-slate-900 dark:text-white">
-            Paramètres du profil
+            {tCommon('profileSettings.title', 'Paramètres du profil')}
           </Text>
           <Text className="text-slate-500 text-sm mt-2">
-            Mettez à jour vos informations personnelles et de contact.
+            {tCommon(
+              'profileSettings.subtitle',
+              'Mettez à jour vos informations personnelles et de contact.',
+            )}
           </Text>
         </View>
 
@@ -81,23 +100,23 @@ const ProfileSettingsScreen = ({ navigation }: any) => {
           <View className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <View className="space-y-2">
               <Text className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-300">
-                Prénom
+                {tCommon('profileSettings.firstNameLabel', 'Prénom')}
               </Text>
               <TextInput
                 value={firstName}
                 onChangeText={setFirstName}
-                placeholder="Prénom"
+                placeholder={tCommon('profileSettings.firstNamePlaceholder', 'Prénom')}
                 className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-slate-100 focus:outline-none"
               />
             </View>
             <View className="space-y-2">
               <Text className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-300">
-                Nom
+                {tCommon('profileSettings.lastNameLabel', 'Nom')}
               </Text>
               <TextInput
                 value={lastName}
                 onChangeText={setLastName}
-                placeholder="Nom"
+                placeholder={tCommon('profileSettings.lastNamePlaceholder', 'Nom')}
                 className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-slate-100 focus:outline-none"
               />
             </View>
@@ -106,12 +125,12 @@ const ProfileSettingsScreen = ({ navigation }: any) => {
           <View className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <View className="space-y-2">
               <Text className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-300">
-                Email
+                {tCommon('profileSettings.emailLabel', 'Email')}
               </Text>
               <TextInput
                 value={email}
                 onChangeText={setEmail}
-                placeholder="Email"
+                placeholder={tCommon('profileSettings.emailPlaceholder', 'Email')}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-slate-100 focus:outline-none"
@@ -120,12 +139,12 @@ const ProfileSettingsScreen = ({ navigation }: any) => {
 
             <View className="space-y-2">
               <Text className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-300">
-                Téléphone
+                {tCommon('profileSettings.phoneLabel', 'Téléphone')}
               </Text>
               <TextInput
                 value={phone}
                 onChangeText={setPhone}
-                placeholder="Téléphone"
+                placeholder={tCommon('profileSettings.phonePlaceholder', 'Téléphone')}
                 keyboardType={Platform.OS === 'web' ? 'default' : 'phone-pad'}
                 className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-slate-100 focus:outline-none"
               />
@@ -134,12 +153,12 @@ const ProfileSettingsScreen = ({ navigation }: any) => {
 
           <View className="space-y-2">
             <Text className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-300">
-              Ville
+              {tCommon('profileSettings.cityLabel', 'Ville')}
             </Text>
             <TextInput
               value={city}
               onChangeText={setCity}
-              placeholder="Ville"
+              placeholder={tCommon('profileSettings.cityPlaceholder', 'Ville')}
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-slate-100 focus:outline-none"
             />
           </View>
@@ -155,7 +174,12 @@ const ProfileSettingsScreen = ({ navigation }: any) => {
               }`}
             >
               <Text className="text-white font-black text-sm text-center">
-                {saving ? 'Enregistrement...' : 'Enregistrer les modifications'}
+                {saving
+                  ? tCommon('profileSettings.saving', 'Enregistrement...')
+                  : tCommon(
+                      'profileSettings.saveChanges',
+                      'Enregistrer les modifications',
+                    )}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -163,7 +187,7 @@ const ProfileSettingsScreen = ({ navigation }: any) => {
               className="flex-1 rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-900 px-5 py-4 text-center hover:bg-slate-200 dark:hover:bg-slate-800"
             >
               <Text className="text-slate-700 dark:text-slate-200 font-black text-sm text-center">
-                Annuler
+                {tCommon('profileSettings.cancel', 'Annuler')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -173,7 +197,7 @@ const ProfileSettingsScreen = ({ navigation }: any) => {
             className="mt-4 rounded-3xl bg-red-600 hover:bg-red-700 px-5 py-4 text-center"
           >
             <Text className="text-white font-black text-sm text-center">
-              Se déconnecter
+              {tCommon('profileSettings.logoutButton', 'Se déconnecter')}
             </Text>
           </TouchableOpacity>
         </View>

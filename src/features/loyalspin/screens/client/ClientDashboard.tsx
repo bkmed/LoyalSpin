@@ -36,10 +36,13 @@ export default function ClientDashboard({ navigation }: any) {
         <View className="mb-8 flex-row justify-between items-start gap-4">
           <View>
             <Text className="text-3xl font-black text-slate-900 dark:text-white">
-              Bonjour, {user?.name || 'Client'} !
+              {t('client.dashboardGreeting', {
+                name: user?.name || t('client.defaultClient', 'Client'),
+                defaultValue: `Hello, ${user?.name || t('client.defaultClient', 'Client')}!`,
+              })}
             </Text>
             <Text className="text-slate-500 text-lg mt-2">
-              Bienvenue sur votre espace de fidélité.
+              {t('client.welcomeText', 'Welcome to your loyalty space.')}
             </Text>
           </View>
           <View className="flex-row flex-wrap gap-2 items-center">
@@ -74,17 +77,17 @@ export default function ClientDashboard({ navigation }: any) {
 
         <View className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <TouchableOpacity onPress={() => navigation.navigate('QRScanner')} className="bg-emerald-600 p-8 rounded-3xl shadow-lg items-center justify-center">
-            <Text className="text-white font-black text-2xl mb-2">Scanner un QR Code</Text>
-            <Text className="text-emerald-100 text-center">Scannez en magasin pour tourner la roue et gagner des cadeaux !</Text>
+            <Text className="text-white font-black text-2xl mb-2">{t('client.scanQrTitle', 'Scan a QR Code')}</Text>
+            <Text className="text-emerald-100 text-center">{t('client.scanQrDescription', 'Scan in store to spin the wheel and win prizes!')}</Text>
           </TouchableOpacity>
 
           <View className="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700">
-            <Text className="text-slate-500 dark:text-slate-400 font-bold mb-2">Cadeaux gagnés</Text>
+            <Text className="text-slate-500 dark:text-slate-400 font-bold mb-2">{t('client.rewardsWon', 'Rewards won')}</Text>
             <Text className="text-5xl font-black text-[#1E3A5F] dark:text-white">{wins.length}</Text>
           </View>
         </View>
 
-        <Text className="text-xl font-bold text-slate-900 dark:text-white mb-4">Vos Récompenses (Historique)</Text>
+        <Text className="text-xl font-bold text-slate-900 dark:text-white mb-4">{t('client.rewardsHistoryTitle', 'Your Rewards (History)')}</Text>
         <View className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
           {wins.length > 0 ? (
             wins.map((win, idx) => (
@@ -94,13 +97,13 @@ export default function ClientDashboard({ navigation }: any) {
                   <Text className="text-sm text-slate-500">{new Date(win.createdAt).toLocaleDateString()}</Text>
                 </View>
                 <View className="bg-emerald-100 dark:bg-emerald-900/50 px-3 py-1 rounded-full">
-                  <Text className="text-emerald-700 dark:text-emerald-400 text-xs font-bold">À réclamer</Text>
+                  <Text className="text-emerald-700 dark:text-emerald-400 text-xs font-bold">{t('client.toClaim', 'To claim')}</Text>
                 </View>
               </View>
             ))
           ) : (
             <View className="p-8 items-center justify-center">
-              <Text className="text-slate-500 text-center">Vous n'avez pas encore gagné de cadeaux.{'\n'}Scannez un QR code pour commencer !</Text>
+              <Text className="text-slate-500 text-center">{t('client.noPrizesYet', "You haven't won any prizes yet.\nScan a QR code to get started!")}</Text>
             </View>
           )}
         </View>

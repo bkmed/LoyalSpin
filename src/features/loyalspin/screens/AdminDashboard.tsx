@@ -62,7 +62,7 @@ export default function AdminDashboard({ businessName, navigation }: any) {
       <View className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 p-4">
         <View className="px-4 mb-4">
           <Text className="text-xl font-black text-slate-900 dark:text-white mb-4">
-            Admin {businessName}
+            {t('adminDashboard.headerTitle', { businessName, defaultValue: `Admin ${businessName}` })}
           </Text>
           <TouchableOpacity
             onPress={() => navigation.navigate('Profile')}
@@ -98,31 +98,31 @@ export default function AdminDashboard({ businessName, navigation }: any) {
             onPress={() => setActiveTab('stats')}
             className={`p-4 rounded-xl ${activeTab === 'stats' ? 'bg-[#1E3A5F]' : 'hover:bg-slate-100 dark:hover:bg-slate-800'}`}
           >
-            <Text className={`font-bold ${activeTab === 'stats' ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`}>Statistiques</Text>
+            <Text className={`font-bold ${activeTab === 'stats' ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`}>{t('adminDashboard.tabs.stats', 'Statistics')}</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             onPress={() => setActiveTab('roulette')}
             className={`p-4 rounded-xl ${activeTab === 'roulette' ? 'bg-[#1E3A5F]' : 'hover:bg-slate-100 dark:hover:bg-slate-800'}`}
           >
-            <Text className={`font-bold ${activeTab === 'roulette' ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`}>Configuration Roulette</Text>
+            <Text className={`font-bold ${activeTab === 'roulette' ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`}>{t('adminDashboard.tabs.roulette', 'Roulette Settings')}</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             onPress={() => setActiveTab('sticker')}
             className={`p-4 rounded-xl ${activeTab === 'sticker' ? 'bg-[#1E3A5F]' : 'hover:bg-slate-100 dark:hover:bg-slate-800'}`}
           >
-            <Text className={`font-bold ${activeTab === 'sticker' ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`}>Design Stickers</Text>
+            <Text className={`font-bold ${activeTab === 'sticker' ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`}>{t('adminDashboard.tabs.sticker', 'Sticker Design')}</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             onPress={() => setActiveTab('coupons')}
             className={`p-4 rounded-xl ${activeTab === 'coupons' ? 'bg-[#1E3A5F]' : 'hover:bg-slate-100 dark:hover:bg-slate-800'}`}
           >
-            <Text className={`font-bold ${activeTab === 'coupons' ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`}>Gestion des Coupons</Text>
+            <Text className={`font-bold ${activeTab === 'coupons' ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`}>{t('adminDashboard.tabs.coupons', 'Coupons Management')}</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             onPress={() => setActiveTab('history')}
             className={`p-4 rounded-xl ${activeTab === 'history' ? 'bg-[#1E3A5F]' : 'hover:bg-slate-100 dark:hover:bg-slate-800'}`}
           >
-            <Text className={`font-bold ${activeTab === 'history' ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`}>Historique & Clients</Text>
+            <Text className={`font-bold ${activeTab === 'history' ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`}>{t('adminDashboard.tabs.history', 'History & Clients')}</Text>
           </TouchableOpacity>
         </View>
       </View>

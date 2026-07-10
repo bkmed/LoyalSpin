@@ -119,19 +119,19 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
   // ────────────────────────────────────────────
   const handleSaveProject = async () => {
     if (!currentProject.name || !currentProject.adminId || !currentProject.email || !currentProject.phone) {
-      showToast('Tous les champs obligatoires (nom, admin, email, tel) sont requis', 'error');
+      showToast(tCommon('superadmin.errorAllFieldsRequired', 'Tous les champs obligatoires (nom, admin, email, tel) sont requis'), 'error');
       return;
     }
     
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (currentProject.email && !emailRegex.test(currentProject.email)) {
-      showToast('Format email invalide', 'error');
+      showToast(tCommon('superadmin.errorInvalidEmailFormat', 'Format email invalide'), 'error');
       return;
     }
 
     const phoneRegex = /^\+?[0-9\s\-]{8,}$/;
     if (currentProject.phone && !phoneRegex.test(currentProject.phone)) {
-      showToast('Format téléphone invalide', 'error');
+      showToast(tCommon('superadmin.errorInvalidPhoneFormat', 'Format téléphone invalide'), 'error');
       return;
     }
     
@@ -142,7 +142,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
         // ── UPDATE existing project via thunk ──
         const { id, createdAt, ...updateData } = currentProject as Project;
         await dispatch(updateProject({ id, data: updateData })).unwrap();
-        showToast('Projet mis à jour avec succès ✅', 'success');
+        showToast(tCommon('superadmin.successProjectUpdated', 'Projet mis à jour avec succès ✅'), 'success');
       } else {
         // ── CREATE new project via thunk ──
         const slug = (currentProject.name || '')
@@ -171,8 +171,8 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
         };
 
         const newProject = await dispatch(createProject(projectData as any)).unwrap();
-        showToast('Projet créé avec succès ✅', 'success');
-
+        showToast(tCommon('superadmin.successProjectCreated', 'Projet créé avec succès ✅'), 'success');
+ 
         // ── AUTO-CREATE full config for the new project ──
         await createFullProjectConfig(newProject.id, newProject.name, currentProject.adminId || '');
       }
@@ -181,7 +181,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
       setCurrentProject({});
     } catch (error: any) {
       console.error('❌ handleSaveProject error:', error);
-      showToast(`Erreur: ${error?.message || 'Impossible de sauvegarder le projet'}`, 'error');
+      showToast(tCommon('superadmin.errorSaveProject', `Erreur: ${error?.message || tCommon('superadmin.errorCouldNotSaveProject', 'Impossible de sauvegarder le projet')}`), 'error');
     } finally {
       setSaving(false);
     }
@@ -204,7 +204,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
         secondaryColor: '#F59E0B',
         textColor: '#FFFFFF',
         title: projectName,
-        subtitle: 'Scannez pour jouer !',
+        subtitle: tCommon('superadmin.defaultStickerSubtitle', 'Scannez pour jouer !'),
         qrCodeUrl: `https://loyalspin.app/${projectId}`,
         qrCodeColor: '#1E3A5F',
         createdAt: new Date().toISOString(),
@@ -216,7 +216,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
       await dispatch(saveRouletteConfig({
         id: `roulette_${projectId}`,
         projectId,
-        wheelName: `Roulette ${projectName}`,
+        wheelName: `${tCommon('superadmin.defaultRouletteName', 'Roulette')} ${projectName}`,
         isActive: true,
         spinLimitType: 'per_user_per_day',
         spinLimitValue: 1,
@@ -228,25 +228,25 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
           {
             id: 'seg_1',
             label: '🎉 -10%',
-            description: 'Réduction de 10%',
+            description: tCommon('superadmin.rouletteSegmentDescription10', 'Réduction de 10%'),
             color: '#10B981',
             probability: 30,
             isGift: true,
-            giftValue: '10% de réduction',
+            giftValue: tCommon('superadmin.rouletteGiftValue10', '10% de réduction'),
           },
           {
             id: 'seg_2',
-            label: '🎁 Cadeau',
-            description: 'Un cadeau surprise',
+            label: `🎁 ${tCommon('superadmin.rouletteSegmentGift', 'Cadeau')}`,
+            description: tCommon('superadmin.rouletteSegmentDescriptionGift', 'Un cadeau surprise'),
             color: '#3B82F6',
             probability: 10,
             isGift: true,
-            giftValue: 'Cadeau surprise',
+            giftValue: tCommon('superadmin.rouletteGiftValueSurprise', 'Cadeau surprise'),
           },
           {
             id: 'seg_3',
-            label: '😢 Perdu',
-            description: 'Pas de chance',
+            label: `😢 ${tCommon('superadmin.rouletteSegmentLost', 'Perdu')}`,
+            description: tCommon('superadmin.rouletteSegmentDescriptionLost', 'Pas de chance'),
             color: '#EF4444',
             probability: 30,
             isGift: false,
@@ -254,16 +254,16 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
           {
             id: 'seg_4',
             label: '🍕 -20%',
-            description: 'Réduction de 20%',
+            description: tCommon('superadmin.rouletteSegmentDescription20', 'Réduction de 20%'),
             color: '#F59E0B',
             probability: 15,
             isGift: true,
-            giftValue: '20% de réduction',
+            giftValue: tCommon('superadmin.rouletteGiftValue20', '20% de réduction'),
           },
           {
             id: 'seg_5',
-            label: '🔄 Rejouez',
-            description: 'Tentez à nouveau',
+            label: `🔄 ${tCommon('superadmin.rouletteSegmentRetry', 'Rejouez')}`,
+            description: tCommon('superadmin.rouletteSegmentDescriptionRetry', 'Tentez à nouveau'),
             color: '#8B5CF6',
             probability: 15,
             isGift: false,
@@ -278,8 +278,8 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
       await dispatch(createCoupon({
         projectId,
         code: `BIENVENUE${Date.now().toString().slice(-4)}`,
-        title: 'Coupon de bienvenue',
-        description: `Coupon de bienvenue pour ${projectName} - 10% de réduction`,
+        title: tCommon('superadmin.defaultCouponTitle', 'Coupon de bienvenue'),
+        description: tCommon('superadmin.defaultCouponDescription', `Coupon de bienvenue pour ${projectName} - 10% de réduction`),
         type: 'percentage',
         value: 10,
         isActive: true,
@@ -292,7 +292,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
       const sampleUserId = `user_${Date.now()}`;
       await dispatch(saveNewUser({
         id: sampleUserId,
-        name: 'Utilisateur Test',
+        name: tCommon('superadmin.defaultSampleUserName', 'Utilisateur Test'),
         email: `test_${projectId}@loyalspin.app`,
         role: 'user',
         projectId,
@@ -306,22 +306,22 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
       })).unwrap();
       console.log('✅ Sample user created for project:', projectId);
 
-      showToast('🎉 Projet entièrement configuré : sticker, roulette, coupon, utilisateur', 'success');
+      showToast(tCommon('superadmin.successProjectFullyConfigured', '🎉 Projet entièrement configuré : sticker, roulette, coupon, utilisateur'), 'success');
     } catch (error: any) {
       console.error('⚠️ Partial config creation error:', error);
-      showToast('Projet créé mais certaines configs par défaut ont échoué. Vous pouvez les configurer manuellement.', 'warning');
+      showToast(tCommon('superadmin.warningPartialConfigFailed', 'Projet créé mais certaines configs par défaut ont échoué. Vous pouvez les configurer manuellement.'), 'warning');
     }
   };
 
   const handleDeleteProject = async (id: string) => {
-    if (window.confirm('Voulez-vous vraiment supprimer ce projet ?')) {
+    if (window.confirm(tCommon('superadmin.confirmDeleteProject', 'Voulez-vous vraiment supprimer ce projet ?'))) {
       setSaving(true);
       try {
         await dispatch(deleteProject(id)).unwrap();
-        showToast('Projet supprimé ✅', 'info');
+        showToast(tCommon('superadmin.successProjectDeleted', 'Projet supprimé ✅'), 'info');
       } catch (error: any) {
         console.error('❌ handleDeleteProject error:', error);
-        showToast(`Erreur suppression: ${error?.message || 'Échec'}`, 'error');
+        showToast(tCommon('superadmin.errorDeleteProject', `Erreur suppression: ${error?.message || tCommon('superadmin.errorFailed', 'Échec')}`), 'error');
       } finally {
         setSaving(false);
       }
@@ -351,13 +351,13 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
   // ────────────────────────────────────────────
   const handleSaveAdmin = async () => {
     if (!currentAdmin.name || !currentAdmin.email) {
-      showToast('Le nom et l\'email sont requis', 'error');
+      showToast(tCommon('superadmin.errorAdminNameEmailRequired', 'Le nom et l\'email sont requis'), 'error');
       return;
     }
     
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(currentAdmin.email)) {
-      showToast('Format email invalide', 'error');
+      showToast(tCommon('superadmin.errorInvalidEmailFormat', 'Format email invalide'), 'error');
       return;
     }
 
@@ -372,7 +372,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
         
         await updateDoc(doc(db, 'users', currentAdmin.id), updatedAdmin as any);
         dispatch(updateAdmin(updatedAdmin));
-        showToast('Admin mis à jour avec succès ✅', 'success');
+        showToast(tCommon('superadmin.successAdminUpdated', 'Admin mis à jour avec succès ✅'), 'success');
       } else {
         // CREATE admin
         const id = `admin_${Date.now()}`;
@@ -389,31 +389,30 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
         
         await setDoc(doc(db, 'users', id), newAdmin);
         dispatch(addAdmin(newAdmin));
-        showToast('Admin créé avec succès ✅', 'success');
+        showToast(tCommon('superadmin.successAdminCreated', 'Admin créé avec succès ✅'), 'success');
       }
       
       setIsEditingAdmin(false);
       setCurrentAdmin({});
     } catch (error: any) {
       console.error('❌ handleSaveAdmin error:', error);
-      showToast(`Erreur: ${error?.message || 'Impossible de sauvegarder l\'admin'}`, 'error');
+      showToast(tCommon('superadmin.errorSaveAdmin', `Erreur: ${error?.message || tCommon('superadmin.errorCouldNotSaveAdmin', 'Impossible de sauvegarder l\'admin')}`), 'error');
     } finally {
       setSaving(false);
     }
   };
 
   const handleDeleteAdmin = async (id: string) => {
-    if (window.confirm('Voulez-vous vraiment supprimer cet admin ?')) {
+    if (window.confirm(tCommon('superadmin.confirmDeleteAdmin', 'Voulez-vous vraiment supprimer cet admin ?'))) {
       setSaving(true);
       try {
         await deleteDoc(doc(db, 'users', id));
         dispatch(deleteAdmin(id));
-        showToast('Admin supprimé ✅', 'info');
+        showToast(tCommon('superadmin.successAdminDeleted', 'Admin supprimé ✅'), 'info');
       } catch (error: any) {
         console.error('❌ handleDeleteAdmin error:', error);
-        showToast(`Erreur suppression: ${error?.message || 'Échec'}`, 'error');
-      } finally {
-        setSaving(false);
+        showToast(tCommon('superadmin.errorDeleteAdmin', `Erreur suppression: ${error?.message || tCommon('superadmin.errorFailed', 'Échec')}`), 'error');
+      } finally {        setSaving(false);
       }
     }
   };
@@ -425,9 +424,9 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
     if (!newSectorName.trim()) return;
     if (!sectors.includes(newSectorName)) {
       setSectors([...sectors, newSectorName]);
-      showToast('Secteur ajouté', 'success');
+      showToast(tCommon('superadmin.successSectorAdded', 'Secteur ajouté'), 'success');
     } else {
-      showToast('Ce secteur existe déjà', 'error');
+      showToast(tCommon('superadmin.errorSectorAlreadyExists', 'Ce secteur existe déjà'), 'error');
     }
     setNewSectorName('');
   };
@@ -440,19 +439,19 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
   const handleSaveEditSector = () => {
     if (!editSectorValue.trim() || !editingSectorName) return;
     if (editSectorValue !== editingSectorName && sectors.includes(editSectorValue)) {
-      showToast('Ce secteur existe déjà', 'error');
+      showToast(tCommon('superadmin.errorSectorAlreadyExists', 'Ce secteur existe déjà'), 'error');
       return;
     }
     
     setSectors(sectors.map(s => s === editingSectorName ? editSectorValue : s));
     setEditingSectorName(null);
     setEditSectorValue('');
-    showToast('Secteur mis à jour', 'success');
+    showToast(tCommon('superadmin.successSectorUpdated', 'Secteur mis à jour'), 'success');
   };
   
   const handleDeleteSector = (sector: string) => {
     setSectors(sectors.filter(s => s !== sector));
-    showToast('Secteur supprimé', 'info');
+    showToast(tCommon('superadmin.successSectorDeleted', 'Secteur supprimé'), 'info');
   };
 
   // ────────────────────────────────────────────
@@ -497,16 +496,16 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
       .slice(0, 5);
 
     const statCards = [
-      { label: 'Projets Payants', value: paidProjectsCount, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-900/20' },
-      { label: 'Total Utilisateurs', value: totalUsersConnected, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-900/20' },
-      { label: 'Revenu Mensuel Est. (€)', value: monthlyRevenue.toFixed(2), color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-900/20' },
-      { label: 'Revenu Annuel Est. (€)', value: annualRevenue.toFixed(2), color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-900/20' },
+      { label: tCommon('superadmin.paidProjectsLabel', 'Projets Payants'), value: paidProjectsCount, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-900/20' },
+      { label: tCommon('superadmin.totalUsersLabel', 'Total Utilisateurs'), value: totalUsersConnected, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-900/20' },
+      { label: tCommon('superadmin.monthlyRevenueLabel', 'Revenu Mensuel Est. (€)'), value: monthlyRevenue.toFixed(2), color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-900/20' },
+      { label: tCommon('superadmin.annualRevenueLabel', 'Revenu Annuel Est. (€)'), value: annualRevenue.toFixed(2), color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-900/20' },
     ];
 
     return (
       <View className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow">
-        <Text className="text-xl font-bold mb-6 dark:text-white">Analytiques Globaux</Text>
-
+        <Text className="text-xl font-bold mb-6 dark:text-white">{tCommon('superadmin.globalAnalyticsTitle', 'Analytiques Globaux')}</Text>
+ 
         <View className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {statCards.map((card, i) => (
             <View key={i} className={`${card.bg} p-5 rounded-2xl border border-slate-100 dark:border-slate-700`}>
@@ -515,38 +514,38 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
             </View>
           ))}
         </View>
-
+ 
         <View className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <View className="bg-slate-50 dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
-            <Text className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">Secteur le plus enregistré</Text>
+            <Text className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">{tCommon('superadmin.topSectorLabel', 'Secteur le plus enregistré')}</Text>
             <Text className="text-2xl font-black text-slate-900 dark:text-white">{topSector.sector}</Text>
-            <Text className="mt-3 text-sm text-slate-600 dark:text-slate-300">Projets: {topSector.projectCount}</Text>
-            <Text className="text-sm text-slate-600 dark:text-slate-300">Utilisateurs: {topSector.userCount}</Text>
+            <Text className="mt-3 text-sm text-slate-600 dark:text-slate-300">{tCommon('superadmin.projectsLabel', 'Projets')}: {topSector.projectCount}</Text>
+            <Text className="text-sm text-slate-600 dark:text-slate-300">{tCommon('superadmin.usersLabel', 'Utilisateurs')}: {topSector.userCount}</Text>
           </View>
 
           <View className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
-            <Text className="text-sm font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-4">Utilisateurs par secteur</Text>
+            <Text className="text-sm font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-4">{tCommon('superadmin.usersBySectorTitle', 'Utilisateurs par secteur')}</Text>
             {sectorsAnalytics.length === 0 ? (
-              <Text className="text-slate-500 dark:text-slate-400">Aucun secteur disponible</Text>
+              <Text className="text-slate-500 dark:text-slate-400">{tCommon('superadmin.noSectorAvailable', 'Aucun secteur disponible')}</Text>
             ) : (
               sectorsAnalytics.slice(0, 5).map((item) => (
                 <View key={item.sector} className="mb-4 last:mb-0">
                   <Text className="font-bold text-slate-700 dark:text-white">{item.sector}</Text>
-                  <Text className="text-xs text-slate-500 dark:text-slate-400">Projets: {item.projectCount} · Utilisateurs: {item.userCount}</Text>
+                  <Text className="text-xs text-slate-500 dark:text-slate-400">{`${tCommon('superadmin.projectsLabel', 'Projets')}: ${item.projectCount} · ${tCommon('superadmin.usersLabel', 'Utilisateurs')}: ${item.userCount}`}</Text>
                 </View>
               ))
             )}
           </View>
 
           <View className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
-            <Text className="text-sm font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-4">Top projets par utilisateurs</Text>
+            <Text className="text-sm font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-4">{tCommon('superadmin.topProjectsByUsersTitle', 'Top projets par utilisateurs')}</Text>
             {topProjectsByUsers.length === 0 ? (
-              <Text className="text-slate-500 dark:text-slate-400">Aucun projet disponible</Text>
+              <Text className="text-slate-500 dark:text-slate-400">{tCommon('superadmin.noProjectsAvailable', 'Aucun projet disponible')}</Text>
             ) : (
               topProjectsByUsers.map((project) => (
                 <View key={project.id} className="mb-4 last:mb-0">
-                  <Text className="font-bold text-slate-700 dark:text-white truncate">{project.name || 'Sans nom'}</Text>
-                  <Text className="text-xs text-slate-500 dark:text-slate-400">Utilisateurs: {project.userCount}</Text>
+                  <Text className="font-bold text-slate-700 dark:text-white truncate">{project.name || tCommon('superadmin.unnamedProject', 'Sans nom')}</Text>
+                  <Text className="text-xs text-slate-500 dark:text-slate-400">{`${tCommon('superadmin.usersLabel', 'Utilisateurs')}: ${project.userCount}`}</Text>
                 </View>
               ))
             )}
@@ -567,10 +566,10 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
     setSettingsSaving(true);
     try {
       await dispatch(updateProject({ id: proj.id, data: settingsData })).unwrap();
-      showToast('Paramètres sauvegardés ✅', 'success');
-      setEditingField(null);
+     showToast(tCommon('superadmin.successSettingsSaved', 'Paramètres sauvegardés ✅'), 'success');
+     setEditingField(null);
     } catch (e: any) {
-      showToast(`Erreur: ${e?.message || 'Sauvegarde échouée'}`, 'error');
+     showToast(tCommon('superadmin.errorSettingsSaveFailed', `Erreur: ${e?.message || tCommon('superadmin.errorSaveFailed', 'Sauvegarde échouée')}`), 'error');
     } finally {
       setSettingsSaving(false);
     }
@@ -605,17 +604,17 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
     const blockedUsers = projectUsers.filter(u => u.status === 'blocked');
 
     const statCards = [
-      { label: 'Utilisateurs Total', value: projectUsers.length, color: 'text-[#1E3A5F] dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-900/20' },
-      { label: 'Utilisateurs Actifs', value: activeUsers.length, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-900/20' },
-      { label: 'Utilisateurs Bloqués', value: blockedUsers.length, color: 'text-red-600 dark:text-red-400', bg: 'bg-red-50 dark:bg-red-900/20' },
-      { label: 'Vues Totales', value: totalPageViews, color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-900/20' },
-      { label: 'Partages', value: totalShares, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-900/20' },
-      { label: 'Clics Appel', value: callClicks, color: 'text-rose-600 dark:text-rose-400', bg: 'bg-rose-50 dark:bg-rose-900/20' },
+      { label: tCommon('superadmin.projectUsersTotalLabel', 'Utilisateurs Total'), value: projectUsers.length, color: 'text-[#1E3A5F] dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-900/20' },
+      { label: tCommon('superadmin.activeUsersLabel', 'Utilisateurs Actifs'), value: activeUsers.length, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-900/20' },
+      { label: tCommon('superadmin.blockedUsersLabel', 'Utilisateurs Bloqués'), value: blockedUsers.length, color: 'text-red-600 dark:text-red-400', bg: 'bg-red-50 dark:bg-red-900/20' },
+      { label: tCommon('superadmin.totalPageViewsLabel', 'Vues Totales'), value: totalPageViews, color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-900/20' },
+      { label: tCommon('superadmin.totalSharesLabel', 'Partages'), value: totalShares, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-900/20' },
+      { label: tCommon('superadmin.callClicksLabel', 'Clics Appel'), value: callClicks, color: 'text-rose-600 dark:text-rose-400', bg: 'bg-rose-50 dark:bg-rose-900/20' },
     ];
 
     return (
       <View>
-        <Text className="text-xl font-black dark:text-white mb-6">📊 Analytiques du Projet</Text>
+        <Text className="text-xl font-black dark:text-white mb-6">{tCommon('superadmin.projectAnalytics', '📊 Statistiques du projet')}</Text>
 
         {/* Stats cards */}
         <View className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
@@ -630,11 +629,11 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
         {/* Users list */}
         <View className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm overflow-hidden">
           <View className="px-6 py-4 border-b border-slate-100 dark:border-slate-700">
-            <Text className="font-black text-slate-800 dark:text-white">👥 Utilisateurs connectés ({projectUsers.length})</Text>
+            <Text className="font-black text-slate-800 dark:text-white">{tCommon('superadmin.connectedUsersTitle', '👥 Utilisateurs connectés')} ({projectUsers.length})</Text>
           </View>
           {projectUsers.length === 0 ? (
             <View className="p-8 items-center">
-              <Text className="text-slate-400 dark:text-slate-500 text-sm">Aucun utilisateur pour ce projet.</Text>
+              <Text className="text-slate-400 dark:text-slate-500 text-sm">{tCommon('superadmin.noUsersForProject', 'Aucun utilisateur pour ce projet.')}</Text>
             </View>
           ) : (
             projectUsers.map((user, idx) => (
@@ -654,7 +653,11 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
                     user.status === 'active' ? 'text-emerald-700 dark:text-emerald-400' :
                     user.status === 'blocked' ? 'text-red-700 dark:text-red-400' : 'text-slate-600 dark:text-slate-300'
                   }`}>
-                    {user.status === 'active' ? '✅ Actif' : user.status === 'blocked' ? '🚫 Bloqué' : '⏳ En attente'}
+                    {user.status === 'active'
+                      ? tCommon('superadmin.statusActive', '✅ Actif')
+                      : user.status === 'blocked'
+                        ? tCommon('superadmin.statusBlocked', '🚫 Bloqué')
+                        : tCommon('superadmin.statusPending', '⏳ En attente')}
                   </Text>
                 </View>
               </View>
@@ -682,11 +685,11 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
 
     return (
       <View>
-        <Text className="text-xl font-black dark:text-white mb-6">⚙️ Paramètres & Liens</Text>
-
+        <Text className="text-xl font-black dark:text-white mb-6">{tCommon('superadmin.settingsTitle', '⚙️ Paramètres & Liens')}</Text>
+ 
         {/* Social links form */}
         <View className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm p-6 mb-6">
-          <Text className="font-black text-slate-700 dark:text-slate-300 mb-4 text-sm uppercase tracking-wider">Liens & Réseaux Sociaux</Text>
+          <Text className="font-black text-slate-700 dark:text-slate-300 mb-4 text-sm uppercase tracking-wider">{tCommon('superadmin.socialLinksHeading', 'Liens & Réseaux Sociaux')}</Text>
           <View className="space-y-4">
             {socialLinks.map(link => (
               <View key={link.key}>
@@ -719,13 +722,13 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
             className="mt-6 bg-[#1E3A5F] px-6 py-3 rounded-xl flex-row items-center justify-center"
           >
             {settingsSaving && <ActivityIndicator size="small" color="#fff" style={{ marginRight: 8 }} />}
-            <Text className="text-white font-black">{settingsSaving ? 'Sauvegarde...' : '💾 Enregistrer les paramètres'}</Text>
+            <Text className="text-white font-black">{settingsSaving ? tCommon('superadmin.savingSettings', 'Sauvegarde...') : tCommon('superadmin.saveSettingsButton', '💾 Enregistrer les paramètres')}</Text>
           </TouchableOpacity>
         </View>
 
         {/* Smart Preview */}
         <View className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm p-6">
-          <Text className="font-black text-slate-700 dark:text-slate-300 mb-4 text-sm uppercase tracking-wider">🔍 Prévisualisation</Text>
+          <Text className="font-black text-slate-700 dark:text-slate-300 mb-4 text-sm uppercase tracking-wider">{tCommon('superadmin.previewTitle', '🔍 Prévisualisation')}</Text>
           <Text className="text-xs text-slate-400 dark:text-slate-500 mb-4">Les réseaux configurés apparaissent ici. Google Maps est toujours affiché par défaut.</Text>
 
           <View className="space-y-3">
@@ -736,9 +739,8 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
                 <View>
                   <Text className="font-bold dark:text-white">Google Maps</Text>
                   <Text className="text-xs text-slate-500" numberOfLines={1}>
-                    {settingsData.googleMapsUrl || 'Non configuré (affiché par défaut)'}
-                  </Text>
-                </View>
+                      {settingsData.googleMapsUrl || tCommon('superadmin.notConfiguredDefault', 'Non configuré (affiché par défaut)')}
+                    </Text>                </View>
               </View>
               <View className={`px-2 py-1 rounded-full ${
                 settingsData.googleMapsUrl ? 'bg-emerald-100 dark:bg-emerald-900/30' : 'bg-slate-200 dark:bg-slate-700'
@@ -746,7 +748,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
                 <Text className={`text-xs font-bold ${
                   settingsData.googleMapsUrl ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-500'
                 }`}>
-                  {settingsData.googleMapsUrl ? '✅ Actif' : '⬜ Défaut'}
+                  {settingsData.googleMapsUrl ? tCommon('superadmin.statusActive', '✅ Actif') : tCommon('superadmin.statusDefault', '⬜ Défaut')}
                 </Text>
               </View>
             </View>
@@ -762,14 +764,14 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
                   </View>
                 </View>
                 <View className="bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 rounded-full">
-                  <Text className="text-xs font-bold text-emerald-700 dark:text-emerald-400">✅ Configuré</Text>
+                  <Text className="text-xs font-bold text-emerald-700 dark:text-emerald-400">{tCommon('superadmin.configuredStatus', '✅ Configuré')}</Text>
                 </View>
               </View>
             ))}
 
             {configuredLinks.filter(l => l.key !== 'googleMapsUrl').length === 0 && (
               <View className="p-4 bg-amber-50 dark:bg-amber-900/10 rounded-xl border border-amber-200 dark:border-amber-800">
-                <Text className="text-xs text-amber-700 dark:text-amber-400 font-semibold">💡 Configurez des liens sociaux pour les voir apparaître ici.</Text>
+                <Text className="text-xs text-amber-700 dark:text-amber-400 font-semibold">{tCommon('superadmin.configureSocialLinksHint', '💡 Configurez des liens sociaux pour les voir apparaître ici.')}</Text>
               </View>
             )}
           </View>
@@ -796,17 +798,17 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
 
     const handleDeleteNote = (id: string) => {
       setNetworkNotes(prev => prev.filter(n => n.id !== id));
-      showToast('Note supprimée', 'info');
+      showToast(tCommon('superadmin.successNoteDeleted', 'Note supprimée'), 'info');
     };
-
+ 
     const handleSaveEditNote = () => {
       if (!editingNoteData) return;
       setNetworkNotes(prev => prev.map(n => n.id === editingNoteData.id ? editingNoteData : n));
       setEditingNoteId(null);
       setEditingNoteData(null);
-      showToast('Note mise à jour ✅', 'success');
+      showToast(tCommon('superadmin.successNoteUpdated', 'Note mise à jour ✅'), 'success');
     };
-
+ 
     const handleAddNote = () => {
       if (!newNote.text.trim()) return;
       const note: NetworkNote = {
@@ -818,53 +820,53 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
       setNetworkNotes(prev => [...prev, note]);
       setNewNote({ network: 'Google Maps', text: '', rating: 5 });
       setShowAddNote(false);
-      showToast('Note ajoutée ✅', 'success');
+      showToast(tCommon('superadmin.successNoteAdded', 'Note ajoutée ✅'), 'success');
     };
 
     const notesByNetwork = (net: string) => networkNotes.filter(n => n.network === net);
 
     return (
       <View>
-        <Text className="text-xl font-black dark:text-white mb-6">📝 Notes du Projet</Text>
-
+        <Text className="text-xl font-black dark:text-white mb-6">{tCommon('superadmin.notesSectionTitle', '📝 Notes du Projet')}</Text>
+ 
         {/* Global Note */}
         <View className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm p-6 mb-6">
-          <Text className="font-black text-slate-700 dark:text-slate-300 mb-3 text-sm uppercase tracking-wider">⭐ Note Globale du Projet</Text>
+          <Text className="font-black text-slate-700 dark:text-slate-300 mb-3 text-sm uppercase tracking-wider">{tCommon('superadmin.globalProjectRatingLabel', '⭐ Note Globale du Projet')}</Text>
           <StarRating rating={globalNote.rating} onRate={(r) => setGlobalNote(prev => ({ ...prev, rating: r }))} />
           <TextInput
             value={globalNote.text}
             onChangeText={(text) => setGlobalNote(prev => ({ ...prev, text }))}
-            placeholder="Commentaire général sur ce projet..."
+            placeholder={tCommon('superadmin.globalProjectCommentPlaceholder', 'Commentaire général sur ce projet...')}
             multiline
             numberOfLines={3}
             className="mt-3 w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 dark:text-white text-sm"
           />
           <TouchableOpacity
-            onPress={() => showToast('Note globale enregistrée ✅', 'success')}
+            onPress={() => showToast(tCommon('superadmin.successGlobalNoteSaved', 'Note globale enregistrée ✅'), 'success')}
             className="mt-3 bg-[#1E3A5F] px-4 py-2 rounded-lg self-end"
           >
-            <Text className="text-white font-bold text-sm">Enregistrer</Text>
+            <Text className="text-white font-bold text-sm">{tCommon('superadmin.save', 'Enregistrer')}</Text>
           </TouchableOpacity>
         </View>
-
+ 
         {/* Per-network notes */}
         <View className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm overflow-hidden mb-6">
           <View className="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex-row justify-between items-center">
-            <Text className="font-black text-slate-700 dark:text-white">📋 Notes par Réseau</Text>
+            <Text className="font-black text-slate-700 dark:text-white">{tCommon('superadmin.notesByNetworkTitle', '📋 Notes par Réseau')}</Text>
             <TouchableOpacity
               onPress={() => setShowAddNote(true)}
               className="bg-[#1E3A5F] px-4 py-2 rounded-lg"
             >
-              <Text className="text-white font-bold text-sm">+ Ajouter</Text>
+              <Text className="text-white font-bold text-sm">{tCommon('superadmin.addNoteButton', '+ Ajouter')}</Text>
             </TouchableOpacity>
           </View>
 
           {/* Add note form */}
           {showAddNote && (
             <View className="p-6 bg-blue-50 dark:bg-blue-900/10 border-b border-slate-100 dark:border-slate-700">
-              <Text className="font-bold text-slate-700 dark:text-slate-300 mb-2">Nouvelle note</Text>
+              <Text className="font-bold text-slate-700 dark:text-slate-300 mb-2">{tCommon('superadmin.newNoteTitle', 'Nouvelle note')}</Text>
               <View className="mb-3">
-                <Text className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Réseau</Text>
+                <Text className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{tCommon('superadmin.networkLabel', 'Réseau')}</Text>
                 <View className="flex-row flex-wrap gap-2">
                   {networks.map(net => (
                     <TouchableOpacity
@@ -878,23 +880,23 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
                 </View>
               </View>
               <View className="mb-3">
-                <Text className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Note</Text>
+                <Text className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{tCommon('superadmin.noteLabel', 'Note')}</Text>
                 <StarRating rating={newNote.rating} onRate={(r) => setNewNote(prev => ({ ...prev, rating: r }))} />
               </View>
               <TextInput
                 value={newNote.text}
                 onChangeText={(text) => setNewNote(prev => ({ ...prev, text }))}
-                placeholder="Votre commentaire..."
+                placeholder={tCommon('superadmin.noteCommentPlaceholder', 'Votre commentaire...')}
                 multiline
                 numberOfLines={2}
                 className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 dark:text-white text-sm mb-3"
               />
               <View className="flex-row space-x-3">
                 <TouchableOpacity onPress={handleAddNote} className="flex-1 bg-[#1E3A5F] py-2 rounded-lg items-center">
-                  <Text className="text-white font-bold">Ajouter</Text>
+                  <Text className="text-white font-bold">{tCommon('superadmin.addButton', 'Ajouter')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setShowAddNote(false)} className="flex-1 bg-slate-200 dark:bg-slate-700 py-2 rounded-lg items-center">
-                  <Text className="font-bold text-slate-700 dark:text-white">Annuler</Text>
+                  <Text className="font-bold text-slate-700 dark:text-white">{tCommon('superadmin.cancel', 'Annuler')}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -926,10 +928,10 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
                         />
                         <View className="flex-row space-x-2">
                           <TouchableOpacity onPress={handleSaveEditNote} className="bg-[#1E3A5F] px-4 py-1.5 rounded-lg">
-                            <Text className="text-white font-bold text-sm">OK</Text>
+                            <Text className="text-white font-bold text-sm">{tCommon('superadmin.ok', 'OK')}</Text>
                           </TouchableOpacity>
                           <TouchableOpacity onPress={() => { setEditingNoteId(null); setEditingNoteData(null); }} className="bg-slate-200 dark:bg-slate-700 px-4 py-1.5 rounded-lg">
-                            <Text className="font-bold text-sm dark:text-white">Annuler</Text>
+                            <Text className="font-bold text-sm dark:text-white">{tCommon('superadmin.cancel', 'Annuler')}</Text>
                           </TouchableOpacity>
                         </View>
                       </View>
@@ -946,15 +948,14 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
                             onPress={() => { setEditingNoteId(note.id); setEditingNoteData({ ...note }); }}
                             className="bg-blue-100 dark:bg-blue-900/30 px-3 py-1.5 rounded-lg"
                           >
-                            <Text className="text-blue-700 dark:text-blue-400 font-bold text-xs">Éditer</Text>
+                            <Text className="text-blue-700 dark:text-blue-400 font-bold text-xs">{tCommon('superadmin.editButtonShort', 'Éditer')}</Text>
                           </TouchableOpacity>
                           <TouchableOpacity
                             onPress={() => handleDeleteNote(note.id)}
                             className="bg-red-100 dark:bg-red-900/30 px-3 py-1.5 rounded-lg"
                           >
-                            <Text className="text-red-600 dark:text-red-400 font-bold text-xs">Suppr.</Text>
-                          </TouchableOpacity>
-                        </View>
+                            <Text className="text-red-600 dark:text-red-400 font-bold text-xs">{tCommon('superadmin.deleteButtonShort', 'Suppr.')}</Text>
+                          </TouchableOpacity>                        </View>
                       </View>
                     )}
                   </View>
@@ -965,7 +966,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
 
           {networkNotes.length === 0 && !showAddNote && (
             <View className="p-8 items-center">
-              <Text className="text-slate-400 dark:text-slate-500 text-sm">Aucune note pour le moment. Cliquez sur "+ Ajouter" pour commencer.</Text>
+              <Text className="text-slate-400 dark:text-slate-500 text-sm">{tCommon('superadmin.noNotesYet', 'Aucune note pour le moment. Cliquez sur "+ Ajouter" pour commencer.')}</Text>
             </View>
           )}
         </View>
@@ -977,39 +978,39 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
     <View className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg mt-6">
       <View className="flex-row justify-between items-center mb-4">
         <Text className="text-xl font-bold dark:text-white">
-          {currentProject.id ? 'Détails du projet' : 'Nouveau Projet'}
+          {currentProject.id ? tCommon('superadmin.projectDetailsTitle', 'Détails du projet') : tCommon('superadmin.newProjectTitle', 'Nouveau Projet')}
         </Text>
         {currentProject.id && !managingProjectId && (
           <TouchableOpacity onPress={() => setManagingProjectId(currentProject.id as string)} className="bg-emerald-100 dark:bg-emerald-900 px-4 py-2 rounded-lg">
-            <Text className="text-emerald-700 dark:text-emerald-300 font-bold">Gérer ce projet</Text>
+            <Text className="text-emerald-700 dark:text-emerald-300 font-bold">{tCommon('superadmin.manageProjectButton', 'Gérer ce projet')}</Text>
           </TouchableOpacity>
         )}
       </View>
       
       <View className="space-y-4">
         <View>
-          <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Nom du projet</Text>
+          <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">{tCommon('superadmin.projectNameLabel', 'Nom du projet')}</Text>
           <TextInput
             value={currentProject.name || ''}
             onChangeText={(text) => setCurrentProject(prev => ({ ...prev, name: text }))}
             className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 dark:text-white"
-            placeholder="Nom du projet"
+            placeholder={tCommon('superadmin.projectNamePlaceholder', 'Nom du projet')}
           />
         </View>
 
         <View>
-          <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Description</Text>
+          <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">{tCommon('superadmin.projectDescriptionLabel', 'Description')}</Text>
           <TextInput
             value={currentProject.description || ''}
             onChangeText={(text) => setCurrentProject(prev => ({ ...prev, description: text }))}
             className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 dark:text-white"
-            placeholder="Description courte"
+            placeholder={tCommon('superadmin.projectDescriptionPlaceholder', 'Description courte')}
           />
         </View>
 
         <View className="flex-row space-x-4">
           <View className="flex-1">
-            <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Email contact <Text className="text-red-500">*</Text></Text>
+            <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">{tCommon('superadmin.contactEmailLabel', 'Email contact')} <Text className="text-red-500">*</Text></Text>
             <TextInput
               value={currentProject.email || ''}
               onChangeText={(text) => setCurrentProject(prev => ({ ...prev, email: text }))}
@@ -1020,7 +1021,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
             />
           </View>
           <View className="flex-1">
-            <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Téléphone <Text className="text-red-500">*</Text></Text>
+            <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">{tCommon('superadmin.phoneLabel', 'Téléphone')} <Text className="text-red-500">*</Text></Text>
             <TextInput
               value={currentProject.phone || ''}
               onChangeText={(text) => setCurrentProject(prev => ({ ...prev, phone: text }))}
@@ -1033,31 +1034,30 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
         
         <View className="flex-row space-x-4 mt-2">
           <View className="flex-1">
-            <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Secteur d'activité</Text>
+            <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">{tCommon('superadmin.industryLabel', 'Secteur d'activité')}</Text>
             <View className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden h-12 justify-center mb-2">
               <Picker
                 selectedValue={currentProject.industry || ''}
                 onValueChange={(val) => setCurrentProject(prev => ({ ...prev, industry: val }))}
                 style={{ height: 50, width: '100%', color: 'inherit' }}
               >
-                <Picker.Item label="Sélectionner un secteur" value="" />
+                <Picker.Item label={tCommon('superadmin.selectSectorPlaceholder', 'Sélectionner un secteur')} value="" />
                 {sectors.map(s => <Picker.Item key={s} label={s} value={s} />)}
               </Picker>
             </View>
             <View className="flex-row space-x-2">
               <TextInput 
-                placeholder="Nouveau secteur"
+                placeholder={tCommon('superadmin.newSectorPlaceholder', 'Nouveau secteur')}
                 value={newSectorName}
-                onChangeText={setNewSectorName}
-                className="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 dark:text-white"
+                onChangeText={setNewSectorName}                className="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 dark:text-white"
               />
               <TouchableOpacity onPress={handleAddSector} className="bg-[#1E3A5F] px-4 py-2 rounded-lg justify-center">
-                <Text className="text-white font-bold">Add</Text>
+                <Text className="text-white font-bold">{tCommon('superadmin.addButton', 'Add')}</Text>
               </TouchableOpacity>
             </View>
           </View>
           <View className="flex-1">
-            <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Statut Paiement</Text>
+            <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">{tCommon('superadmin.paymentStatusLabel', 'Statut Paiement')}</Text>
             <View className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden h-12 justify-center">
               <Picker
                 selectedValue={currentProject.paymentStatus || 'pending'}
@@ -1067,23 +1067,23 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
                 }))}
                 style={{ height: 50, width: '100%', color: 'inherit' }}
               >
-                <Picker.Item label="En attente" value="pending" />
-                <Picker.Item label="Payé" value="paid" />
-                <Picker.Item label="Expiré" value="expired" />
+                <Picker.Item label={tCommon('superadmin.paymentStatusPending', 'En attente')} value="pending" />
+                <Picker.Item label={tCommon('superadmin.paymentStatusPaid', 'Payé')} value="paid" />
+                <Picker.Item label={tCommon('superadmin.paymentStatusExpired', 'Expiré')} value="expired" />
               </Picker>
             </View>
           </View>
         </View>
 
         <View>
-          <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">ID de l'Admin</Text>
+          <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">{tCommon('superadmin.adminIdLabel', 'ID de l\'Admin')}</Text>
           <View className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden h-12 justify-center">
             <Picker
               selectedValue={currentProject.adminId || ''}
               onValueChange={(val) => setCurrentProject(prev => ({ ...prev, adminId: val }))}
               style={{ height: 50, width: '100%', color: 'inherit' }}
             >
-              <Picker.Item label="Sélectionner un admin" value="" />
+              <Picker.Item label={tCommon('superadmin.selectAdminPlaceholder', 'Sélectionner un admin')} value="" />
               {admins.map(admin => (
                 <Picker.Item key={admin.id} label={`${admin.name} (${admin.email})`} value={admin.id} />
               ))}
@@ -1092,7 +1092,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
         </View>
 
         <View className="flex-row items-center justify-between mt-2">
-          <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300">Projet Actif</Text>
+          <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300">{tCommon('superadmin.projectActiveLabel', 'Projet Actif')}</Text>
           <Switch 
             value={currentProject.isActive !== false}
             onValueChange={(val) => setCurrentProject(prev => ({ ...prev, isActive: val }))}
@@ -1101,12 +1101,12 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
 
         <View className="flex-row justify-end space-x-4 mt-6">
           <TouchableOpacity onPress={() => { setIsEditing(false); setCurrentProject({}); }} className="px-6 py-3 rounded-lg bg-slate-200 dark:bg-slate-700" disabled={saving}>
-            <Text className="text-slate-800 dark:text-white font-bold">Annuler</Text>
+            <Text className="text-slate-800 dark:text-white font-bold">{tCommon('superadmin.cancel', 'Annuler')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleSaveProject} className="px-6 py-3 rounded-lg bg-[#1E3A5F] flex-row items-center" disabled={saving}>
             {saving && <ActivityIndicator size="small" color="#fff" style={{ marginRight: 8 }} />}
             <Text className="text-white font-bold">
-              {saving ? 'Enregistrement...' : 'Enregistrer'}
+              {saving ? tCommon('superadmin.saving', 'Enregistrement...') : tCommon('superadmin.save', 'Enregistrer')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -1117,22 +1117,22 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
   const renderAdminForm = () => (
     <View className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg mt-6">
       <Text className="text-xl font-bold mb-4 dark:text-white">
-        {currentAdmin.id ? 'Modifier l\'admin' : 'Nouvel Admin'}
+        {currentAdmin.id ? tCommon('superadmin.editAdminTitle', 'Modifier l\'admin') : tCommon('superadmin.newAdminTitle', 'Nouvel Admin')}
       </Text>
       
       <View className="space-y-4">
         <View>
-          <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Nom <Text className="text-red-500">*</Text></Text>
+          <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">{tCommon('superadmin.adminNameLabel', 'Nom')} <Text className="text-red-500">*</Text></Text>
           <TextInput
             value={currentAdmin.name || ''}
             onChangeText={(text) => setCurrentAdmin(prev => ({ ...prev, name: text }))}
             className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 dark:text-white"
-            placeholder="Nom complet"
+            placeholder={tCommon('superadmin.adminNamePlaceholder', 'Nom complet')}
           />
         </View>
 
         <View>
-          <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Email <Text className="text-red-500">*</Text></Text>
+          <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">{tCommon('superadmin.adminEmailLabel', 'Email')} <Text className="text-red-500">*</Text></Text>
           <TextInput
             value={currentAdmin.email || ''}
             onChangeText={(text) => setCurrentAdmin(prev => ({ ...prev, email: text }))}
@@ -1143,7 +1143,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
         </View>
 
         <View>
-          <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Téléphone</Text>
+          <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">{tCommon('superadmin.adminPhoneLabel', 'Téléphone')}</Text>
           <TextInput
             value={currentAdmin.phone || ''}
             onChangeText={(text) => setCurrentAdmin(prev => ({ ...prev, phone: text }))}
@@ -1153,7 +1153,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
         </View>
 
         <View className="flex-row items-center justify-between mt-2">
-          <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300">Admin Actif</Text>
+          <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300">{tCommon('superadmin.adminActiveLabel', 'Admin Actif')}</Text>
           <Switch 
             value={currentAdmin.status !== 'blocked'}
             onValueChange={(val) => setCurrentAdmin(prev => ({ ...prev, status: val ? 'active' : 'blocked' }))}
@@ -1162,12 +1162,12 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
 
         <View className="flex-row justify-end space-x-4 mt-6">
           <TouchableOpacity onPress={() => setIsEditingAdmin(false)} className="px-6 py-3 rounded-lg bg-slate-200 dark:bg-slate-700" disabled={saving}>
-            <Text className="text-slate-800 dark:text-white font-bold">Annuler</Text>
+            <Text className="text-slate-800 dark:text-white font-bold">{tCommon('superadmin.cancel', 'Annuler')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleSaveAdmin} className="px-6 py-3 rounded-lg bg-[#1E3A5F] flex-row items-center" disabled={saving}>
             {saving && <ActivityIndicator size="small" color="#fff" style={{ marginRight: 8 }} />}
             <Text className="text-white font-bold">
-              {saving ? 'Enregistrement...' : 'Enregistrer'}
+              {saving ? tCommon('superadmin.saving', 'Enregistrement...') : tCommon('superadmin.save', 'Enregistrer')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -1210,26 +1210,26 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
         {managingProjectId ? (
           <View>
             <TouchableOpacity onPress={() => setManagingProjectId(null)} className="mb-6 self-start bg-slate-200 dark:bg-slate-800 px-4 py-2 rounded-lg">
-              <Text className="text-slate-800 dark:text-white font-bold">← Retour au Dashboard</Text>
+              <Text className="text-slate-800 dark:text-white font-bold">{tCommon('superadmin.returnDashboardButton', '← Retour au Dashboard')}</Text>
             </TouchableOpacity>
-            
+             
             <View className="mb-8">
               <Text className="text-3xl font-black dark:text-white">
-                Gestion du Projet: {projects.find(p => p.id === managingProjectId)?.name}
+                {tCommon('superadmin.manageProjectTitle', 'Gestion du Projet')}: {projects.find(p => p.id === managingProjectId)?.name}
               </Text>
             </View>
 
             <ScrollView horizontal showsHorizontalScrollIndicator={false} className="border-b border-slate-200 dark:border-slate-800 mb-6">
               <View className="flex-row gap-1 pb-0">
                 {[
-                  { id: 'details', label: '📋 Détails' },
-                  { id: 'analytics', label: '📊 Analytiques' },
-                  { id: 'settings', label: '⚙️ Paramètres' },
-                  { id: 'notes', label: '📝 Notes' },
-                  { id: 'coupons', label: '🎟️ Coupons' },
-                  { id: 'roulette', label: '🎡 Roulette' },
-                  { id: 'users', label: '👥 Utilisateurs' },
-                  { id: 'stickers', label: '🏷️ Stickers' },
+                  { id: 'details', label: tCommon('superadmin.manageTab.details', '📋 Détails') },
+                  { id: 'analytics', label: tCommon('superadmin.manageTab.analytics', '📊 Analytiques') },
+                  { id: 'settings', label: tCommon('superadmin.manageTab.settings', '⚙️ Paramètres') },
+                  { id: 'notes', label: tCommon('superadmin.manageTab.notes', '📝 Notes') },
+                  { id: 'coupons', label: tCommon('superadmin.manageTab.coupons', '🎟️ Coupons') },
+                  { id: 'roulette', label: tCommon('superadmin.manageTab.roulette', '🎡 Roulette') },
+                  { id: 'users', label: tCommon('superadmin.manageTab.users', '👥 Utilisateurs') },
+                  { id: 'stickers', label: tCommon('superadmin.manageTab.stickers', '🏷️ Stickers') },
                 ].map(tab => (
                   <TouchableOpacity
                     key={tab.id}
@@ -1286,15 +1286,15 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
               </Text>
           <View className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <View className="p-6 bg-white dark:bg-slate-800 rounded-2xl shadow">
-              <Text className="text-sm font-bold text-slate-500 dark:text-slate-400">Projets Actifs</Text>
+              <Text className="text-sm font-bold text-slate-500 dark:text-slate-400">{tCommon('superadmin.activeProjects', 'Active Projects')}</Text>
               <Text className="text-3xl font-black text-[#1E3A5F] dark:text-white">{projects.length}</Text>
             </View>
             <View className="p-6 bg-white dark:bg-slate-800 rounded-2xl shadow">
-              <Text className="text-sm font-bold text-slate-500 dark:text-slate-400">Admins</Text>
+              <Text className="text-sm font-bold text-slate-500 dark:text-slate-400">{tCommon('superadmin.admins', 'Admins')}</Text>
               <Text className="text-3xl font-black text-emerald-600 dark:text-emerald-400">{admins.length}</Text>
             </View>
             <View className="p-6 bg-white dark:bg-slate-800 rounded-2xl shadow">
-              <Text className="text-sm font-bold text-slate-500 dark:text-slate-400">Secteurs</Text>
+              <Text className="text-sm font-bold text-slate-500 dark:text-slate-400">{tCommon('superadmin.sectors', 'Sectors')}</Text>
               <Text className="text-3xl font-black text-amber-600 dark:text-amber-400">{sectors.length}</Text>
             </View>
           </View>
@@ -1306,38 +1306,38 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
             className={`pb-4 px-6 ${activeTab === 'projects' ? 'border-b-2 border-[#1E3A5F] dark:border-blue-400' : ''}`}
             onPress={() => setActiveTab('projects')}
           >
-            <Text className={`font-bold ${activeTab === 'projects' ? 'text-[#1E3A5F] dark:text-blue-400' : 'text-slate-500'}`}>Gestion des Projets</Text>
+            <Text className={`font-bold ${activeTab === 'projects' ? 'text-[#1E3A5F] dark:text-blue-400' : 'text-slate-500'}`}>{tCommon('superadmin.tabs.projects', 'Project Management')}</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             className={`pb-4 px-6 ${activeTab === 'admins' ? 'border-b-2 border-[#1E3A5F] dark:border-blue-400' : ''}`}
             onPress={() => setActiveTab('admins')}
           >
-            <Text className={`font-bold ${activeTab === 'admins' ? 'text-[#1E3A5F] dark:text-blue-400' : 'text-slate-500'}`}>Gestion des Admins</Text>
+            <Text className={`font-bold ${activeTab === 'admins' ? 'text-[#1E3A5F] dark:text-blue-400' : 'text-slate-500'}`}>{tCommon('superadmin.tabs.admins', 'Admin Management')}</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             className={`pb-4 px-6 ${activeTab === 'sectors' ? 'border-b-2 border-[#1E3A5F] dark:border-blue-400' : ''}`}
             onPress={() => setActiveTab('sectors')}
           >
-            <Text className={`font-bold ${activeTab === 'sectors' ? 'text-[#1E3A5F] dark:text-blue-400' : 'text-slate-500'}`}>Gestion des Secteurs</Text>
+            <Text className={`font-bold ${activeTab === 'sectors' ? 'text-[#1E3A5F] dark:text-blue-400' : 'text-slate-500'}`}>{tCommon('superadmin.tabs.sectors', 'Sector Management')}</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             className={`pb-4 px-6 ${activeTab === 'analytics' ? 'border-b-2 border-[#1E3A5F] dark:border-blue-400' : ''}`}
             onPress={() => setActiveTab('analytics')}
           >
-            <Text className={`font-bold ${activeTab === 'analytics' ? 'text-[#1E3A5F] dark:text-blue-400' : 'text-slate-500'}`}>Analytiques Globaux</Text>
+            <Text className={`font-bold ${activeTab === 'analytics' ? 'text-[#1E3A5F] dark:text-blue-400' : 'text-slate-500'}`}>{tCommon('superadmin.tabs.analytics', 'Global Analytics')}</Text>
           </TouchableOpacity>
         </View>
 
         {activeTab === 'projects' && (
           <View>
             <View className="flex-row justify-between items-center mb-6">
-              <Text className="text-xl font-bold dark:text-white">Liste des Projets</Text>
+              <Text className="text-xl font-bold dark:text-white">{tCommon('superadmin.projectListTitle', 'Project List')}</Text>
               {!isEditing && (
                 <TouchableOpacity 
                   className="bg-[#1E3A5F] px-4 py-2 rounded-lg"
                   onPress={() => { setCurrentProject({}); setIsEditing(true); }}
                 >
-                  <Text className="text-white font-bold">+ Nouveau Projet</Text>
+                  <Text className="text-white font-bold">{tCommon('superadmin.addProjectButton', '+ New Project')}</Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -1350,27 +1350,27 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
                   <View key={proj.id} className={`p-4 flex-row justify-between items-center ${idx !== projects.length - 1 ? 'border-b border-slate-100 dark:border-slate-700' : ''}`}>
                     <View>
                       <Text className="font-bold text-lg dark:text-white">{proj.name}</Text>
-                      <Text className="text-sm text-slate-500 dark:text-slate-400">Admin: {proj.adminId} · Statut: {proj.paymentStatus || 'N/A'} · Utilisateurs: {userCountsByProject[proj.id] || 0}</Text>
+                      <Text className="text-sm text-slate-500 dark:text-slate-400">{`${tCommon('superadmin.adminLabel', 'Admin')}: ${proj.adminId} · ${tCommon('superadmin.statusLabel', 'Statut')}: ${proj.paymentStatus || tCommon('superadmin.notAvailable', 'N/A')} · ${tCommon('superadmin.usersLabel', 'Utilisateurs')}: ${userCountsByProject[proj.id] || 0}`}</Text>
                     </View>
                     <View className="flex-row space-x-3 items-center">
                       <TouchableOpacity onPress={() => { setManagingProjectId(proj.id); setManagingTab('details'); setCurrentProject(proj); }} className="bg-emerald-100 dark:bg-emerald-900 px-3 py-1.5 rounded-lg">
-                        <Text className="text-emerald-700 dark:text-emerald-300 font-bold">Gérer</Text>
+                        <Text className="text-emerald-700 dark:text-emerald-300 font-bold">{tCommon('superadmin.manageButton', 'Gérer')}</Text>
                       </TouchableOpacity>
                       <TouchableOpacity onPress={() => openProjectPreview(proj.id)} className="bg-slate-100 dark:bg-slate-700 px-3 py-1.5 rounded-lg">
-                        <Text className="text-slate-700 dark:text-slate-300 font-bold">Prévisualiser</Text>
+                        <Text className="text-slate-700 dark:text-slate-300 font-bold">{tCommon('superadmin.previewButton', 'Prévisualiser')}</Text>
                       </TouchableOpacity>
                       <TouchableOpacity onPress={() => { setCurrentProject(proj); setIsEditing(true); }} className="bg-blue-100 dark:bg-blue-900 px-3 py-1.5 rounded-lg">
-                        <Text className="text-blue-700 dark:text-blue-300 font-bold">Éditer</Text>
+                        <Text className="text-blue-700 dark:text-blue-300 font-bold">{tCommon('superadmin.editButton', 'Éditer')}</Text>
                       </TouchableOpacity>
                       <TouchableOpacity onPress={() => handleDeleteProject(proj.id)} className="bg-red-100 dark:bg-red-900 px-3 py-1.5 rounded-lg" disabled={saving}>
-                        <Text className="text-red-700 dark:text-red-300 font-bold">Supprimer</Text>
+                        <Text className="text-red-700 dark:text-red-300 font-bold">{tCommon('superadmin.deleteButton', 'Supprimer')}</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
                 ))}
                 {projects.length === 0 && (
                   <View className="p-8 items-center">
-                    <Text className="text-slate-500 dark:text-slate-400">Aucun projet trouvé</Text>
+                    <Text className="text-slate-500 dark:text-slate-400">{tCommon('superadmin.noProjectsFound', 'Aucun projet trouvé')}</Text>
                   </View>
                 )}
               </View>
@@ -1381,13 +1381,13 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
         {activeTab === 'admins' && (
           <View>
             <View className="flex-row justify-between items-center mb-6">
-              <Text className="text-xl font-bold dark:text-white">Liste des Admins</Text>
+              <Text className="text-xl font-bold dark:text-white">{tCommon('superadmin.adminListTitle', 'Admin List')}</Text>
               {!isEditingAdmin && (
                 <TouchableOpacity 
                   className="bg-[#1E3A5F] px-4 py-2 rounded-lg"
                   onPress={() => { setCurrentAdmin({}); setIsEditingAdmin(true); }}
                 >
-                  <Text className="text-white font-bold">+ Nouvel Admin</Text>
+                  <Text className="text-white font-bold">{tCommon('superadmin.addAdminButton', '+ New Admin')}</Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -1402,11 +1402,11 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
                     <View key={adm.id} className={`p-4 flex-row justify-between items-center ${idx !== admins.length - 1 ? 'border-b border-slate-100 dark:border-slate-700' : ''}`}>
                       <View>
                         <Text className="font-bold text-lg dark:text-white">{adm.name}</Text>
-                        <Text className="text-sm text-slate-500 dark:text-slate-400">{adm.email} | Status: {adm.status || 'N/A'}</Text>
+                        <Text className="text-sm text-slate-500 dark:text-slate-400">{adm.email} | {tCommon('superadmin.statusLabel', 'Status')}: {adm.status || tCommon('superadmin.notAvailable', 'N/A')}</Text>
                         {associatedProject && (
                           <View className="flex-row items-center mt-1">
                             <Text className="text-xs bg-[#1E3A5F] text-white px-2 py-0.5 rounded-full mr-2">
-                              Projet: {associatedProject.name}
+                              {tCommon('superadmin.projectLabel', 'Projet')}: {associatedProject.name}
                             </Text>
                             {associatedProject.industry && (
                               <Text className="text-xs bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded-full">
@@ -1418,10 +1418,10 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
                       </View>
                       <View className="flex-row space-x-3">
                         <TouchableOpacity onPress={() => { setCurrentAdmin(adm); setIsEditingAdmin(true); }} className="bg-blue-100 dark:bg-blue-900 px-3 py-1.5 rounded-lg">
-                          <Text className="text-blue-700 dark:text-blue-300 font-bold">Éditer</Text>
+                          <Text className="text-blue-700 dark:text-blue-300 font-bold">{tCommon('superadmin.editButton', 'Edit')}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => handleDeleteAdmin(adm.id)} className="bg-red-100 dark:bg-red-900 px-3 py-1.5 rounded-lg" disabled={saving}>
-                          <Text className="text-red-700 dark:text-red-300 font-bold">Supprimer</Text>
+                          <Text className="text-red-700 dark:text-red-300 font-bold">{tCommon('superadmin.deleteButton', 'Delete')}</Text>
                         </TouchableOpacity>
                       </View>
                     </View>
@@ -1429,7 +1429,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
                 })}
                 {admins.length === 0 && (
                   <View className="p-8 items-center">
-                    <Text className="text-slate-500 dark:text-slate-400">Aucun admin trouvé</Text>
+                    <Text className="text-slate-500 dark:text-slate-400">{tCommon('superadmin.noAdmins', 'No admins found')}</Text>
                   </View>
                 )}
               </View>
@@ -1439,17 +1439,17 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
 
         {activeTab === 'sectors' && (
           <View className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow">
-            <Text className="text-xl font-bold mb-4 dark:text-white">Liste des Secteurs</Text>
-            
+            <Text className="text-xl font-bold mb-4 dark:text-white">{tCommon('superadmin.sectorListTitle', 'Sector List')}</Text>
+              
             <View className="flex-row space-x-3 mb-6">
               <TextInput 
-                placeholder="Nom du secteur"
+                placeholder={tCommon('superadmin.sectorNamePlaceholder', 'Sector Name')}
                 value={newSectorName}
                 onChangeText={setNewSectorName}
                 className="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 dark:text-white"
               />
               <TouchableOpacity onPress={handleAddSector} className="bg-[#1E3A5F] px-6 py-3 rounded-lg justify-center">
-                <Text className="text-white font-bold">Ajouter</Text>
+                <Text className="text-white font-bold">{tCommon('superadmin.addSectorButton', 'Add')}</Text>
               </TouchableOpacity>
             </View>
 
@@ -1476,10 +1476,10 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
                       <Text className="font-semibold dark:text-white flex-1">{sector}</Text>
                       <View className="flex-row space-x-2">
                         <TouchableOpacity onPress={() => handleEditSector(sector)} className="bg-blue-100 dark:bg-blue-900/30 px-3 py-1.5 rounded-lg">
-                          <Text className="text-blue-600 dark:text-blue-400 font-bold">Éditer</Text>
+                          <Text className="text-blue-600 dark:text-blue-400 font-bold">{tCommon('superadmin.editButton', 'Edit')}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => handleDeleteSector(sector)} className="bg-red-100 dark:bg-red-900/30 px-3 py-1.5 rounded-lg">
-                          <Text className="text-red-600 dark:text-red-400 font-bold">Supprimer</Text>
+                          <Text className="text-red-600 dark:text-red-400 font-bold">{tCommon('superadmin.deleteButton', 'Delete')}</Text>
                         </TouchableOpacity>
                       </View>
                     </>
@@ -1488,7 +1488,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
               ))}
               {sectors.length === 0 && (
                 <View className="p-4 items-center">
-                  <Text className="text-slate-500">Aucun secteur défini.</Text>
+                  <Text className="text-slate-500">{tCommon('superadmin.noSectorDefined', 'No sectors defined.')}</Text>
                 </View>
               )}
             </View>

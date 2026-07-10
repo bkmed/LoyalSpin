@@ -3,7 +3,8 @@ import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../../store';
-import { updateUser, deleteUser, saveNewUser } from '../../../store/slices/usersSlice';
+import { updateUserInFirebase, deleteUserFromFirebase, saveNewUser } from '../../../store/slices/usersSlice';
+import { addAdmin, updateAdmin, deleteAdmin } from '../../../store/slices/adminsSlice';
 import { setActiveTab } from '../../../store/slices/uiSlice';
 
 interface AdminUsersProps {
@@ -18,6 +19,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
     t(key, { defaultValue });
   const dispatch = useDispatch<AppDispatch>();
   const usersList = useSelector((state: RootState) => state.users?.items ?? []);
+  const adminsList = useSelector((state: RootState) => state.admins?.items ?? []);
   const sessionUser = useSelector(
     (state: RootState) => (state as any).webSession?.sessionUser,
   );
@@ -48,7 +50,19 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
   const [createUserErrors, setCreateUserErrors] = React.useState<Record<string, string>>({});
 
   const enrichedUsers = React.useMemo((): any[] => {
-    return usersList.map((user: any) => ({
+    const baseUsers = projectId
+      ? [
+          ...usersList.filter((user: any) => user.projectId === projectId),
+          ...adminsList
+            .filter(
+              (admin: any) =>
+                admin.projectId === projectId &&
+                !usersList.some((user: any) => user.id === admin.id),
+            ),
+        ]
+      : usersList;
+
+    return baseUsers.map((user: any) => ({
       ...user,
       level:
         user.level ||
@@ -71,7 +85,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
           user.email || user.name || user.id,
         )}`,
     }));
-  }, [usersList]);
+  }, [usersList, adminsList, projectId]);
 
   const canManageUser = React.useCallback((user: any) => {
     if (isSuperAdmin || currentRole === 'super-admin') return true;
@@ -84,10 +98,13 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
 
   const visibleEnrichedUsers = React.useMemo(() => {
     let baseUsers = enrichedUsers;
+    if (projectId) {
+      baseUsers = baseUsers.filter(u => u.projectId === projectId);
+    }
     if (isSuperAdmin || currentRole === 'super-admin') return baseUsers;
     if (!sessionUser) return [];
     return baseUsers.filter(u => canManageUser(u));
-  }, [enrichedUsers, currentRole, sessionUser, canManageUser]);
+  }, [enrichedUsers, currentRole, sessionUser, canManageUser, projectId, isSuperAdmin]);
 
   const filteredUsers = React.useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
@@ -146,18 +163,34 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
       status: selectedUser.status === 'active' ? 'blocked' : 'active',
       updatedAt: new Date().toISOString(),
     };
-    dispatch(updateUser(updated));
-    showToast(
-      tCommon(
-        selectedUser.status === 'active'
-          ? 'adminUsers.userBlocked'
-          : 'adminUsers.userReactivated',
-        selectedUser.status === 'active'
-          ? 'Utilisateur bloqué avec succès !'
-          : 'Compte réactivé !',
-      ),
-      'info',
-    );
+    dispatch(updateUserInFirebase(updated))
+      .unwrap()
+      .then(() => {
+        if (updated.role === 'admin') {
+          if (adminsList.some((admin: any) => admin.id === updated.id)) {
+            dispatch(updateAdmin(updated));
+          } else {
+            dispatch(addAdmin(updated));
+          }
+        }
+        showToast(
+          tCommon(
+            selectedUser.status === 'active'
+              ? 'adminUsers.userBlocked'
+              : 'adminUsers.userReactivated',
+            selectedUser.status === 'active'
+              ? 'Utilisateur bloqué avec succès !'
+              : 'Compte réactivé !',
+          ),
+          'info',
+        );
+      })
+      .catch(() => {
+        showToast(
+          tCommon('adminUsers.userUpdateFailed', 'Impossible de mettre à jour l utilisateur.'),
+          'error',
+        );
+      });
   };
 
   const handleSendNotification = () => {
@@ -193,12 +226,30 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
       role: editUserRole,
       updatedAt: new Date().toISOString(),
     };
-    dispatch(updateUser(updatedUser));
-    showToast(
-      tCommon('adminUsers.userUpdated', 'Utilisateur mis à jour avec succès !'),
-      'success',
-    );
-    setEditingUser(null);
+    dispatch(updateUserInFirebase(updatedUser))
+      .unwrap()
+      .then(() => {
+        if (updatedUser.role === 'admin') {
+          if (adminsList.some((admin: any) => admin.id === updatedUser.id)) {
+            dispatch(updateAdmin(updatedUser));
+          } else {
+            dispatch(addAdmin(updatedUser));
+          }
+        } else if (editingUser?.role === 'admin') {
+          dispatch(deleteAdmin(updatedUser.id));
+        }
+        showToast(
+          tCommon('adminUsers.userUpdated', 'Utilisateur mis à jour avec succès !'),
+          'success',
+        );
+        setEditingUser(null);
+      })
+      .catch(() => {
+        showToast(
+          tCommon('adminUsers.userUpdateFailed', 'Impossible de mettre à jour l utilisateur.'),
+          'error',
+        );
+      });
   };
 
   const confirmDeleteUser = () => {
@@ -215,11 +266,23 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
     if (editingUser?.id === userToDelete.id) {
       setEditingUser(null);
     }
-    dispatch(deleteUser(userToDelete.id));
-    showToast(
-      tCommon('adminUsers.userDeleted', 'Utilisateur supprimé !'),
-      'info',
-    );
+    dispatch(deleteUserFromFirebase(userToDelete.id))
+      .unwrap()
+      .then(() => {
+        if (userToDelete.role === 'admin') {
+          dispatch(deleteAdmin(userToDelete.id));
+        }
+        showToast(
+          tCommon('adminUsers.userDeleted', 'Utilisateur supprimé !'),
+          'info',
+        );
+      })
+      .catch(() => {
+        showToast(
+          tCommon('adminUsers.userDeleteFailed', 'Impossible de supprimer l utilisateur.'),
+          'error',
+        );
+      });
     setShowDeleteConfirm(false);
     setUserToDelete(null);
   };
@@ -270,6 +333,9 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
     dispatch(saveNewUser(newUser))
       .unwrap()
       .then(() => {
+        if (newUser.role === 'admin') {
+          dispatch(addAdmin(newUser));
+        }
         showToast(
           tCommon('adminUsers.userCreated', 'Utilisateur créé avec succès !'),
           'success',
@@ -282,22 +348,24 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
         setNewUserStatus('active');
         setCreateUserErrors({});
       })
-      .catch((err: any) => {
+      .catch(() => {
         showToast("Erreur lors de la création de l'utilisateur.", 'error');
       });
   };
 
   return (
     <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in text-left">
-      <TouchableOpacity
-        onPress={() => dispatch(setActiveTab('AdminManage'))}
-        className="mb-6 bg-slate-200 dark:bg-slate-700 px-4 py-2 rounded-xl self-start"
-        style={{ alignSelf: 'flex-start' }}
-      >
-        <Text className="text-xs font-black text-slate-600 dark:text-slate-200">
-          {tCommon('adminUsers.backToManage', '← Retour à Manage')}
-        </Text>
-      </TouchableOpacity>
+      {!projectId && (
+        <TouchableOpacity
+          onPress={() => dispatch(setActiveTab('AdminManage'))}
+          className="mb-6 bg-slate-200 dark:bg-slate-700 px-4 py-2 rounded-xl self-start"
+          style={{ alignSelf: 'flex-start' }}
+        >
+          <Text className="text-xs font-black text-slate-600 dark:text-slate-200">
+            {tCommon('adminUsers.backToManage', '← Retour à Manage')}
+          </Text>
+        </TouchableOpacity>
+      )}
 
       <View className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <View>

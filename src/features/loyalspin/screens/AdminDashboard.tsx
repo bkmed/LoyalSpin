@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { useTheme } from '../../../context/ThemeContext';
 
 import AdminStats from './admin/AdminStats';
 import AdminRoulette from './admin/AdminRoulette';
@@ -7,8 +9,35 @@ import AdminSticker from './AdminSticker';
 import AdminCoupons from './admin/AdminCoupons';
 import AdminHistory from './admin/AdminHistory';
 
-export default function AdminDashboard({ businessName, t }: any) {
+export default function AdminDashboard({ businessName, navigation }: any) {
+  const { t, i18n } = useTranslation();
+  const { themeMode, setThemeMode } = useTheme();
   const [activeTab, setActiveTab] = useState<'stats' | 'roulette' | 'sticker' | 'coupons' | 'history'>('stats');
+
+  const nextLanguage =
+    i18n.language === 'fr' ? 'en' : i18n.language === 'en' ? 'ar' : 'fr';
+
+  const handleToggleTheme = () => {
+    setThemeMode(themeMode === 'dark' ? 'light' : 'dark');
+  };
+
+  const handleToggleLanguage = () => {
+    i18n.changeLanguage(nextLanguage);
+  };
+
+  const languageLabel =
+    i18n.language === 'ar'
+      ? t('languages.languageLabelAR', 'العربية')
+      : i18n.language === 'en'
+      ? t('languages.languageLabelEN', 'English')
+      : t('languages.languageLabelFR', 'Français');
+
+  const languageNextLabel =
+    nextLanguage === 'ar'
+      ? t('languages.languageLabelAR', 'العربية')
+      : nextLanguage === 'en'
+      ? t('languages.languageLabelEN', 'English')
+      : t('languages.languageLabelFR', 'Français');
 
   const renderContent = () => {
     switch (activeTab) {
@@ -31,10 +60,39 @@ export default function AdminDashboard({ businessName, t }: any) {
     <View className="flex-1 flex-row bg-slate-50 dark:bg-[#0B0F19]">
       {/* Sidebar */}
       <View className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 p-4">
-        <Text className="text-xl font-black text-slate-900 dark:text-white mb-8 px-4">
-          Admin {businessName}
-        </Text>
-        
+        <View className="px-4 mb-4">
+          <Text className="text-xl font-black text-slate-900 dark:text-white mb-4">
+            Admin {businessName}
+          </Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Profile')}
+            className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-900 px-4 py-3 mb-4"
+          >
+            <Text className="text-sm font-black text-slate-900 dark:text-slate-100">
+              {t('common.viewEditProfile', 'Voir / modifier mon profil')}
+            </Text>
+          </TouchableOpacity>
+          <View className="flex-row flex-wrap gap-2 items-center">
+            <TouchableOpacity
+              onPress={handleToggleTheme}
+              className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-900 px-4 py-2"
+            >
+              <Text className="text-sm font-black text-slate-900 dark:text-slate-100">
+                {themeMode === 'dark'
+                  ? t('common.themeLight', 'Mode clair')
+                  : t('common.themeDark', 'Mode sombre')}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleToggleLanguage}
+              className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-900 px-4 py-2"
+            >
+              <Text className="text-sm font-black text-slate-900 dark:text-slate-100">
+                {t('common.languageSwitcher', 'Lang')}: {languageLabel} → {languageNextLabel}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
         <View className="space-y-2">
           <TouchableOpacity 
             onPress={() => setActiveTab('stats')}

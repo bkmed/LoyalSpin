@@ -10,6 +10,7 @@ import AdminDashboard from '../features/loyalspin/screens/AdminDashboard';
 import ClientDashboard from '../features/loyalspin/screens/client/ClientDashboard';
 import ClientSpinScreen from '../features/loyalspin/screens/client/ClientSpinScreen';
 import QRScannerScreen from '../features/loyalspin/screens/client/QRScannerScreen';
+import ProfileSettingsScreen from '../features/loyalspin/screens/ProfileSettingsScreen';
 
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
@@ -108,14 +109,21 @@ export const AppNavigator = () => {
         {!user ? (
           <Stack.Screen name="Auth" component={AuthWrapper} />
         ) : user.role === 'super-admin' ? (
-          <Stack.Screen name="SuperAdminDashboard" component={SuperAdminDashboard} />
+          <>
+            <Stack.Screen name="SuperAdminDashboard" component={SuperAdminDashboard} />
+            <Stack.Screen name="Profile" component={ProfileSettingsScreen} />
+          </>
         ) : user.role === 'admin' ? (
-          <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
+          <>
+            <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
+            <Stack.Screen name="Profile" component={ProfileSettingsScreen} />
+          </>
         ) : (
           <>
             <Stack.Screen name="ClientDashboard" component={ClientDashboard} />
             <Stack.Screen name="ClientSpin" component={ClientSpinScreen} />
             <Stack.Screen name="QRScanner" component={QRScannerScreen} />
+            <Stack.Screen name="Profile" component={ProfileSettingsScreen} />
           </>
         )}
       </Stack.Navigator>

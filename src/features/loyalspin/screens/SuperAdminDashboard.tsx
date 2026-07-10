@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, TextInput, ScrollView, Switch, ActivityIn
 import { Picker } from '@react-native-picker/picker';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../../store';
+import { useTranslation } from 'react-i18next';
+import { useTheme } from '../../../context/ThemeContext';
 import { Project, UserAccount } from '../../../database/schema';
 import {
   fetchProjects,
@@ -25,14 +27,15 @@ import AdminCoupons from './admin/AdminCoupons';
 import AdminRoulette from './AdminRoulette';
 import { AdminUsers } from './AdminUsers';
 import AdminSticker from './AdminSticker';
-import { useTranslation } from 'react-i18next';
 
 interface Props {
   t?: any;
+  navigation?: any;
 }
 
-export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
-  const { t: tHook } = useTranslation();
+export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) => {
+  const { t: tHook, i18n } = useTranslation();
+  const { themeMode, setThemeMode } = useTheme();
   const t = tProp || tHook;
   const dispatch = useDispatch<AppDispatch>();
   const { showToast } = useToast();
@@ -78,6 +81,23 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
   const [editingNoteData, setEditingNoteData] = useState<NetworkNote | null>(null);
   const [showAddNote, setShowAddNote] = useState(false);
   const [newNote, setNewNote] = useState({ network: 'Google Maps', text: '', rating: 5 });
+
+  const nextLanguage =
+    i18n.language === 'fr' ? 'en' : i18n.language === 'en' ? 'ar' : 'fr';
+
+  const handleToggleTheme = () => {
+    setThemeMode(themeMode === 'dark' ? 'light' : 'dark');
+  };
+
+  const handleToggleLanguage = () => {
+    i18n.changeLanguage(nextLanguage);
+  };
+
+  const languageLabel =
+    i18n.language === 'ar' ? 'AR' : i18n.language === 'en' ? 'EN' : 'FR';
+
+  const languageNextLabel =
+    nextLanguage === 'ar' ? 'AR' : nextLanguage === 'en' ? 'EN' : 'FR';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -308,6 +328,24 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
     }
   };
 
+  const openProjectPreview = (projectId: string) => {
+    const baseUrl = typeof window !== 'undefined' && window.location?.origin ? window.location.origin : 'https://loyalspin.app';
+    const previewUrl = `${baseUrl}/spin/${projectId}?preview=true`;
+    Linking.openURL(previewUrl).catch((error) => console.error('Erreur ouverture preview:', error));
+  };
+
+  const userCountsByProject = allUsers.reduce((acc: Record<string, number>, user) => {
+    if (!user.projectId) return acc;
+    acc[user.projectId] = (acc[user.projectId] || 0) + 1;
+    return acc;
+  }, {});
+
+  admins.forEach((admin) => {
+    if (!admin.projectId) return;
+    if (allUsers.some((user) => user.id === admin.id)) return;
+    userCountsByProject[admin.projectId] = (userCountsByProject[admin.projectId] || 0) + 1;
+  });
+
   // ────────────────────────────────────────────
   // ADMIN CRUD — using proper thunks + Firebase
   // ────────────────────────────────────────────
@@ -423,9 +461,40 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
   const renderGlobalAnalyticsTab = () => {
     const paidProjectsCount = projects.filter(p => p.paymentStatus === 'paid').length;
     const totalUsersConnected = allUsers.length;
-    // Estimation basée sur le plan Business à 29.99€/mois
     const monthlyRevenue = paidProjectsCount * 29.99;
     const annualRevenue = monthlyRevenue * 12;
+
+    const sectorStats = projects.reduce<Record<string, { projectCount: number; userCount: number }>>((acc, project) => {
+      const sector = project.industry?.trim() || 'Non défini';
+      if (!acc[sector]) {
+        acc[sector] = { projectCount: 0, userCount: 0 };
+      }
+      acc[sector].projectCount += 1;
+      return acc;
+    }, {});
+
+    allUsers.forEach((user) => {
+      const project = projects.find((proj) => proj.id === user.projectId);
+      const sector = project?.industry?.trim() || 'Non défini';
+      if (!sectorStats[sector]) {
+        sectorStats[sector] = { projectCount: 0, userCount: 0 };
+      }
+      sectorStats[sector].userCount += 1;
+    });
+
+    const sectorsAnalytics = Object.entries(sectorStats)
+      .map(([sector, stats]) => ({ sector, ...stats }))
+      .sort((a, b) => b.projectCount - a.projectCount || b.userCount - a.userCount);
+
+    const topSector = sectorsAnalytics[0] || { sector: 'Non défini', projectCount: 0, userCount: 0 };
+    const topProjectsByUsers = projects
+      .map((project) => ({
+        id: project.id,
+        name: project.name,
+        userCount: userCountsByProject[project.id] || 0,
+      }))
+      .sort((a, b) => b.userCount - a.userCount)
+      .slice(0, 5);
 
     const statCards = [
       { label: 'Projets Payants', value: paidProjectsCount, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-900/20' },
@@ -437,7 +506,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
     return (
       <View className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow">
         <Text className="text-xl font-bold mb-6 dark:text-white">Analytiques Globaux</Text>
-        
+
         <View className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {statCards.map((card, i) => (
             <View key={i} className={`${card.bg} p-5 rounded-2xl border border-slate-100 dark:border-slate-700`}>
@@ -445,6 +514,43 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
               <Text className={`text-3xl font-black ${card.color}`}>{card.value}</Text>
             </View>
           ))}
+        </View>
+
+        <View className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <View className="bg-slate-50 dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
+            <Text className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">Secteur le plus enregistré</Text>
+            <Text className="text-2xl font-black text-slate-900 dark:text-white">{topSector.sector}</Text>
+            <Text className="mt-3 text-sm text-slate-600 dark:text-slate-300">Projets: {topSector.projectCount}</Text>
+            <Text className="text-sm text-slate-600 dark:text-slate-300">Utilisateurs: {topSector.userCount}</Text>
+          </View>
+
+          <View className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
+            <Text className="text-sm font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-4">Utilisateurs par secteur</Text>
+            {sectorsAnalytics.length === 0 ? (
+              <Text className="text-slate-500 dark:text-slate-400">Aucun secteur disponible</Text>
+            ) : (
+              sectorsAnalytics.slice(0, 5).map((item) => (
+                <View key={item.sector} className="mb-4 last:mb-0">
+                  <Text className="font-bold text-slate-700 dark:text-white">{item.sector}</Text>
+                  <Text className="text-xs text-slate-500 dark:text-slate-400">Projets: {item.projectCount} · Utilisateurs: {item.userCount}</Text>
+                </View>
+              ))
+            )}
+          </View>
+
+          <View className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
+            <Text className="text-sm font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-4">Top projets par utilisateurs</Text>
+            {topProjectsByUsers.length === 0 ? (
+              <Text className="text-slate-500 dark:text-slate-400">Aucun projet disponible</Text>
+            ) : (
+              topProjectsByUsers.map((project) => (
+                <View key={project.id} className="mb-4 last:mb-0">
+                  <Text className="font-bold text-slate-700 dark:text-white truncate">{project.name || 'Sans nom'}</Text>
+                  <Text className="text-xs text-slate-500 dark:text-slate-400">Utilisateurs: {project.userCount}</Text>
+                </View>
+              ))
+            )}
+          </View>
         </View>
       </View>
     );
@@ -487,7 +593,14 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
   // ────────────────────────────────────────────
   const renderAnalyticsTab = () => {
     const proj = projects.find(p => p.id === managingProjectId);
-    const projectUsers = allUsers.filter(u => u.projectId === managingProjectId);
+    const projectUsers = [
+      ...allUsers.filter(u => u.projectId === managingProjectId),
+      ...admins.filter(
+        (admin) =>
+          admin.projectId === managingProjectId &&
+          !allUsers.some((user) => user.id === admin.id),
+      ),
+    ];
     const activeUsers = projectUsers.filter(u => u.status === 'active');
     const blockedUsers = projectUsers.filter(u => u.status === 'blocked');
 
@@ -1065,7 +1178,35 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
   return (
     <ScrollView className="flex-1 w-full bg-slate-50 dark:bg-[#0B0F19]">
       <View className="max-w-7xl mx-auto px-4 sm:px-6 py-10 w-full">
-        
+        <View className="flex-row justify-end mb-6 flex-wrap gap-2">
+          <TouchableOpacity
+            onPress={handleToggleTheme}
+            className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800"
+          >
+            <Text className="text-sm font-black text-slate-900 dark:text-slate-100">
+              {themeMode === 'dark'
+                ? t('common.themeLight', 'Mode clair')
+                : t('common.themeDark', 'Mode sombre')}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleToggleLanguage}
+            className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800"
+          >
+            <Text className="text-sm font-black text-slate-900 dark:text-slate-100">
+              {t('common.languageSwitcher', 'Lang')}: {languageLabel} → {languageNextLabel}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation?.navigate('Profile')}
+            className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800"
+          >
+            <Text className="text-sm font-black text-slate-900 dark:text-slate-100">
+              {t('common.viewEditProfile', 'Voir / modifier mon profil')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         {managingProjectId ? (
           <View>
             <TouchableOpacity onPress={() => setManagingProjectId(null)} className="mb-6 self-start bg-slate-200 dark:bg-slate-800 px-4 py-2 rounded-lg">
@@ -1209,11 +1350,14 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp }) => {
                   <View key={proj.id} className={`p-4 flex-row justify-between items-center ${idx !== projects.length - 1 ? 'border-b border-slate-100 dark:border-slate-700' : ''}`}>
                     <View>
                       <Text className="font-bold text-lg dark:text-white">{proj.name}</Text>
-                      <Text className="text-sm text-slate-500 dark:text-slate-400">Admin: {proj.adminId} | Status: {proj.paymentStatus || 'N/A'}</Text>
+                      <Text className="text-sm text-slate-500 dark:text-slate-400">Admin: {proj.adminId} · Statut: {proj.paymentStatus || 'N/A'} · Utilisateurs: {userCountsByProject[proj.id] || 0}</Text>
                     </View>
                     <View className="flex-row space-x-3 items-center">
                       <TouchableOpacity onPress={() => { setManagingProjectId(proj.id); setManagingTab('details'); setCurrentProject(proj); }} className="bg-emerald-100 dark:bg-emerald-900 px-3 py-1.5 rounded-lg">
                         <Text className="text-emerald-700 dark:text-emerald-300 font-bold">Gérer</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={() => openProjectPreview(proj.id)} className="bg-slate-100 dark:bg-slate-700 px-3 py-1.5 rounded-lg">
+                        <Text className="text-slate-700 dark:text-slate-300 font-bold">Prévisualiser</Text>
                       </TouchableOpacity>
                       <TouchableOpacity onPress={() => { setCurrentProject(proj); setIsEditing(true); }} className="bg-blue-100 dark:bg-blue-900 px-3 py-1.5 rounded-lg">
                         <Text className="text-blue-700 dark:text-blue-300 font-bold">Éditer</Text>

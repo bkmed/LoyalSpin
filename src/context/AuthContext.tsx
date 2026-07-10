@@ -83,12 +83,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error('Error signing out:', error);
     } finally {
       dispatch(logout());
-      if (navigation) {
-        navigation.replace('Login');
+      if (navigation && typeof navigation.replace === 'function') {
+        try {
+          navigation.replace('Login');
+        } catch (err) {
+          console.warn('Unable to replace to Login route:', err);
+        }
       }
-      // Note: If called from auto-logout (no navigation param),
-      // the AppNavigator should ideally react to user being null and switch stacks,
-      // or we rely on the Redux state change to trigger re-render of navigation.
+      // If no navigation is passed, the AppNavigator will react to auth state change and show the Auth screen.
     }
   };
 

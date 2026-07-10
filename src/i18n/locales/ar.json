@@ -673,6 +673,13 @@
     "hi": "हिन्दी",
     "zh": "中文"
   },
+  "common": {
+    "viewEditProfile": "عرض / تعديل ملفي",
+    "editProfile": "تعديل الملف الشخصي",
+    "themeLight": "الوضع الفاتح",
+    "themeDark": "الوضع الداكن",
+    "languageSwitcher": "اللغة"
+  },
   "leaves": {
     "addedToCalendar": "تمت الإضافة إلى التقويم",
     "addToCalendar": "إضافة إلى التقويم",

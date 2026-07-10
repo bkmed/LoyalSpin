@@ -673,6 +673,13 @@
     "hi": "हिन्दी",
     "zh": "中文"
   },
+  "common": {
+    "viewEditProfile": "Voir / modifier mon profil",
+    "editProfile": "Modifier le profil",
+    "themeLight": "Mode clair",
+    "themeDark": "Mode sombre",
+    "languageSwitcher": "Langue"
+  },
   "leaves": {
     "addedToCalendar": "Ajouté au calendrier",
     "addToCalendar": "Ajouter au calendrier",

@@ -1,24 +1,75 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { useTheme } from '../../../../context/ThemeContext';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 
 export default function ClientDashboard({ navigation }: any) {
+  const { t, i18n } = useTranslation();
+  const { themeMode, setThemeMode } = useTheme();
   const user = useSelector((state: RootState) => state.auth.user);
   const spinHistory = useSelector((state: RootState) => state.spinHistory?.items || []);
+
+  const nextLanguage =
+    i18n.language === 'fr' ? 'en' : i18n.language === 'en' ? 'ar' : 'fr';
+
+  const languageLabel =
+    i18n.language === 'ar'
+      ? t('languages.languageLabelAR', 'العربية')
+      : i18n.language === 'en'
+      ? t('languages.languageLabelEN', 'English')
+      : t('languages.languageLabelFR', 'Français');
+
+  const languageNextLabel =
+    nextLanguage === 'ar'
+      ? t('languages.languageLabelAR', 'العربية')
+      : nextLanguage === 'en'
+      ? t('languages.languageLabelEN', 'English')
+      : t('languages.languageLabelFR', 'Français');
 
   const wins = spinHistory.filter(h => h.outcome === 'win');
 
   return (
     <View className="flex-1 bg-slate-50 dark:bg-[#0B0F19] p-4 md:p-8">
       <View className="max-w-4xl mx-auto w-full">
-        <View className="mb-8">
-          <Text className="text-3xl font-black text-slate-900 dark:text-white">
-            Bonjour, {user?.name || 'Client'} !
-          </Text>
-          <Text className="text-slate-500 text-lg mt-2">
-            Bienvenue sur votre espace de fidélité.
-          </Text>
+        <View className="mb-8 flex-row justify-between items-start gap-4">
+          <View>
+            <Text className="text-3xl font-black text-slate-900 dark:text-white">
+              Bonjour, {user?.name || 'Client'} !
+            </Text>
+            <Text className="text-slate-500 text-lg mt-2">
+              Bienvenue sur votre espace de fidélité.
+            </Text>
+          </View>
+          <View className="flex-row flex-wrap gap-2 items-center">
+            <TouchableOpacity
+              onPress={() => setThemeMode(themeMode === 'dark' ? 'light' : 'dark')}
+              className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800"
+            >
+              <Text className="text-sm font-black text-slate-900 dark:text-slate-100">
+                {themeMode === 'dark'
+                  ? t('common.themeLight', 'Mode clair')
+                  : t('common.themeDark', 'Mode sombre')}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => i18n.changeLanguage(nextLanguage)}
+              className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800"
+            >
+              <Text className="text-sm font-black text-slate-900 dark:text-slate-100">
+                {t('common.languageSwitcher', 'Lang')}: {languageLabel} → {languageNextLabel}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Profile')}
+              className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-5 py-3 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800"
+            >
+              <Text className="text-sm font-black text-slate-900 dark:text-slate-100">
+                {t('common.editProfile', 'Modifier le profil')}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">

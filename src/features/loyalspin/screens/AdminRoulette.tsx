@@ -33,19 +33,54 @@ const makeSegment = (index: number): RouletteSegment => ({
   giftValue: '',
 });
 
-const DEFAULT_SEGMENTS: RouletteSegment[] = [
-  { id: 'seg_1', label: 'Café gratuit', color: '#F97316', probability: 20, isGift: true, iconEmoji: '☕' },
-  { id: 'seg_2', label: '10% de réduction', color: '#3B82F6', probability: 30, isGift: false, iconEmoji: '🏷️' },
-  { id: 'seg_3', label: 'Dessert offert', color: '#10B981', probability: 15, isGift: true, iconEmoji: '🍰' },
-  { id: 'seg_4', label: 'Points x2', color: '#8B5CF6', probability: 20, isGift: false, iconEmoji: '⭐' },
-  { id: 'seg_5', label: 'Rien cette fois', color: '#6B7280', probability: 15, isGift: false, iconEmoji: '😅' },
-];
+const DEFAULT_SEGMENT_COUNT = 5;
 
-const buildDefaultConfig = (projectId: string): RouletteConfig => ({
+const buildDefaultConfig = (projectId: string, tFn?: any): RouletteConfig => ({
   id: `roulette_${projectId}`,
   projectId,
-  wheelName: 'Ma Roulette Fidélité',
-  segments: DEFAULT_SEGMENTS,
+  wheelName: tFn ? tFn('adminRoulette.defaultWheelName', { defaultValue: 'Ma Roulette Fidélité' }) : 'Ma Roulette Fidélité',
+  segments: [
+    {
+      id: 'seg_1',
+      label: tFn ? tFn('adminRoulette.defaultSegmentCoffee', { defaultValue: 'Café gratuit' }) : 'Café gratuit',
+      color: '#F97316',
+      probability: 20,
+      isGift: true,
+      iconEmoji: '☕',
+    },
+    {
+      id: 'seg_2',
+      label: tFn ? tFn('adminRoulette.defaultSegmentDiscount', { defaultValue: '10% de réduction' }) : '10% de réduction',
+      color: '#3B82F6',
+      probability: 30,
+      isGift: false,
+      iconEmoji: '🏷️',
+    },
+    {
+      id: 'seg_3',
+      label: tFn ? tFn('adminRoulette.defaultSegmentDessert', { defaultValue: 'Dessert offert' }) : 'Dessert offert',
+      color: '#10B981',
+      probability: 15,
+      isGift: true,
+      iconEmoji: '🍰',
+    },
+    {
+      id: 'seg_4',
+      label: tFn ? tFn('adminRoulette.defaultSegmentDoublePoints', { defaultValue: 'Points x2' }) : 'Points x2',
+      color: '#8B5CF6',
+      probability: 20,
+      isGift: false,
+      iconEmoji: '⭐',
+    },
+    {
+      id: 'seg_5',
+      label: tFn ? tFn('adminRoulette.defaultSegmentNothing', { defaultValue: 'Rien cette fois' }) : 'Rien cette fois',
+      color: '#6B7280',
+      probability: 15,
+      isGift: false,
+      iconEmoji: '😅',
+    },
+  ],
   isActive: true,
   spinLimitType: 'per_day',
   spinLimitValue: 1,
@@ -58,8 +93,16 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { showToast } = useToast();
   const tFn = t && typeof t === 'function' ? t : null;
-  const tr = (key: string, fallback: string) =>
-    tFn ? tFn(key, { defaultValue: fallback }) : fallback;
+  const tr = (key: string, fallback: string, options: Record<string, any> = {}) => {
+    if (tFn) {
+      return tFn(key, { defaultValue: fallback, ...options });
+    }
+    let result = fallback;
+    Object.keys(options).forEach(optKey => {
+      result = result.replace(new RegExp(`{{${optKey}}}`, 'g'), String(options[optKey]));
+    });
+    return result;
+  };
 
   const savedConfig = useSelector(
     (state: RootState) => projectId ? selectRouletteConfig(projectId)(state) : null
@@ -84,12 +127,12 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
     dispatch(fetchRouletteConfig(projectId)).then((action: any) => {
       if (action.payload == null) {
         // Null means offline or no config in Firestore yet — use defaults.
-        setLocalConfig(buildDefaultConfig(projectId));
+        setLocalConfig(buildDefaultConfig(projectId, tFn));
       }
       // Non-null payload is already stored in Redux; the savedConfig selector
       // will update and trigger the first branch of this effect on re-render.
     }).catch(() => {
-      setLocalConfig(buildDefaultConfig(projectId));
+      setLocalConfig(buildDefaultConfig(projectId, tFn));
     });
   }, [projectId, savedConfig?.id]);
 
@@ -116,7 +159,7 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
   const addSegment = () => {
     if (!localConfig) return;
     if (localConfig.segments.length >= 8) {
-      showToast('Maximum 8 segments autorisés.', 'error');
+      showToast(tr('adminRoulette.maxSegmentsError', 'Maximum 8 segments autorisés.'), 'error');
       return;
     }
     const newSeg = makeSegment(localConfig.segments.length);
@@ -126,7 +169,7 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
   const removeSegment = (id: string) => {
     if (!localConfig) return;
     if (localConfig.segments.length <= 2) {
-      showToast('Minimum 2 segments requis.', 'error');
+      showToast(tr('adminRoulette.minSegmentsError', 'Minimum 2 segments requis.'), 'error');
       return;
     }
     setLocalConfig(prev => prev ? { ...prev, segments: prev.segments.filter(s => s.id !== id) } : prev);
@@ -137,15 +180,17 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
     const newSegErrors: Record<string, string> = {};
 
     if (!localConfig) return false;
-    if (!localConfig.wheelName.trim()) newErrors.wheelName = 'Le nom de la roulette est obligatoire.';
-    if (!localConfig.spinLimitValue || localConfig.spinLimitValue < 1) newErrors.spinLimitValue = 'Minimum 1 spin par jour.';
+    if (!localConfig.wheelName.trim()) newErrors.wheelName = tr('adminRoulette.validation.wheelNameRequired', 'Le nom de la roulette est obligatoire.');
+    if (!localConfig.spinLimitValue || localConfig.spinLimitValue < 1) newErrors.spinLimitValue = tr('adminRoulette.validation.spinLimitValueMin', 'Minimum 1 spin par jour.');
 
     localConfig.segments.forEach(seg => {
-      if (!seg.label.trim()) newSegErrors[`${seg.id}_label`] = 'Le nom du segment est requis.';
-      if (seg.probability < 0 || seg.probability > 100) newSegErrors[`${seg.id}_probability`] = '0-100 requis.';
+      if (!seg.label.trim()) newSegErrors[`${seg.id}_label`] = tr('adminRoulette.validation.segmentLabelRequired', 'Le nom du segment est requis.');
+      if (seg.probability < 0 || seg.probability > 100) newSegErrors[`${seg.id}_probability`] = tr('adminRoulette.validation.probabilityRange', '0-100 requis.');
     });
 
-    if (totalProbability !== 100) newErrors.total = `Le total des probabilités doit être 100% (actuellement ${totalProbability}%).`;
+    if (totalProbability !== 100) newErrors.total = tr('adminRoulette.validation.totalProbability', 'Le total des probabilités doit être 100% (actuellement {{percent}}%).', {
+      percent: totalProbability,
+    });
 
     setErrors(newErrors);
     setSegErrors(newSegErrors);
@@ -160,9 +205,9 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
         updatedAt: new Date().toISOString(),
       };
       await dispatch(saveRouletteConfig(configToSave)).unwrap();
-      showToast('Configuration de la roulette sauvegardée !', 'success');
+      showToast(tr('adminRoulette.saveSuccess', 'Configuration de la roulette sauvegardée !'), 'success');
     } catch (err) {
-      showToast('Erreur lors de la sauvegarde.', 'error');
+      showToast(tr('adminRoulette.saveError', 'Erreur lors de la sauvegarde.'), 'error');
       console.error('AdminRoulette save error:', err);
     }
   };
@@ -183,9 +228,9 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
               `projects/${projectId}/roulette_bg_${Date.now()}`
             );
             updateField('backgroundImageUrl', downloadUrl);
-            showToast('Image de fond téléchargée !', 'success');
+            showToast(tr('adminRoulette.backgroundUploaded', 'Image de fond téléchargée !'), 'success');
           } catch (err) {
-            showToast("Erreur d'upload", 'error');
+            showToast(tr('adminRoulette.uploadError', "Erreur d'upload"), 'error');
           } finally {
             setUploadingImage(false);
           }
@@ -204,9 +249,9 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
               `projects/${projectId}/roulette_bg_${Date.now()}`
             );
             updateField('backgroundImageUrl', downloadUrl);
-            showToast('Image de fond téléchargée !', 'success');
+            showToast(tr('adminRoulette.backgroundUploaded', 'Image de fond téléchargée !'), 'success');
           } catch (err) {
-            showToast("Erreur d'upload", 'error');
+            showToast(tr('adminRoulette.uploadError', "Erreur d'upload"), 'error');
           } finally {
             setUploadingImage(false);
           }
@@ -220,7 +265,7 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
       <View className="py-16 items-center">
         <Text className="text-4xl mb-3">🎯</Text>
         <Text className="text-slate-500 dark:text-slate-400 font-semibold">
-          Sélectionnez un projet pour configurer la roulette.
+          {tr('adminRoulette.selectProjectPrompt', 'Select a project to configure the wheel.')}
         </Text>
       </View>
     );
@@ -229,7 +274,7 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
   if (!localConfig) {
     return (
       <View className="py-16 items-center">
-        <Text className="text-slate-500 dark:text-slate-400">Chargement de la configuration...</Text>
+        <Text className="text-slate-500 dark:text-slate-400">{tr('adminRoulette.loadingConfig', 'Loading configuration...')}</Text>
       </View>
     );
   }
@@ -243,11 +288,11 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
             {tr('adminRoulette.title', 'Configuration de la Roulette')}
           </Text>
           <Text className="text-slate-500 dark:text-slate-400 text-sm mt-1">
-            Personnalisez les segments, probabilités et règles du jeu.
+            {tr('adminRoulette.description', 'Customize the wheel segments, probabilities and rules.')}
           </Text>
         </View>
         <View className="flex-row items-center gap-4">
-          <Text className="text-sm font-semibold text-slate-600 dark:text-slate-300">Activer</Text>
+          <Text className="text-sm font-semibold text-slate-600 dark:text-slate-300">{tr('adminRoulette.enable', 'Enable')}</Text>
           <Switch
             value={localConfig.isActive}
             onValueChange={v => updateField('isActive', v)}
@@ -268,7 +313,7 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
             <TextInput
               value={localConfig.wheelName}
               onChangeText={v => updateField('wheelName', v)}
-              placeholder="Ex: Roulette Café Premium"
+              placeholder={tr('adminRoulette.wheelNamePlaceholder', 'Ex: Roulette Café Premium')}
               className={`w-full rounded-2xl border px-4 py-3 text-sm text-white bg-slate-900 ${errors.wheelName ? 'border-red-500' : 'border-slate-700'}`}
               placeholderTextColor="#6B7280"
             />
@@ -291,7 +336,7 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
               {!!errors.spinLimitValue && <Text className="text-red-400 text-xs mt-1">{errors.spinLimitValue}</Text>}
             </View>
             <View className="rounded-3xl bg-slate-900 border border-slate-800 p-4">
-              <Text className="text-xs uppercase tracking-widest text-slate-500 mb-2">Couleur principale</Text>
+              <Text className="text-xs uppercase tracking-widest text-slate-500 mb-2">{tr('adminRoulette.mainColor', 'Couleur principale')}</Text>
               <TextInput
                 value={localConfig.primaryColor || '#F97316'}
                 onChangeText={v => updateField('primaryColor', v)}
@@ -303,7 +348,7 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
           </View>
           
           <View className="mb-6 rounded-3xl bg-slate-900 border border-slate-800 p-4">
-            <Text className="text-xs uppercase tracking-widest text-slate-500 mb-2">Image de Fond (Optionnel)</Text>
+            <Text className="text-xs uppercase tracking-widest text-slate-500 mb-2">{tr('adminRoulette.backgroundImageOptional', 'Image de Fond (Optionnel)')}</Text>
             <View className="flex-row items-center gap-4">
               <TouchableOpacity
                 onPress={handleUploadBackground}
@@ -314,7 +359,7 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
                   <ActivityIndicator size="small" color="#F97316" />
                 ) : (
                   <Text className="text-white font-bold text-sm">
-                    {localConfig.backgroundImageUrl ? 'Changer l\'image' : 'Uploader une image'}
+                    {localConfig.backgroundImageUrl ? tr('adminRoulette.changeImage', 'Changer l\'image') : tr('adminRoulette.uploadImage', 'Uploader une image')}
                   </Text>
                 )}
               </TouchableOpacity>
@@ -342,7 +387,7 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
                   className="bg-[#F97316] px-3 py-1.5 rounded-xl"
                   disabled={localConfig.segments.length >= 8}
                 >
-                  <Text className="text-white text-xs font-bold">+ Segment</Text>
+                  <Text className="text-white text-xs font-bold">{tr('adminRoulette.addSegmentButton', '+ Segment')}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -378,7 +423,9 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
                       <TextInput
                         value={seg.label}
                         onChangeText={v => updateSegment(seg.id, 'label', v)}
-                        placeholder={`Segment ${index + 1} *`}
+                        placeholder={tr('adminRoulette.segmentPlaceholder', 'Segment {{index}} *', {
+                          index: index + 1,
+                        })}
                         className={`w-full rounded-xl border px-3 py-2 text-sm text-white bg-slate-950 ${segErrors[`${seg.id}_label`] ? 'border-red-500' : 'border-slate-700'}`}
                         placeholderTextColor="#6B7280"
                       />
@@ -398,7 +445,7 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
                   {/* Color hex + Probability + isGift row */}
                   <View className="flex-row gap-3 items-center">
                     <View className="flex-1">
-                      <Text className="text-xs text-slate-500 mb-1">Couleur (hex)</Text>
+                      <Text className="text-xs text-slate-500 mb-1">{tr('adminRoulette.colorHex', 'Couleur (hex)')}</Text>
                       <TextInput
                         value={seg.color}
                         onChangeText={v => updateSegment(seg.id, 'color', v)}
@@ -409,7 +456,7 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
                     </View>
                     <View className="flex-1">
                       <View className="flex-row justify-between items-center mb-1">
-                        <Text className="text-xs text-slate-500">Probabilité (%) *</Text>
+                        <Text className="text-xs text-slate-500">{tr('adminRoulette.probabilityPercent', 'Probabilité (%) *')}</Text>
                         <Text className="text-xs font-bold text-[#10B981]">
                           Max: {Math.max(0, 100 - (totalProbability - (Number(seg.probability) || 0)))}%
                         </Text>
@@ -458,14 +505,14 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
             className="mt-6 w-full rounded-3xl bg-[#F97316] py-4 items-center"
           >
             <Text className="text-white font-black text-base">
-              {isSaving ? 'Enregistrement...' : 'Enregistrer la configuration'}
+              {isSaving ? tr('adminRoulette.saving', 'Enregistrement...') : tr('adminRoulette.saveConfig', 'Enregistrer la configuration')}
             </Text>
           </TouchableOpacity>
         </View>
 
         {/* RIGHT: Live preview */}
         <View className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-xl">
-          <Text className="text-xs uppercase tracking-widest text-slate-500 mb-4">Aperçu en direct</Text>
+          <Text className="text-xs uppercase tracking-widest text-slate-500 mb-4">{tr('adminRoulette.livePreview', 'Aperçu en direct')}</Text>
 
           {/* Wheel visual */}
           <View className="items-center mb-6">
@@ -515,7 +562,7 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
               <View key={seg.id} className="flex-row items-center gap-3">
                 <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: seg.color, flexShrink: 0 }} />
                 <Text className="text-xs text-slate-700 dark:text-slate-300 flex-1" numberOfLines={1}>
-                  {seg.iconEmoji ? `${seg.iconEmoji} ` : ''}{seg.label || '(Sans nom)'}
+                  {seg.iconEmoji ? `${seg.iconEmoji} ` : ''}{seg.label || tr('adminRoulette.unnamedSegment', '(Sans nom)')}
                 </Text>
                 <Text className="text-xs font-bold text-slate-500">{seg.probability}%</Text>
               </View>
@@ -526,19 +573,21 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
           <View className={`mt-4 rounded-2xl p-3 ${totalProbability === 100 ? 'bg-emerald-50 dark:bg-emerald-900/20' : 'bg-red-50 dark:bg-red-900/20'}`}>
             <Text className={`text-center text-sm font-black ${totalProbability === 100 ? 'text-emerald-600' : 'text-red-500'}`}>
               {totalProbability === 100
-                ? '✅ Total: 100% — Prêt à enregistrer'
-                : `⚠️ Total: ${totalProbability}% — Doit être exactement 100%`}
+                ? tr('adminRoulette.totalReady', '✅ Total: 100% — Prêt à enregistrer')
+                : tr('adminRoulette.totalNeedsReview', '⚠️ Total: {{percent}}% — Doit être exactement 100%', {
+                    percent: totalProbability,
+                  })}
             </Text>
           </View>
 
           {/* Config summary */}
           <View className="mt-4 bg-white dark:bg-slate-800 rounded-2xl p-4 border border-slate-200 dark:border-slate-700">
-            <Text className="text-xs uppercase tracking-widest text-slate-400 mb-2">Paramètres</Text>
+            <Text className="text-xs uppercase tracking-widest text-slate-400 mb-2">{tr('adminRoulette.settings', 'Paramètres')}</Text>
             <Text className="text-sm text-slate-700 dark:text-slate-300">
-              🎯 <Text className="font-bold">{localConfig.spinLimitValue}</Text> tour(s) par jour
+              🎯 <Text className="font-bold">{localConfig.spinLimitValue}</Text> {tr('adminRoulette.spinsPerDayLabel', 'tour(s) par jour')}
             </Text>
             <Text className="text-sm text-slate-700 dark:text-slate-300 mt-1">
-              {localConfig.isActive ? '🟢 Roulette active' : '🔴 Roulette désactivée'}
+              {localConfig.isActive ? tr('adminRoulette.activeStatus', '🟢 Roulette active') : tr('adminRoulette.inactiveStatus', '🔴 Roulette désactivée')}
             </Text>
           </View>
         </View>

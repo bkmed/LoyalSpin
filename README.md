@@ -82,6 +82,20 @@ using a shared codebase.
 
 * Firebase
 
+### Firebase configuration
+
+Web and mobile authentication require a valid Firebase Web app configuration. Copy `src/config/firebase.local.example.ts` to `src/config/firebase.local.ts` and fill in your Firebase project values. The repository ignores `src/config/firebase.local.ts` so your credentials stay private.
+
+If you prefer environment variables for web builds, create a `.env` file from `.env.example` and set the following values before running webpack:
+
+* `FIREBASE_API_KEY`
+* `FIREBASE_AUTH_DOMAIN`
+* `FIREBASE_PROJECT_ID`
+* `FIREBASE_STORAGE_BUCKET`
+* `FIREBASE_MESSAGING_SENDER_ID`
+* `FIREBASE_APP_ID`
+* `FIREBASE_MEASUREMENT_ID`
+
 ## Internationalization
 
 * i18next

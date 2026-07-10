@@ -41,6 +41,10 @@ node_modules/
 npm-debug.log
 yarn-error.log
 
+# Firebase local config overrides
+src/config/firebase.local.ts
+.env
+
 # fastlane
 #
 # It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the

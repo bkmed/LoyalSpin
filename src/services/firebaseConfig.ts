@@ -1,7 +1,18 @@
 import { getAuth } from 'firebase/auth';
-import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore';
+import {
+  getFirestore,
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+} from 'firebase/firestore';
 import { Platform } from 'react-native';
 import { app } from '../config/firebase';
+
+if (!app) {
+  throw new Error(
+    'Firebase app was not initialized. Check your Firebase configuration in src/config/firebase.ts.',
+  );
+}
 
 const auth = getAuth(app);
 

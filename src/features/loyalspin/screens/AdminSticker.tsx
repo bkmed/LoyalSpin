@@ -66,6 +66,17 @@ export default function AdminSticker({ t, projectId }: Props) {
   const configs = useSelector((state: RootState) => state.stickerConfig?.configs || {});
   const saving = useSelector((state: RootState) => state.stickerConfig?.saving ?? false);
   const loading = useSelector((state: RootState) => state.stickerConfig?.loading ?? false);
+  const tFn = t && typeof t === 'function' ? t : null;
+  const tr = (key: string, fallback: string, options: Record<string, any> = {}) => {
+    if (tFn) {
+      return tFn(key, { defaultValue: fallback, ...options });
+    }
+    let result = fallback;
+    Object.keys(options).forEach(optKey => {
+      result = result.replace(new RegExp(`{{${optKey}}}`, 'g'), String(options[optKey]));
+    });
+    return result;
+  };
 
   const resolvedProjectId = projectId ?? Object.keys(configs)[0] ?? 'default';
   const existingConfig = configs[resolvedProjectId] as StickerConfig | undefined;
@@ -77,8 +88,12 @@ export default function AdminSticker({ t, projectId }: Props) {
   );
   const [primaryColor, setPrimaryColor] = useState(existingConfig?.primaryColor || '#1E3A5F');
   const [secondaryColor, setSecondaryColor] = useState(existingConfig?.secondaryColor || '#F97316');
-  const [title, setTitle] = useState(existingConfig?.title || 'Scannez & Tournez !');
-  const [subtitle, setSubtitle] = useState(existingConfig?.subtitle || 'Votre récompense vous attend');
+  const [title, setTitle] = useState(
+    existingConfig?.title || tr('adminSticker.defaultTitle', 'Scan & Spin!'),
+  );
+  const [subtitle, setSubtitle] = useState(
+    existingConfig?.subtitle || tr('adminSticker.defaultSubtitle', 'Your reward awaits'),
+  );
   const [qrUrl, setQrUrl] = useState(existingConfig?.qrCodeUrl || '');
   const [backgroundImageUri, setBackgroundImageUri] = useState<string | undefined>(
     existingConfig?.backgroundImageUri,
@@ -138,7 +153,7 @@ export default function AdminSticker({ t, projectId }: Props) {
 
   const handleDownloadPdf = async () => {
     if (Platform.OS !== 'web') {
-      alert('Le téléchargement PDF n\'est disponible que sur le web.');
+      alert(tr('adminSticker.pdfWebOnly', 'PDF download is only available on the web.'));
       return;
     }
     try {
@@ -209,7 +224,7 @@ export default function AdminSticker({ t, projectId }: Props) {
 
       // Titre
       const titleEl = document.createElement('div');
-      titleEl.innerText = title || 'Scannez & Gagnez !';
+      titleEl.innerText = title || tr('adminSticker.defaultTitle', 'Scan & Spin!');
       titleEl.style.cssText = `
         font-size: ${isA4 ? 48 : 36}px;
         font-weight: 900;
@@ -292,7 +307,7 @@ export default function AdminSticker({ t, projectId }: Props) {
       pdf.save(`sticker_${resolvedProjectId}.pdf`);
     } catch (err) {
       console.error('PDF generation error:', err);
-      alert('Erreur lors de la génération du PDF.');
+      alert(tr('adminSticker.pdfGenerationError', 'An error occurred while generating the PDF.'));
     }
   };
 
@@ -343,10 +358,10 @@ export default function AdminSticker({ t, projectId }: Props) {
     <ScrollView>
       <View className="max-w-5xl">
         <Text className="text-3xl font-black text-slate-900 dark:text-white mb-1">
-          Design des Stickers
+          {tr('adminSticker.heading', 'Sticker design')}
         </Text>
         <Text className="text-slate-500 mb-8">
-          Personnalisez l&apos;apparence du sticker QR qui sera scanné par vos clients.
+          {tr('adminSticker.description', 'Customize the QR sticker that your customers will scan.')}
         </Text>
 
         {loading && (
@@ -359,31 +374,37 @@ export default function AdminSticker({ t, projectId }: Props) {
         <View className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* ─── LEFT: Configuration ─────────────────────────────────── */}
           <View className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-5">
-            <Text className="text-xl font-bold dark:text-white">Configuration</Text>
-
+            <Text className="text-xl font-bold dark:text-white">{tr('adminSticker.configuration', 'Configuration')}</Text>
+ 
             {/* Titre / Sous-titre */}
             <View>
-              <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Titre</Text>
+              <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                {tr('adminSticker.titleLabel', 'Title')}
+              </Text>
               <TextInput
                 value={title}
                 onChangeText={setTitle}
                 className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 dark:text-white"
-                placeholder="Titre du sticker"
+                placeholder={tr('adminSticker.titlePlaceholder', 'Sticker title')}
               />
             </View>
             <View>
-              <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Sous-titre</Text>
+              <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                {tr('adminSticker.subtitleLabel', 'Subtitle')}
+              </Text>
               <TextInput
                 value={subtitle}
                 onChangeText={setSubtitle}
                 className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 dark:text-white"
-                placeholder="Sous-titre (optionnel)"
+                placeholder={tr('adminSticker.subtitlePlaceholder', 'Subtitle (optional)')}
               />
             </View>
-
+ 
             {/* Forme */}
             <View>
-              <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Forme</Text>
+              <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                {tr('adminSticker.shapeLabel', 'Shape')}
+              </Text>
               <View className="flex-row space-x-2">
                 {(['round', 'square', 'rectangle', 'a4'] as const).map(s => (
                   <TouchableOpacity
@@ -396,16 +417,24 @@ export default function AdminSticker({ t, projectId }: Props) {
                     }`}
                   >
                     <Text className={`capitalize ${shape === s ? 'text-blue-700 dark:text-blue-300 font-bold' : 'dark:text-white'}`}>
-                      {s === 'round' ? 'Rond' : s === 'square' ? 'Carré' : s === 'rectangle' ? 'Rectangle' : 'A4'}
+                      {s === 'round'
+                        ? tr('adminSticker.shape.round', 'Round')
+                        : s === 'square'
+                        ? tr('adminSticker.shape.square', 'Square')
+                        : s === 'rectangle'
+                        ? tr('adminSticker.shape.rectangle', 'Rectangle')
+                        : 'A4'}
                     </Text>
                   </TouchableOpacity>
                 ))}
               </View>
             </View>
-
+ 
             {/* Taille */}
             <View>
-              <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Taille</Text>
+              <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                {tr('adminSticker.sizeLabel', 'Size')}
+              </Text>
               <View className="flex-row space-x-2">
                 {(['small', 'medium', 'large'] as const).map(s => (
                   <TouchableOpacity
@@ -418,17 +447,23 @@ export default function AdminSticker({ t, projectId }: Props) {
                     }`}
                   >
                     <Text className={`capitalize ${size === s ? 'text-emerald-700 dark:text-emerald-300 font-bold' : 'dark:text-white'}`}>
-                      {s === 'small' ? 'Petit' : s === 'medium' ? 'Moyen' : 'Grand'}
+                      {s === 'small'
+                        ? tr('adminSticker.size.small', 'Small')
+                        : s === 'medium'
+                        ? tr('adminSticker.size.medium', 'Medium')
+                        : tr('adminSticker.size.large', 'Large')}
                     </Text>
                   </TouchableOpacity>
                 ))}
               </View>
             </View>
-
+ 
             {/* Couleurs */}
             <View className="flex-row space-x-4">
               <View className="flex-1">
-                <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Couleur principale</Text>
+                <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  {tr('adminSticker.primaryColorLabel', 'Primary color')}
+                </Text>
                 <View className="flex-row items-center space-x-2">
                   <View style={{ width: 32, height: 32, borderRadius: 8, backgroundColor: primaryColor, borderWidth: 1, borderColor: '#ccc' }} />
                   <TextInput
@@ -439,7 +474,9 @@ export default function AdminSticker({ t, projectId }: Props) {
                 </View>
               </View>
               <View className="flex-1">
-                <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Couleur secondaire</Text>
+                <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  {tr('adminSticker.secondaryColorLabel', 'Secondary color')}
+                </Text>
                 <View className="flex-row items-center space-x-2">
                   <View style={{ width: 32, height: 32, borderRadius: 8, backgroundColor: secondaryColor, borderWidth: 1, borderColor: '#ccc' }} />
                   <TextInput
@@ -453,7 +490,9 @@ export default function AdminSticker({ t, projectId }: Props) {
 
             {/* Image de fond */}
             <View>
-              <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Image de fond</Text>
+              <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                {tr('adminSticker.backgroundImageLabel', 'Background image')}
+              </Text>
               {backgroundImageUri ? (
                 <View className="mb-2 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700" style={{ height: 80 }}>
                   <Image source={{ uri: backgroundImageUri }} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
@@ -465,7 +504,7 @@ export default function AdminSticker({ t, projectId }: Props) {
                   className="flex-1 bg-slate-100 dark:bg-slate-700 border border-dashed border-slate-400 dark:border-slate-500 rounded-xl py-3 items-center justify-center"
                 >
                   <Text className="text-slate-600 dark:text-slate-300 font-semibold text-sm">
-                    📁 {backgroundImageUri ? 'Changer l\'image' : 'Upload image'}
+                    📁 {backgroundImageUri ? tr('adminSticker.changeImage', 'Change image') : tr('adminSticker.uploadImage', 'Upload image')}
                   </Text>
                 </TouchableOpacity>
                 {backgroundImageUri && (
@@ -478,10 +517,12 @@ export default function AdminSticker({ t, projectId }: Props) {
                 )}
               </View>
             </View>
-
+ 
             {/* Logo */}
             <View>
-              <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Logo du commerce</Text>
+              <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                {tr('adminSticker.logoLabel', 'Store logo')}
+              </Text>
               {logoUri ? (
                 <View className="mb-2 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700" style={{ height: 64, width: 64 }}>
                   <Image source={{ uri: logoUri }} style={{ width: '100%', height: '100%' }} resizeMode="contain" />
@@ -493,7 +534,7 @@ export default function AdminSticker({ t, projectId }: Props) {
                   className="flex-1 bg-slate-100 dark:bg-slate-700 border border-dashed border-slate-400 dark:border-slate-500 rounded-xl py-3 items-center justify-center"
                 >
                   <Text className="text-slate-600 dark:text-slate-300 font-semibold text-sm">
-                    🖼️ {logoUri ? 'Changer le logo' : 'Upload logo'}
+                    🖼️ {logoUri ? tr('adminSticker.changeLogo', 'Change logo') : tr('adminSticker.uploadLogo', 'Upload logo')}
                   </Text>
                 </TouchableOpacity>
                 {logoUri && (
@@ -506,10 +547,12 @@ export default function AdminSticker({ t, projectId }: Props) {
                 )}
               </View>
             </View>
-
+ 
             {/* QR Code URL */}
             <View>
-              <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">URL du QR Code</Text>
+              <Text className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                {tr('adminSticker.qrUrlLabel', 'QR code URL')}
+              </Text>
               <TextInput
                 value={qrUrl}
                 onChangeText={setQrUrl}
@@ -519,35 +562,37 @@ export default function AdminSticker({ t, projectId }: Props) {
                 keyboardType="url"
               />
             </View>
-
+ 
             {/* Bouton générer QR */}
             <TouchableOpacity
                onPress={handleGenerateQR}
                className="bg-indigo-600 py-3 rounded-xl items-center flex-row justify-center space-x-2"
              >
-               <Text className="text-white font-bold">🔲 Générer le QR Code</Text>
+               <Text className="text-white font-bold">🔲 {tr('adminSticker.generateQrButton', 'Generate QR code')}</Text>
              </TouchableOpacity>
-
+ 
              {/* Bouton dashboard fidélité */}
              <TouchableOpacity
                onPress={handleOpenDashboard}
                className="border-2 border-[#1E3A5F] dark:border-blue-400 py-3 rounded-xl items-center flex-row justify-center space-x-2"
              >
-               <Text className="text-[#1E3A5F] dark:text-blue-400 font-bold">🔗 Ouvrir la page de fidélité</Text>
+               <Text className="text-[#1E3A5F] dark:text-blue-400 font-bold">🔗 {tr('adminSticker.openLoyaltyPage', 'Open loyalty page')}</Text>
              </TouchableOpacity>
-
+ 
              {/* Bouton Télécharger PDF */}
              <TouchableOpacity
                onPress={handleDownloadPdf}
                className="bg-red-500 py-3 rounded-xl items-center flex-row justify-center space-x-2"
              >
-               <Text className="text-white font-bold">📄 Télécharger en PDF</Text>
+               <Text className="text-white font-bold">📄 {tr('adminSticker.downloadPdfButton', 'Download PDF')}</Text>
              </TouchableOpacity>
            </View>
 
            {/* ─── RIGHT: Preview ──────────────────────────────────────── */}
            <View className="bg-slate-100 dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 items-center justify-center space-y-4">
-             <Text className="text-lg font-bold text-slate-500 dark:text-slate-400 mb-2">Aperçu en direct</Text>
+             <Text className="text-lg font-bold text-slate-500 dark:text-slate-400 mb-2">
+              {tr('adminSticker.livePreview', 'Live preview')}
+            </Text>
 
              {/* Sticker preview */}
              <View
@@ -620,7 +665,9 @@ export default function AdminSticker({ t, projectId }: Props) {
 
              {/* Info taille */}
              <Text className="text-xs text-slate-400 dark:text-slate-500">
-               {shape === 'a4' ? 'Format A4' : `${size === 'small' ? '5×5 cm' : size === 'medium' ? '7×7 cm' : '10×10 cm'} — ${shape}`}
+               {shape === 'a4'
+                 ? tr('adminSticker.previewInfo.a4', 'A4 format')
+                 : `${size === 'small' ? tr('adminSticker.previewInfo.smallSize', '5×5 cm') : size === 'medium' ? tr('adminSticker.previewInfo.mediumSize', '7×7 cm') : tr('adminSticker.previewInfo.largeSize', '10×10 cm')} — ${tr(`adminSticker.shape.${shape}`, shape)}`}
              </Text>
            </View>
          </View>
@@ -642,12 +689,14 @@ export default function AdminSticker({ t, projectId }: Props) {
                <ActivityIndicator color="#fff" size="small" />
              ) : (
                <Text className="text-white font-bold text-base">
-                 {saved ? '✅ Modifications enregistrées !' : '💾 Enregistrer les modifications'}
+                 {saved
+                   ? tr('adminSticker.savedSuccess', '✅ Changes saved!')
+                   : tr('adminSticker.saveButton', '💾 Save changes')}
                </Text>
              )}
            </TouchableOpacity>
            <Text className="text-xs text-slate-400 dark:text-slate-500 text-center mt-2">
-             Sauvegarde dans Redux et Firebase Firestore
+             {tr('adminSticker.saveHint', 'Saved to Redux and Firebase Firestore')}
            </Text>
          </View>
        </View>

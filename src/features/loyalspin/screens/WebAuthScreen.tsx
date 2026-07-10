@@ -68,7 +68,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
       };
       startWebSession(superSession, 'SuperAdminAccueil');
       showToast(
-        tCommon('web.welcomeSuper', 'Bienvenue Super Admin !'),
+        tCommon('web.welcomeSuper', 'Welcome Super Admin !'),
         'success',
       );
     } else if (
@@ -113,12 +113,12 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
       };
       startWebSession(userSession, 'UserDashboard');
       showToast(
-        tCommon('web.welcomeUser', 'Ravi de vous revoir, Ahmed Ben Ali !'),
+        tCommon('web.welcomeUser', 'Nice to see you again, Ahmed Ben Ali !'),
         'success',
       );
     } else {
       showToast(
-        tCommon('web.invalidCredentials', 'Identifiants invalides'),
+        tCommon('web.invalidCredentials', 'Invalid credentials'),
         'error',
       );
     }
@@ -127,9 +127,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
   const handleSignUp = () => {
     if (signupPassword !== signupConfirmPassword) {
       showToast(
-        tCommon(
-          'web.passwordsMismatch',
-          'Les mots de passe ne correspondent pas',
+        tCommon('web.passwordsMismatch', 'Passwords do not match',
         ),
         'error',
       );
@@ -149,16 +147,14 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
     };
     startWebSession(newUser, 'UserDashboard');
     showToast(
-      tCommon('web.signupSuccess', 'Compte créé avec succès !'),
+      tCommon('web.signupSuccess', 'Account created successfully !'),
       'success',
     );
   };
 
   const handleForgotSubmit = () => {
     setForgotStatusMessage(
-      tCommon(
-        'web.resetLinkSent',
-        'Le lien de réinitialisation a été envoyé !',
+      tCommon('web.resetLinkSent', 'The reset link has been sent !',
       ),
     );
   };
@@ -201,9 +197,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
               {businessName}
             </Text>
             <Text className="text-[9px] text-[#F97316] font-extrabold tracking-widest uppercase mt-0.5">
-              {tCommon(
-                'web.branding_services',
-                'Roulette · Coupons · Récompenses · Partenaires',
+              {tCommon('web.branding_services', 'Roulette · Coupons · Rewards · Partners',
               )}
             </Text>
           </View>
@@ -211,47 +205,39 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
 
         <View className="my-auto space-y-6 relative z-10 text-left">
           <Text className="bg-[#F97316] text-white text-[9px] font-black px-3.5 py-1.5 rounded-full uppercase tracking-wider leading-none">
-            {tCommon('web.branding_platform', 'PLATEFORME LOYALSPIN')}
+            {tCommon('web.branding_platform', 'LOYALSPIN PLATFORM')}
           </Text>
           <Text className="text-4xl sm:text-5xl font-black text-white leading-tight">
-            {tCommon(
-              'web.branding_leader',
-              'Tournez, gagnez et conservez vos récompenses.',
+            {tCommon('web.branding_leader', 'Spin, win and keep your rewards.',
             )}
           </Text>
           <Text className="text-slate-300 text-sm leading-relaxed font-semibold">
-            {tCommon(
-              'web.branding_description',
-              'Participez à la roue de fidélité, gagnez des coupons et découvrez des offres partenaires sur web, Android et iOS.',
+            {tCommon('web.branding_description', 'Join the loyalty wheel, earn coupons and discover partner offers on web, Android and iOS.',
             )}
           </Text>
           <View className="grid grid-cols-2 gap-6 pt-6">
             <View>
               <Text className="text-2xl font-black text-[#F97316]">
-                {tCommon('web.branding_24h', 'Gagnez chaque jour')}
+                {tCommon('web.branding_24h', 'Win every day')}
               </Text>
               <Text className="text-[10px] text-slate-400 font-extrabold uppercase mt-1 dark:text-slate-300">
-                {tCommon(
-                  'web.branding_urgentIntervention',
-                  'Tournez tous les jours',
+                {tCommon('web.branding_urgentIntervention', 'Spin every day',
                 )}
               </Text>
             </View>
             <View>
               <Text className="text-2xl font-black text-[#F97316]">
-                {tCommon('web.branding_tested', 'Récompenses sécurisées')}
+                {tCommon('web.branding_tested', 'Secured rewards')}
               </Text>
               <Text className="text-[10px] text-slate-400 font-extrabold uppercase mt-1 dark:text-slate-300">
-                {tCommon('web.branding_partsWarranty', 'Offres vérifiées')}
+                {tCommon('web.branding_partsWarranty', 'Verified offers')}
               </Text>
             </View>
           </View>
         </View>
 
         <Text className="text-xs text-slate-500 font-bold relative z-10 dark:text-slate-400">
-          {tCommon(
-            'web.branding_copyright',
-            '© ${new Date().getFullYear()}{{businessName}}. Créé pour les clients fidèles et les partenaires.',
+          {tCommon('web.branding_copyright', '© ${new Date().getFullYear()}{{businessName}}. Built for loyal customers and partners.',
             { businessName },
           )}
         </Text>
@@ -268,10 +254,10 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
             >
               <Text className="text-[10px] font-black tracking-wider uppercase text-slate-700 dark:text-slate-200">
                 {nextLanguage === 'ar'
-                  ? 'العربية'
+                  ? tCommon('web.languageArabicLabel', 'Arabic')
                   : nextLanguage === 'en'
-                  ? 'English'
-                  : 'Français'}
+                  ? tCommon('web.languageEnglishLabel', 'English')
+                  : tCommon('web.languageFrenchLabel', 'French')}
               </Text>
             </TouchableOpacity>
 
@@ -292,27 +278,21 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
               <LogoSVG size={56} />
             </View>
             <Text className="text-2xl font-black text-slate-950 dark:text-white">
-              {authTab === 'signin' && tCommon('web.signinTitle', 'Connexion')}
+              {authTab === 'signin' && tCommon('web.signinTitle', 'Sign in')}
               {authTab === 'signup' &&
-                tCommon('web.signupTitle', 'Inscription')}
+                tCommon('web.signupTitle', 'Sign up')}
               {authTab === 'forgot' &&
-                tCommon('web.forgotTitle', 'Mot de passe oublié')}
+                tCommon('web.forgotTitle', 'Forgot Password')}
             </Text>
             <Text className="text-slate-500 dark:text-slate-400 text-xs mt-2 font-semibold">
               {authTab === 'signin' &&
-                tCommon(
-                  'web.signinSubtitle',
-                  'Connectez-vous pour accéder à votre espace premium.',
+                tCommon('web.signinSubtitle', 'Sign in to access your premium space.',
                 )}
               {authTab === 'signup' &&
-                tCommon(
-                  'web.signupSubtitle',
-                  'Créez votre compte client gratuit en quelques secondes.',
+                tCommon('web.signupSubtitle', 'Create your free customer account in seconds.',
                 )}
               {authTab === 'forgot' &&
-                tCommon(
-                  'web.forgotSubtitle',
-                  'Entrez votre email pour recevoir les instructions de réinitialisation.',
+                tCommon('web.forgotSubtitle', 'Enter your email to receive reset instructions.',
                 )}
             </Text>
           </View>
@@ -327,7 +307,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
             >
               <View className="space-y-2">
                 <Text className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-left">
-                  {tCommon('web.emailLabel', 'Adresse Email')}
+                  {tCommon('web.emailLabel', 'Email Address')}
                 </Text>
                 <TextInput
                   keyboardType="email-address"
@@ -340,7 +320,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
 
               <View className="space-y-2">
                 <Text className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-left">
-                  {tCommon('web.passwordLabel', 'Mot de Passe')}
+                  {tCommon('web.passwordLabel', 'Password')}
                 </Text>
                 <TextInput
                   secureTextEntry
@@ -403,9 +383,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
 
               <View className="border-t border-slate-200 dark:border-slate-800 pt-4 mt-6">
                 <Text className="text-[10px] text-slate-400 dark:text-slate-500 text-center font-bold mb-2.5">
-                  {tCommon(
-                    'web.demoAccountsLabel',
-                    'LOYALSPIN DEMO ACCOUNTS (DIRECT ACCESS)',
+                  {tCommon('web.demoAccountsLabel', 'LOYALSPIN DEMO ACCOUNTS (DIRECT ACCESS)',
                   )}
                 </Text>
                 <View className="grid grid-cols-2 gap-3 text-center">
@@ -546,9 +524,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                         };
                         startWebSession(client1Session, 'UserDashboard');
                         showToast(
-                          tCommon(
-                            'web.welcomeUser',
-                            'Ravi de vous revoir, Ahmed Ben Ali !',
+                          tCommon('web.welcomeUser', 'Nice to see you again, Ahmed Ben Ali !',
                           ),
                           'success',
                         );
@@ -584,9 +560,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                         };
                         startWebSession(client2Session, 'UserDashboard');
                         showToast(
-                          tCommon(
-                            'web.welcomeUser',
-                            'Ravi de vous revoir, Ahmed Ben Ali !',
+                          tCommon('web.welcomeUser', 'Nice to see you again, Ahmed Ben Ali !',
                           ),
                           'success',
                         );
@@ -605,7 +579,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                 <Text className="text-xs text-slate-500 dark:text-slate-400 font-semibold">
                   {tCommon(
                     'web.noAccountQuestion',
-                    `Nouveau sur ${businessName} ?`,
+                    `New to ${businessName}?`,
                   )}{' '}
                   <TouchableOpacity
                     onPress={() => {
@@ -616,7 +590,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                     className="text-[#F97316] font-extrabold hover:underline bg-transparent border-0 p-0"
                   >
                     <Text className="text-[#F97316] font-extrabold">
-                      {tCommon('web.createAccountLink', 'Créer un compte')}
+                      {tCommon('web.createAccountLink', 'Create an account')}
                     </Text>
                   </TouchableOpacity>
                 </Text>
@@ -634,7 +608,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
             >
               <View className="space-y-2">
                 <Text className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-left">
-                  {tCommon('web.emailLabel', 'Adresse Email')}
+                  {tCommon('web.emailLabel', 'Email Address')}
                 </Text>
                 <TextInput
                   keyboardType="email-address"
@@ -688,7 +662,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
             >
               <View className="space-y-2">
                 <Text className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-left">
-                  {tCommon('web.fullNameLabel', 'Nom Complet')}
+                  {tCommon('web.fullNameLabel', 'Full Name')}
                 </Text>
                 <TextInput
                   placeholder="Ahmed Ben Salem"
@@ -701,7 +675,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
               <View className="grid grid-cols-2 gap-4">
                 <View className="space-y-2">
                   <Text className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-left">
-                    {tCommon('web.emailLabel', 'Email')}
+                    {tCommon('web.emailLabel', 'Email Address')}
                   </Text>
                   <TextInput
                     keyboardType="email-address"
@@ -713,7 +687,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                 </View>
                 <View className="space-y-2">
                   <Text className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-left">
-                    {tCommon('web.phoneLabel', 'Téléphone')}
+                    {tCommon('web.phoneLabel', 'Phone')}
                   </Text>
                   <TextInput
                     placeholder="+216 22 111 222"
@@ -726,7 +700,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
 
               <View className="space-y-2">
                 <Text className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-left">
-                  {tCommon('web.cityGovernorateLabel', 'Ville / Gouvernorat')}
+                  {tCommon('web.cityGovernorateLabel', 'City / Governorate')}
                 </Text>
                 <View className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl overflow-hidden">
                   <Picker
@@ -747,7 +721,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
               <View className="grid grid-cols-2 gap-4">
                 <View className="space-y-2">
                   <Text className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-left">
-                    {tCommon('web.passwordLabel', 'Mot de Passe')}
+                    {tCommon('web.passwordLabel', 'Password')}
                   </Text>
                   <TextInput
                     secureTextEntry
@@ -803,16 +777,14 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                 className="w-full bg-[#1E3A5F] hover:bg-[#152a47] text-white text-xs font-black py-3.5 rounded-xl transition shadow-lg uppercase tracking-wider hover:scale-[1.01] transform"
               >
                 <Text className="text-white text-xs font-black text-center">
-                  {tCommon(
-                    'web.createAccountButton',
-                    'Créer mon compte client',
+                  {tCommon('web.createAccountButton', 'Create my customer account',
                   )}
                 </Text>
               </TouchableOpacity>
 
               <View className="text-center pt-3 border-t border-slate-200 dark:border-slate-800">
                 <Text className="text-xs text-slate-500 dark:text-slate-400 font-semibold">
-                  {tCommon('web.alreadyRegisteredQuestion', 'Déjà inscrit ?')}{' '}
+                  {tCommon('web.alreadyRegisteredQuestion', 'Already registered?')}{' '}
                   <TouchableOpacity
                     onPress={() => {
                       setAuthTab('signin');
@@ -825,7 +797,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                     className="text-[#F97316] font-extrabold hover:underline bg-transparent border-0 p-0"
                   >
                     <Text className="text-[#F97316] font-extrabold">
-                      {tCommon('web.signInLink', 'Se connecter')}
+                      {tCommon('web.signInLink', 'Sign in')}
                     </Text>
                   </TouchableOpacity>
                 </Text>
@@ -842,7 +814,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                 setSessionUser(null);
                 setActiveTab('Accueil');
                 showToast(
-                  tCommon('web.guestAccessToast', 'Accès Invité autorisé.'),
+                  tCommon('web.guestAccessToast', 'Guest access granted.'),
                   'info',
                 );
               }}
@@ -851,7 +823,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
               <Text className="text-slate-600 dark:text-slate-300">
                 {tCommon(
                   'web.continueAsGuestButton',
-                  "Continuer en tant qu'invité (Anonyme) →",
+                  'Continue as guest (Anonymous) →',
                 )}
               </Text>
             </TouchableOpacity>

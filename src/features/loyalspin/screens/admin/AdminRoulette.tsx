@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, TextInput, Switch } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -11,8 +11,8 @@ interface AdminRouletteProps {
 
 export default function AdminRoulette({ projectId }: AdminRouletteProps) {
   const { t } = useTranslation();
-  const tCommon = (key: string, defaultValue: string, options?: any) =>
-    t(key, { defaultValue, ...options });
+  const tCommon = (key: string, defaultValue: string, options?: any): string =>
+    t(key, { defaultValue, ...options }) as string;
   const configs = useSelector((state: RootState) => state.rouletteConfig?.configs || {});
   const config = projectId ? (configs[projectId] as RouletteConfig | undefined) : (Object.values(configs)[0] as RouletteConfig | undefined);
   const [segments, setSegments] = useState<Partial<RouletteSegment>[]>(

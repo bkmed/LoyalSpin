@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { useToast } from '../../../context/ToastContext';
 import { RootState, AppDispatch } from '../../../store';
 import { updateUserInFirebase, deleteUserFromFirebase, saveNewUser } from '../../../store/slices/usersSlice';
 import { addAdmin, updateAdmin, deleteAdmin } from '../../../store/slices/adminsSlice';
@@ -14,9 +16,13 @@ interface AdminUsersProps {
   isSuperAdmin?: boolean;
 }
 
-export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId, isSuperAdmin }) => {
-  const tCommon = (key: string, defaultValue: string) =>
-    t(key, { defaultValue });
+export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast: showToastProp, t, projectId, isSuperAdmin }) => {
+  const { t: tHook } = useTranslation();
+  const { showToast: showToastHook } = useToast();
+  const safeShowToast = showToastProp ?? showToastHook;
+  const translateFn = typeof t === 'function' ? t : tHook;
+  const tCommon = (key: string, defaultValue: string, options: any = {}) =>
+    translateFn(key, { defaultValue, ...options });
   const dispatch = useDispatch<AppDispatch>();
   const usersList = useSelector((state: RootState) => state.users?.items ?? []);
   const adminsList = useSelector((state: RootState) => state.admins?.items ?? []);
@@ -139,7 +145,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
   const handleToggleAccountAccess = () => {
     if (!selectedUser) return;
     if (!canManageUser(selectedUser)) {
-      showToast(
+      safeShowToast(
         tCommon('adminUsers.accessDenied', 'Access denied: unmanaged client.'),
         'error',
       );
@@ -149,7 +155,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
       sessionUser &&
       selectedUser.email.toLowerCase() === sessionUser.email.toLowerCase()
     ) {
-      showToast(
+      safeShowToast(
         tCommon(
           'adminUsers.cannotBlockSelf',
           'Impossible de bloquer votre propre compte admin !',
@@ -173,7 +179,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
             dispatch(addAdmin(updated));
           }
         }
-        showToast(
+        safeShowToast(
           tCommon(
             selectedUser.status === 'active'
               ? 'adminUsers.userBlocked'
@@ -186,7 +192,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
         );
       })
       .catch(() => {
-        showToast(
+        safeShowToast(
           tCommon('adminUsers.userUpdateFailed', 'Unable to update user.'),
           'error',
         );
@@ -195,7 +201,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
 
   const handleSendNotification = () => {
     if (!selectedUser) return;
-    showToast(
+    safeShowToast(
       tCommon(
         'adminUsers.notificationSent',
         `Notification sent to ${selectedUser.name}!`,
@@ -212,7 +218,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
     if (e?.preventDefault) e.preventDefault();
     if (!editingUser) return;
     if (!canManageUser(editingUser)) {
-      showToast(
+      safeShowToast(
         tCommon('adminUsers.accessDenied', 'Access denied: unmanaged client.'),
         'error',
       );
@@ -238,14 +244,14 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
         } else if (editingUser?.role === 'admin') {
           dispatch(deleteAdmin(updatedUser.id));
         }
-        showToast(
+        safeShowToast(
           tCommon('adminUsers.userUpdated', 'User updated successfully!'),
           'success',
         );
         setEditingUser(null);
       })
       .catch(() => {
-        showToast(
+        safeShowToast(
           tCommon('adminUsers.userUpdateFailed', 'Unable to update user.'),
           'error',
         );
@@ -255,7 +261,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
   const confirmDeleteUser = () => {
     if (!userToDelete) return;
     if (!canManageUser(userToDelete)) {
-      showToast(
+      safeShowToast(
         tCommon('adminUsers.accessDenied', 'Access denied: unmanaged client.'),
         'error',
       );
@@ -272,13 +278,13 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
         if (userToDelete.role === 'admin') {
           dispatch(deleteAdmin(userToDelete.id));
         }
-        showToast(
+        safeShowToast(
           tCommon('adminUsers.userDeleted', 'User deleted successfully!'),
           'info',
         );
       })
       .catch(() => {
-        showToast(
+        safeShowToast(
           tCommon('adminUsers.userDeleteFailed', 'Impossible de supprimer l utilisateur.'),
           'error',
         );
@@ -336,7 +342,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
         if (newUser.role === 'admin') {
           dispatch(addAdmin(newUser));
         }
-        showToast(
+        safeShowToast(
           tCommon('adminUsers.userCreated', 'User created successfully!'),
           'success',
         );
@@ -349,7 +355,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ showToast, t, projectId,
         setCreateUserErrors({});
       })
       .catch(() => {
-        showToast('Failed to create user.', 'error');
+        safeShowToast('Failed to create user.', 'error');
       });
   };
 

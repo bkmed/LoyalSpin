@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../../context/ThemeContext';
 import { useAuth } from '../../../context/AuthContext';
 import { useSelector } from 'react-redux';
+import { useToast } from '../../../context/ToastContext';
 import { RootState } from '../../../store';
 import { selectAllProjects, selectProjectById } from '../../../store/slices/projectsSlice';
 
@@ -19,6 +20,7 @@ export default function AdminDashboard({ businessName, navigation }: any) {
   const { t, i18n } = useTranslation();
   const { themeMode, setThemeMode } = useTheme();
   const { user } = useAuth();
+  const { showToast } = useToast();
   const projects = useSelector(selectAllProjects);
   const [activeTab, setActiveTab] = useState<'stats' | 'users' | 'roulette' | 'sticker' | 'coupons' | 'history' | 'settings'>('stats');
 
@@ -65,7 +67,7 @@ export default function AdminDashboard({ businessName, navigation }: any) {
       case 'coupons':
         return <AdminCoupons />;
       case 'users':
-        return <AdminUsers />;
+        return <AdminUsers t={t} showToast={showToast} projectId={project?.id ?? adminProjectId} />;
       case 'history':
         return <AdminHistory />;
       case 'settings':

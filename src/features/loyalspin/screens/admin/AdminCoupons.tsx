@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Switch, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Switch } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../../store';
@@ -52,7 +52,6 @@ export default function AdminCoupons({ projectId }: AdminCouponsProps) {
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
-  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
     if (projectId) {
@@ -139,9 +138,9 @@ export default function AdminCoupons({ projectId }: AdminCouponsProps) {
         showToast('Coupon créé avec succès !', 'success');
       }
       handleCancel();
-    } catch (err) {
+    } catch (error) {
+      console.error('AdminCoupons save error:', error);
       showToast('Erreur lors de la sauvegarde du coupon.', 'error');
-      console.error('AdminCoupons save error:', err);
     } finally {
       setSaving(false);
     }
@@ -152,7 +151,8 @@ export default function AdminCoupons({ projectId }: AdminCouponsProps) {
     try {
       await dispatch(deleteCoupon(id)).unwrap();
       showToast('Coupon supprimé.', 'info');
-    } catch (err) {
+    } catch (error) {
+      console.error('AdminCoupons delete error:', error);
       showToast('Erreur lors de la suppression.', 'error');
     }
   };
@@ -161,7 +161,8 @@ export default function AdminCoupons({ projectId }: AdminCouponsProps) {
     try {
       await dispatch(toggleCouponActive({ id: coupon.id, isActive: !coupon.isActive })).unwrap();
       showToast(`Coupon ${!coupon.isActive ? 'activé' : 'désactivé'}.`, 'info');
-    } catch (err) {
+    } catch (error) {
+      console.error('AdminCoupons toggle active error:', error);
       showToast('Erreur lors de la mise à jour.', 'error');
     }
   };

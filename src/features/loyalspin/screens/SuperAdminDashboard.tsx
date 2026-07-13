@@ -128,7 +128,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
       return;
     }
 
-    const phoneRegex = /^\+?[0-9\s\-]{8,}$/;
+    const phoneRegex = /^\+?[0-9\s-]{8,}$/;
     if (currentProject.phone && !phoneRegex.test(currentProject.phone)) {
       showToast(tCommon('superadmin.errorInvalidPhoneFormat', 'Format téléphone invalide'), 'error');
       return;
@@ -139,7 +139,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
     try {
       if (currentProject.id) {
         // ── UPDATE existing project via thunk ──
-        const { id, createdAt, ...updateData } = currentProject as Project;
+        const { id, ...updateData } = currentProject as Project;
         await dispatch(updateProject({ id, data: updateData })).unwrap();
         showToast(tCommon('superadmin.successProjectUpdated', 'Projet mis à jour avec succès ✅'), 'success');
       } else {
@@ -173,7 +173,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
         showToast(tCommon('superadmin.successProjectCreated', 'Projet créé avec succès ✅'), 'success');
  
         // ── AUTO-CREATE full config for the new project ──
-        await createFullProjectConfig(newProject.id, newProject.name, currentProject.adminId || '');
+       await createFullProjectConfig(newProject.id, newProject.name);
       }
 
       setIsEditing(false);
@@ -190,7 +190,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
    * Creates default sticker config, roulette config, sample coupon,
    * and sample user for a newly created project.
    */
-  const createFullProjectConfig = async (projectId: string, projectName: string, adminId: string) => {
+  const createFullProjectConfig = async (projectId: string, projectName: string) => {
     try {
       // 1. Default Sticker Config
       await dispatch(saveStickerConfig({

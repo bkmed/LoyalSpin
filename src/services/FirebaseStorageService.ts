@@ -1,6 +1,5 @@
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { app } from '../config/firebase'; 
-import { Platform } from 'react-native';
+import { app } from '../config/firebase';
 
 let storage: any = null;
 try {

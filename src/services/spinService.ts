@@ -1,4 +1,4 @@
-import { collection, doc, getDocs, setDoc, query, where, orderBy } from 'firebase/firestore';
+import { collection, doc, getDocs, setDoc, query, where } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import type { SpinHistory } from '../database/schema';
 

@@ -1,6 +1,5 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { Reclamation, ReclamationStatus, Role } from '../../database/schema';
-import { RootState } from '../index';
 import { collection, doc, getDocs, query, setDoc, where, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../services/firebaseConfig';
 

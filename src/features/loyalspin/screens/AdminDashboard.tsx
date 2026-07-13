@@ -3,10 +3,9 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../../context/ThemeContext';
 import { useAuth } from '../../../context/AuthContext';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../../../store';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
 import { selectAllProjects, selectProjectById } from '../../../store/slices/projectsSlice';
-import { useToast } from '../../../context/ToastContext';
 
 import AdminStats from './admin/AdminStats';
 import AdminRoulette from './admin/AdminRoulette';
@@ -20,8 +19,6 @@ export default function AdminDashboard({ businessName, navigation }: any) {
   const { t, i18n } = useTranslation();
   const { themeMode, setThemeMode } = useTheme();
   const { user } = useAuth();
-  const { showToast } = useToast();
-  const dispatch = useDispatch<AppDispatch>();
   const projects = useSelector(selectAllProjects);
   const [activeTab, setActiveTab] = useState<'stats' | 'users' | 'roulette' | 'sticker' | 'coupons' | 'history' | 'settings'>('stats');
 

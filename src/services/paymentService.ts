@@ -1,4 +1,4 @@
-import { collection, doc, getDocs, setDoc, updateDoc, query, where, orderBy } from 'firebase/firestore';
+import { collection, doc, getDocs, setDoc, updateDoc, query, where } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import type { Payment } from '../database/schema';
 

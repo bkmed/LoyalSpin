@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Switch, Platform, Image, ActivityIndicator } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
 import {
   fetchRouletteConfig,
@@ -32,8 +32,6 @@ const makeSegment = (index: number): RouletteSegment => ({
   iconEmoji: '',
   giftValue: '',
 });
-
-const DEFAULT_SEGMENT_COUNT = 5;
 
 const buildDefaultConfig = (projectId: string, tFn?: any): RouletteConfig => ({
   id: `roulette_${projectId}`,
@@ -250,7 +248,8 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
             );
             updateField('backgroundImageUrl', downloadUrl);
             showToast(tr('adminRoulette.backgroundUploaded', 'Background image uploaded!'), 'success');
-          } catch (err) {
+          } catch (error) {
+            console.error('AdminRoulette upload error:', error);
             showToast(tr('adminRoulette.uploadError', 'Upload failed'), 'error');
           } finally {
             setUploadingImage(false);

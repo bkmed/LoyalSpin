@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, Switch } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { View, Text, TouchableOpacity, TextInput, Switch } from 'react-native';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { RootState } from '../../../../store';
 import { RouletteConfig, RouletteSegment } from '../../../../database/schema';

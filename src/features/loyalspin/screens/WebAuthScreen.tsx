@@ -38,7 +38,6 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
   const tCommon = (key: string, defaultValue: string, options?: any) =>
     t(key, { defaultValue, ...options });
   const { signIn, signUp } = useAuth();
-  const [isProcessing, setIsProcessing] = useState(false);
   const [authTab, setAuthTab] = useState<'signin' | 'signup' | 'forgot'>(
     'signin',
   );
@@ -118,7 +117,6 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
       return;
     }
 
-    setIsProcessing(true);
     try {
       const user = await authService.login(signinEmail.trim(), signinPassword);
       await signIn(user);
@@ -128,8 +126,6 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
         error?.message || tCommon('web.invalidCredentials', 'Invalid credentials'),
         'error',
       );
-    } finally {
-      setIsProcessing(false);
     }
   };
 
@@ -142,7 +138,6 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
       return;
     }
 
-    setIsProcessing(true);
     try {
       const user = await authService.register(
         signupName.trim(),
@@ -160,8 +155,6 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
         error?.message || tCommon('web.signupFailed', 'Unable to create account.'),
         'error',
       );
-    } finally {
-      setIsProcessing(false);
     }
   };
 

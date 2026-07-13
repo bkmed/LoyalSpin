@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Platform,
+  useWindowDimensions,
 } from 'react-native';
 import { LogoSVG } from './LogoSVG';
 import { Role, WebSessionUser } from '../utils/webTranslations';
@@ -45,11 +46,13 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
 }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { width } = useWindowDimensions();
 
   const tCommon = (key: string, defaultValue: string) =>
     t(key, { defaultValue });
 
   const isDark = currentTheme === 'dark';
+  const isDesktopLayout = width >= 1280;
 
   useEffect(() => {
     if (Platform.OS !== 'web') return;
@@ -60,12 +63,10 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
 
   useEffect(() => {
     if (Platform.OS !== 'web') return;
-    const handleResize = () => {
-      if ((window as any).innerWidth >= 1024) setMobileOpen(false);
-    };
-    (window as any).addEventListener('resize', handleResize);
-    return () => (window as any).removeEventListener('resize', handleResize);
-  }, []);
+    if (isDesktopLayout) {
+      setMobileOpen(false);
+    }
+  }, [isDesktopLayout]);
 
   const adminLinks = [
     {
@@ -244,7 +245,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
       {/* ═══ NAVBAR ═══════════════════════════════════════════════════════ */}
       <View style={navStyle}>
         {/* ── Top bar ── */}
-        <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[72px] flex flex-row items-center justify-between">
+        <View className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[72px] flex flex-row items-center justify-between gap-3">
           {/* Logo */}
           <TouchableOpacity
             onPress={() =>
@@ -258,12 +259,12 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
                   : 'Accueil',
               )
             }
-            className="flex flex-row items-center gap-3"
+            className="flex flex-row items-center gap-3 min-w-0"
           >
             <LogoSVG size={42} />
             <View>
               <Text
-                className={`text-lg font-black tracking-tight leading-tight ${
+                className={`text-lg font-black tracking-tight leading-tight flex-shrink ${
                   isDark ? 'text-white' : 'text-slate-900'
                 } ${isRTL ? 'font-arabic' : ''}`}
               >
@@ -280,8 +281,8 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({
 
           {/* ── Desktop Nav links (xl+) ── */}
           <View
-            className="hidden xl:flex flex-row items-center gap-1 flex-1 mx-4"
-            style={{ overflow: 'hidden' } as any}
+            className="hidden xl:flex flex-row items-center gap-1 flex-1 min-w-0 mx-4"
+            style={{ overflow: 'hidden', maxWidth: '100%' } as any}
           >
             <ScrollView
               horizontal

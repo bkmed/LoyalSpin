@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
-import { AppDispatch, RootState } from '../../../store';
-import { updateProject } from '../../../store/slices/projectsSlice';
-import { Project } from '../../../database/schema';
-import { useToast } from '../../../context/ToastContext';
+import { AppDispatch, RootState } from '../../../../store';
+import { updateProject } from '../../../../store/slices/projectsSlice';
+import { Project } from '../../../../database/schema';
+import { useToast } from '../../../../context/ToastContext';
 
 interface AdminSettingsProps {
   projectId?: string | null;

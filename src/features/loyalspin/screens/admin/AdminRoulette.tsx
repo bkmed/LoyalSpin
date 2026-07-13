@@ -5,12 +5,16 @@ import { useTranslation } from 'react-i18next';
 import { RootState } from '../../../../store';
 import { RouletteConfig, RouletteSegment } from '../../../../database/schema';
 
-export default function AdminRoulette() {
+interface AdminRouletteProps {
+  projectId?: string | null;
+}
+
+export default function AdminRoulette({ projectId }: AdminRouletteProps) {
   const { t } = useTranslation();
   const tCommon = (key: string, defaultValue: string, options?: any) =>
     t(key, { defaultValue, ...options });
   const configs = useSelector((state: RootState) => state.rouletteConfig?.configs || {});
-  const config = Object.values(configs)[0] as RouletteConfig | undefined;
+  const config = projectId ? (configs[projectId] as RouletteConfig | undefined) : (Object.values(configs)[0] as RouletteConfig | undefined);
   const [segments, setSegments] = useState<Partial<RouletteSegment>[]>(
     config?.segments ||
       Array(8).fill({
@@ -19,6 +23,12 @@ export default function AdminRoulette() {
         isGift: false,
       }),
   );
+
+  useEffect(() => {
+    if (config?.segments) {
+      setSegments(config.segments);
+    }
+  }, [config?.segments]);
 
   const handleSave = () => {
     // Dispatch save action to update in firebase

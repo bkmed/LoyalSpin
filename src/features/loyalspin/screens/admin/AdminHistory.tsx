@@ -33,7 +33,7 @@ export default function AdminHistory() {
             </View>
             
             {/* Rows */}
-            {spinHistory.map((spin, idx) => (
+            {filteredHistory.map((spin, idx) => (
               <View key={spin.id} className={`flex-row p-4 ${idx !== spinHistory.length - 1 ? 'border-b border-slate-100 dark:border-slate-700' : ''}`}>
                 <Text className="w-32 text-slate-700 dark:text-slate-300">
                   {new Date(spin.createdAt).toLocaleDateString()}

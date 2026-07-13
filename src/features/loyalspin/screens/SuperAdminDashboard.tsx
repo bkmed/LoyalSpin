@@ -11,7 +11,6 @@ import {
   createProject,
   updateProject,
   deleteProject,
-  selectAllProjects,
 } from '../../../store/slices/projectsSlice';
 import { fetchAdmins, addAdmin, updateAdmin, deleteAdmin } from '../../../store/slices/adminsSlice';
 import { selectAllUsers } from '../../../store/slices/usersSlice';
@@ -46,7 +45,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
   const totalShares = useSelector(selectTotalShares);
   const callClicks = useSelector(selectCallClicks);
 
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<'projects' | 'admins' | 'sectors' | 'analytics'>('projects');
   
@@ -71,7 +70,7 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
   // Settings tab state (social links editing)
   const [settingsData, setSettingsData] = useState<Partial<any>>({});
   const [settingsSaving, setSettingsSaving] = useState(false);
-  const [editingField, setEditingField] = useState<string | null>(null);
+  const [, setEditingField] = useState<string | null>(null);
 
   // Notes state
   interface NetworkNote { id: string; network: string; text: string; rating: number; }
@@ -591,7 +590,6 @@ export const SuperAdminDashboard: React.FC<Props> = ({ t: tProp, navigation }) =
   // ANALYTICS TAB
   // ────────────────────────────────────────────
   const renderAnalyticsTab = () => {
-    const proj = projects.find(p => p.id === managingProjectId);
     const projectUsers = [
       ...allUsers.filter(u => u.projectId === managingProjectId),
       ...admins.filter(

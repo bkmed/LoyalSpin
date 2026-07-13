@@ -2,17 +2,34 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../../context/ThemeContext';
+import { useAuth } from '../../../context/AuthContext';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
+import { selectAllProjects, selectProjectById } from '../../../store/slices/projectsSlice';
 
 import AdminStats from './admin/AdminStats';
 import AdminRoulette from './admin/AdminRoulette';
 import AdminSticker from './AdminSticker';
 import AdminCoupons from './admin/AdminCoupons';
 import AdminHistory from './admin/AdminHistory';
+import { AdminUsers } from '../AdminUsers';
+import AdminSettings from './admin/AdminSettings';
 
 export default function AdminDashboard({ businessName, navigation }: any) {
   const { t, i18n } = useTranslation();
   const { themeMode, setThemeMode } = useTheme();
-  const [activeTab, setActiveTab] = useState<'stats' | 'roulette' | 'sticker' | 'coupons' | 'history'>('stats');
+  const { user } = useAuth();
+  const { showToast } = useToast();
+  const dispatch = useDispatch<AppDispatch>();
+  const projects = useSelector(selectAllProjects);
+  const [activeTab, setActiveTab] = useState<'stats' | 'users' | 'roulette' | 'sticker' | 'coupons' | 'history' | 'settings'>('stats');
+
+  const adminProjectId =
+    user?.projectId || projects.find(project => project.adminId === user?.id)?.id || null;
+
+  const project = useSelector((state: RootState) =>
+    adminProjectId ? selectProjectById(adminProjectId)(state) : null,
+  );
 
   const nextLanguage =
     i18n.language === 'fr' ? 'en' : i18n.language === 'en' ? 'ar' : 'fr';
@@ -49,8 +66,12 @@ export default function AdminDashboard({ businessName, navigation }: any) {
         return <AdminSticker />;
       case 'coupons':
         return <AdminCoupons />;
+      case 'users':
+        return <AdminUsers />;
       case 'history':
         return <AdminHistory />;
+      case 'settings':
+        return <AdminSettings />;
       default:
         return <AdminStats />;
     }
@@ -64,6 +85,15 @@ export default function AdminDashboard({ businessName, navigation }: any) {
           <Text className="text-xl font-black text-slate-900 dark:text-white mb-4">
             {t('adminDashboard.headerTitle', { businessName, defaultValue: `Admin ${businessName}` })}
           </Text>
+          {project?.name ? (
+            <Text className="text-sm text-slate-500 dark:text-slate-400 mb-3">
+              {t('adminDashboard.projectLabel', 'Project')}: {project.name}
+            </Text>
+          ) : (
+            <Text className="text-sm text-slate-500 dark:text-slate-400 mb-3">
+              {t('adminDashboard.noProjectAssigned', 'No project assigned yet.')}
+            </Text>
+          )}
           <TouchableOpacity
             onPress={() => navigation.navigate('Profile')}
             className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-900 px-4 py-3 mb-4"
@@ -118,11 +148,23 @@ export default function AdminDashboard({ businessName, navigation }: any) {
           >
             <Text className={`font-bold ${activeTab === 'coupons' ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`}>{t('adminDashboard.tabs.coupons', 'Coupons Management')}</Text>
           </TouchableOpacity>
+            <TouchableOpacity 
+            onPress={() => setActiveTab('users')}
+            className={`p-4 rounded-xl ${activeTab === 'users' ? 'bg-[#1E3A5F]' : 'hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+          >
+            <Text className={`font-bold ${activeTab === 'users' ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`}>{t('adminDashboard.tabs.users', 'Users')}</Text>
+          </TouchableOpacity>
           <TouchableOpacity 
             onPress={() => setActiveTab('history')}
             className={`p-4 rounded-xl ${activeTab === 'history' ? 'bg-[#1E3A5F]' : 'hover:bg-slate-100 dark:hover:bg-slate-800'}`}
           >
             <Text className={`font-bold ${activeTab === 'history' ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`}>{t('adminDashboard.tabs.history', 'History & Clients')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={() => setActiveTab('settings')}
+            className={`p-4 rounded-xl ${activeTab === 'settings' ? 'bg-[#1E3A5F]' : 'hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+          >
+            <Text className={`font-bold ${activeTab === 'settings' ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`}>{t('adminDashboard.tabs.settings', 'Project Settings')}</Text>
           </TouchableOpacity>
         </View>
       </View>

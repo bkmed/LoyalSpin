@@ -3,15 +3,21 @@ import { View, Text } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 
-export default function AdminStats() {
+interface AdminStatsProps {
+  projectId?: string | null;
+}
+
+export default function AdminStats({ projectId }: AdminStatsProps) {
   const coupons = useSelector((state: RootState) => state.coupons?.items || []);
   const spinHistory = useSelector((state: RootState) => state.spinHistory?.items || []);
+  const filteredCoupons = projectId ? coupons.filter(c => c.projectId === projectId) : coupons;
+  const filteredSpinHistory = projectId ? spinHistory.filter(s => s.projectId === projectId) : spinHistory;
 
-  const totalScans = spinHistory.length;
-  const rewardsDistributed = spinHistory.filter(h => h.outcome === 'win').length;
-  
-  const createdCoupons = coupons.reduce((sum, c) => sum + (c.totalQuantity || 1), 0);
-  const usedCoupons = coupons.reduce((sum, c) => sum + (c.usedQuantity || 0), 0);
+  const totalScans = filteredSpinHistory.length;
+  const rewardsDistributed = filteredSpinHistory.filter(h => h.outcome === 'win').length;
+
+  const createdCoupons = filteredCoupons.reduce((sum, c) => sum + (c.totalQuantity || 1), 0);
+  const usedCoupons = filteredCoupons.reduce((sum, c) => sum + (c.usedQuantity || 0), 0);
 
   return (
     <View className="max-w-5xl">

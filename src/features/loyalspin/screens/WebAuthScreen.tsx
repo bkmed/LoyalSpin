@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput, Platform } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { LogoSVG } from '../components/LogoSVG';
+import { useAuth } from '../../../context/AuthContext';
+import { authService } from '../../../services/authService';
 import { WebSessionUser, Role } from '../utils/webTranslations';
 
 interface WebAuthScreenProps {
@@ -35,24 +37,24 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
 }) => {
   const tCommon = (key: string, defaultValue: string, options?: any) =>
     t(key, { defaultValue, ...options });
-  const [authTab, setAuthTab] = React.useState<'signin' | 'signup' | 'forgot'>(
+  const { signIn, signUp } = useAuth();
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [authTab, setAuthTab] = useState<'signin' | 'signup' | 'forgot'>(
     'signin',
   );
-  const [signinEmail, setSigninEmail] = React.useState('');
-  const [signinPassword, setSigninPassword] = React.useState('');
-  const [forgotEmail, setForgotEmail] = React.useState('');
-  const [forgotStatusMessage, setForgotStatusMessage] = React.useState<
-    string | null
-  >(null);
+  const [signinEmail, setSigninEmail] = useState('');
+  const [signinPassword, setSigninPassword] = useState('');
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotStatusMessage, setForgotStatusMessage] = useState<string | null>(null);
 
-  const [signupName, setSignupName] = React.useState('');
-  const [signupEmail, setSignupEmail] = React.useState('');
-  const [signupPhone, setSignupPhone] = React.useState('');
-  const [signupCity, setSignupCity] = React.useState('Tunis');
-  const [signupPassword, setSignupPassword] = React.useState('');
-  const [signupConfirmPassword, setSignupConfirmPassword] = React.useState('');
+  const [signupName, setSignupName] = useState('');
+  const [signupEmail, setSignupEmail] = useState('');
+  const [signupPhone, setSignupPhone] = useState('');
+  const [signupCity, setSignupCity] = useState('Tunis');
+  const [signupPassword, setSignupPassword] = useState('');
+  const [signupConfirmPassword, setSignupConfirmPassword] = useState('');
 
-  const handleSignIn = () => {
+  const handleSignIn = async () => {
     if (signinEmail === 'super@demo.com' && signinPassword === 'super123') {
       const superSession: WebSessionUser = {
         id: 'super-web-demo',
@@ -71,10 +73,10 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
         tCommon('web.welcomeSuper', 'Welcome Super Admin !'),
         'success',
       );
-    } else if (
-      signinEmail === 'admin@demo.com' &&
-      signinPassword === 'admin123'
-    ) {
+      return;
+    }
+
+    if (signinEmail === 'admin@demo.com' && signinPassword === 'admin123') {
       const adminSession: WebSessionUser = {
         id: 'admin-web-demo',
         name: 'Admin LoyaltySpin',
@@ -89,16 +91,13 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
       };
       startWebSession(adminSession, 'AdminAccueil');
       showToast(
-        tCommon(
-          'web.welcomeAdmin',
-          "Bienvenue dans votre espace d'administration !",
-        ),
+        tCommon('web.welcomeAdmin', "Bienvenue dans votre espace d'administration !"),
         'success',
       );
-    } else if (
-      signinEmail === 'user@demo.com' &&
-      signinPassword === 'user123'
-    ) {
+      return;
+    }
+
+    if (signinEmail === 'user@demo.com' && signinPassword === 'user123') {
       const userSession: WebSessionUser = {
         id: 'user-web-demo',
         name: 'Ahmed Ben Ali',
@@ -116,46 +115,59 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
         tCommon('web.welcomeUser', 'Nice to see you again, Ahmed Ben Ali !'),
         'success',
       );
-    } else {
+      return;
+    }
+
+    setIsProcessing(true);
+    try {
+      const user = await authService.login(signinEmail.trim(), signinPassword);
+      await signIn(user);
+      showToast(tCommon('web.welcomeBack', 'Welcome back!'), 'success');
+    } catch (error: any) {
       showToast(
-        tCommon('web.invalidCredentials', 'Invalid credentials'),
+        error?.message || tCommon('web.invalidCredentials', 'Invalid credentials'),
         'error',
       );
+    } finally {
+      setIsProcessing(false);
     }
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (signupPassword !== signupConfirmPassword) {
       showToast(
-        tCommon('web.passwordsMismatch', 'Passwords do not match',
-        ),
+        tCommon('web.passwordsMismatch', 'Passwords do not match'),
         'error',
       );
       return;
     }
-    const newUser: WebSessionUser = {
-      id: 'user-' + Date.now(),
-      name: signupName,
-      email: signupEmail,
-      role: 'user',
-      phone: signupPhone,
-      status: 'active',
-      addresses: [signupCity],
-      city: signupCity,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    startWebSession(newUser, 'UserDashboard');
-    showToast(
-      tCommon('web.signupSuccess', 'Account created successfully !'),
-      'success',
-    );
+
+    setIsProcessing(true);
+    try {
+      const user = await authService.register(
+        signupName.trim(),
+        signupEmail.trim(),
+        signupPassword,
+        'user',
+      );
+      await signUp(user);
+      showToast(
+        tCommon('web.signupSuccess', 'Account created successfully!'),
+        'success',
+      );
+    } catch (error: any) {
+      showToast(
+        error?.message || tCommon('web.signupFailed', 'Unable to create account.'),
+        'error',
+      );
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleForgotSubmit = () => {
     setForgotStatusMessage(
-      tCommon('web.resetLinkSent', 'The reset link has been sent !',
-      ),
+      tCommon('web.resetLinkSent', 'The reset link has been sent !'),
     );
   };
 
@@ -311,7 +323,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                 </Text>
                 <TextInput
                   keyboardType="email-address"
-                  placeholder="exemple@email.com"
+                  placeholder={tCommon('web.emailPlaceholder', 'example@email.com')}
                   value={signinEmail}
                   onChangeText={setSigninEmail}
                   className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-[#F97316] text-left transition-colors"
@@ -328,7 +340,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                   autoCorrect={false}
                   autoComplete="current-password"
                   textContentType="password"
-                  placeholder="••••••••"
+                  placeholder={tCommon('web.passwordPlaceholder', '••••••••')}
                   value={signinPassword}
                   onChangeText={setSigninPassword}
                   className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-[#F97316] text-left transition-colors"
@@ -421,7 +433,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                     className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[10px] font-black py-2.5 rounded-lg transition"
                   >
                     <Text className="text-slate-800 dark:text-slate-200 text-[10px] font-black text-center">
-                      Super Admin LoyaltySpin
+                      {tCommon('web.demoAccount.superAdmin', 'Super Admin LoyaltySpin')}
                     </Text>
                   </TouchableOpacity>
 
@@ -459,7 +471,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                     className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[10px] font-black py-2.5 rounded-lg transition"
                   >
                     <Text className="text-slate-800 dark:text-slate-200 text-[10px] font-black text-center">
-                      Admin LoyaltySpin 1
+                      {tCommon('web.demoAccount.admin1', 'Admin LoyaltySpin 1')}
                     </Text>
                   </TouchableOpacity>
 
@@ -497,7 +509,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                     className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[10px] font-black py-2.5 rounded-lg transition"
                   >
                     <Text className="text-slate-800 dark:text-slate-200 text-[10px] font-black text-center">
-                      Admin LoyaltySpin 2
+                      {tCommon('web.demoAccount.admin2', 'Admin LoyaltySpin 2')}
                     </Text>
                   </TouchableOpacity>
 
@@ -533,7 +545,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                     className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[10px] font-black py-2.5 rounded-lg transition"
                   >
                     <Text className="text-slate-800 dark:text-slate-200 text-[10px] font-black text-center">
-                      Client LoyaltySpin 1
+                      {tCommon('web.demoAccount.client1', 'Client LoyaltySpin 1')}
                     </Text>
                   </TouchableOpacity>
 
@@ -569,7 +581,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                     className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[10px] font-black py-2.5 rounded-lg transition"
                   >
                     <Text className="text-slate-800 dark:text-slate-200 text-[10px] font-black text-center">
-                      Client LoyaltySpin 2
+                      {tCommon('web.demoAccount.client2', 'Client LoyaltySpin 2')}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -612,7 +624,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                 </Text>
                 <TextInput
                   keyboardType="email-address"
-                  placeholder="exemple@email.com"
+                  placeholder={tCommon('web.emailPlaceholder', 'example@email.com')}
                   value={forgotEmail}
                   onChangeText={setForgotEmail}
                   className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-[#F97316] text-left transition-colors"
@@ -665,7 +677,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                   {tCommon('web.fullNameLabel', 'Full Name')}
                 </Text>
                 <TextInput
-                  placeholder="Ahmed Ben Salem"
+                  placeholder={tCommon('web.fullNamePlaceholder', 'Ahmed Ben Salem')}
                   value={signupName}
                   onChangeText={setSignupName}
                   className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-[#F97316] transition-colors"
@@ -679,7 +691,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                   </Text>
                   <TextInput
                     keyboardType="email-address"
-                    placeholder="nom@email.tn"
+                    placeholder={tCommon('web.emailPlaceholder', 'name@email.com')}
                     value={signupEmail}
                     onChangeText={setSignupEmail}
                     className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-[#F97316] transition-colors"
@@ -690,7 +702,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                     {tCommon('web.phoneLabel', 'Phone')}
                   </Text>
                   <TextInput
-                    placeholder="+216 22 111 222"
+                    placeholder={tCommon('web.phonePlaceholder', '+216 22 111 222')}
                     value={signupPhone}
                     onChangeText={setSignupPhone}
                     className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-[#F97316] transition-colors"
@@ -729,7 +741,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                     autoCorrect={false}
                     autoComplete="new-password"
                     textContentType="newPassword"
-                    placeholder="••••••••"
+                    placeholder={tCommon('web.passwordPlaceholder', '••••••••')}
                     value={signupPassword}
                     onChangeText={setSignupPassword}
                     className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-[#F97316] transition-colors"
@@ -745,7 +757,7 @@ export const WebAuthScreen: React.FC<WebAuthScreenProps> = ({
                     autoCorrect={false}
                     autoComplete="new-password"
                     textContentType="newPassword"
-                    placeholder="••••••••"
+                    placeholder={tCommon('web.passwordPlaceholder', '••••••••')}
                     value={signupConfirmPassword}
                     onChangeText={setSignupConfirmPassword}
                     className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-[#F97316] transition-colors"

@@ -1284,7 +1284,18 @@
     "noAccountQuestion": "جديد على {{businessName}}؟",
     "languageArabicLabel": "العربية",
     "languageEnglishLabel": "English",
-    "languageFrenchLabel": "فرنسية"
+    "languageFrenchLabel": "فرنسية",
+    "emailPlaceholder": "example@email.com",
+    "passwordPlaceholder": "••••••••",
+    "fullNamePlaceholder": "Ahmed Ben Salem",
+    "phonePlaceholder": "+216 22 111 222",
+    "demoAccount": {
+      "superAdmin": "Super Admin LoyaltySpin",
+      "admin1": "Admin LoyaltySpin 1",
+      "admin2": "Admin LoyaltySpin 2",
+      "client1": "Client LoyaltySpin 1",
+      "client2": "Client LoyaltySpin 2"
+    }
   },
   "loyalspin": {
     "welcome": "أهلا وسهلا بك في LoyalSpin",

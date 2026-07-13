@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, runOnJS, Easing } from 'react-native-reanimated';
 import Svg, { Circle, G, Path, Text as SvgText, TSpan } from 'react-native-svg';
@@ -83,11 +83,17 @@ const WheelNative: React.FC = () => {
     const n = choices.length;
     const base = Math.round(100 / n);
     const arr = choices.map(c => ({ ...c, probability: base }));
-    let sum = arr.reduce((s, a) => s + a.probability, 0);
+    const sum = arr.reduce((s, a) => s + a.probability, 0);
     if (sum < 100) arr[n - 1].probability += 100 - sum;
     else if (sum > 100) arr[n - 1].probability -= sum - 100;
     setChoices(arr);
   }, [choices]);
+
+  useEffect(() => {
+    if (probMode === 'equal') {
+      setEqualProbabilities();
+    }
+  }, [probMode, setEqualProbabilities]);
 
   const finishSpin = useCallback((idx: number) => {
     setSpinning(false);

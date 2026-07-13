@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Switch, ScrollView, Platform, Image, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Switch, Platform, Image, ActivityIndicator } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
 import {
@@ -229,7 +229,7 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
             );
             updateField('backgroundImageUrl', downloadUrl);
             showToast(tr('adminRoulette.backgroundUploaded', 'Background image uploaded!'), 'success');
-          } catch (err) {
+          } catch {
             showToast(tr('adminRoulette.uploadError', 'Upload failed'), 'error');
           } finally {
             setUploadingImage(false);
@@ -533,8 +533,7 @@ const AdminRoulette: React.FC<AdminRouletteProps> = ({ t, projectId }) => {
                   style={{ position: 'absolute', width: '100%', height: '100%', opacity: 0.5 }}
                 />
               )}
-              {localConfig.segments.map((seg, i) => {
-                const angle = (seg.probability / 100) * 360;
+              {localConfig.segments.map((seg) => {
                 return (
                   <View
                     key={seg.id}
